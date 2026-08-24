@@ -4,6 +4,7 @@
  * Ahmia is the established, policy-compliant .onion search engine.
  * It provides clearnet access and enforces content policy (CSAM filtering, etc.).
  */
+import { textOnly } from '@/lib/queryParser';
 import type { SearchProvider, SearchOptions, ProviderSearchResponse, SearchResult } from './types';
 
 import { proxiedFetch } from '@/lib/corsProxy';
@@ -84,10 +85,15 @@ export const torProvider: SearchProvider = {
   privacy: 'proxied',
   privacyNote: 'Routed through a CORS proxy to Ahmia.fi. The proxy and Ahmia can see the query.',
 
-  async search({ query, signal }: SearchOptions): Promise<ProviderSearchResponse> {
+  async search({ query, signal, parsed }: SearchOptions): Promise<ProviderSearchResponse> {
     if (!query.trim()) return { results: [] };
 
-    const targetUrl = `https://ahmia.fi/search/?q=${encodeURIComponent(query.trim())}`;
+    // Ahmia understands no operators — text residue only; the merge layer
+    // applies the structured filters to whatever comes back.
+    const text = parsed ? textOnly(parsed) : query.trim();
+    if (!text) return { results: [] };
+
+    const targetUrl = `https://ahmia.fi/search/?q=${encodeURIComponent(text)}`;
 
     try {
       const res = await proxiedFetch(targetUrl, {

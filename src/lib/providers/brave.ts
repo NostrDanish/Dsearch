@@ -17,6 +17,7 @@ import type { SearchProvider, SearchOptions, ProviderSearchResponse, SearchResul
 import { proxiedFetch } from '@/lib/corsProxy';
 import { getWebEngineBases } from './enginePriority';
 import { braveLanguageParam } from '@/lib/languageFilter';
+import { toEngineQuery } from '@/lib/queryParser';
 const LS_BRAVE_KEY = 'presearchstr:brave-api-key';
 const API_URL = 'https://api.search.brave.com/res/v1/web/search';
 
@@ -62,17 +63,24 @@ export const braveProvider: SearchProvider = {
   privacy: 'proxied',
   privacyNote: 'Brave Search API with your own free key. The query + your key go to Brave (via the CORS proxy, which sees both). No key configured = provider inactive.',
 
-  async search({ query, signal, limit = 20, languages }: SearchOptions): Promise<ProviderSearchResponse> {
+  async search({ query, signal, limit = 20, languages, parsed }: SearchOptions): Promise<ProviderSearchResponse> {
     const apiKey = getBraveApiKey();
     if (!query.trim() || !apiKey) return { results: [] };
 
+    // Brave natively understands -exclusions, quotes, site:, intitle:,
+    // before:/after: — the translation layer maps our syntax onto it.
+    const engineQuery = parsed ? toEngineQuery(parsed) : query.trim();
+    if (!engineQuery) return { results: [] };
+
     const params = new URLSearchParams({
-      q: query.trim(),
+      q: engineQuery,
       count: String(Math.min(limit, 20)),
       text_decorations: '0',
     });
     // Result language filter: Brave honors one search_lang server-side.
-    const lang = braveLanguageParam(languages ?? []);
+    // An explicit lang: operator in the query overrides the Settings filter.
+    const queryLangs = parsed?.filters.filter((f) => f.field === 'lang' && !f.negated).map((f) => f.value.toLowerCase());
+    const lang = braveLanguageParam(queryLangs && queryLangs.length > 0 ? queryLangs : (languages ?? []));
     if (lang) params.set('search_lang', lang);
 
     try {

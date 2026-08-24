@@ -4,6 +4,7 @@
  * Queries the public Algolia-powered HN search API. No API key needed.
  * Returns stories (posts) sorted by relevance.
  */
+import { textOnly } from '@/lib/queryParser';
 import type { SearchProvider, SearchOptions, ProviderSearchResponse, SearchResult } from './types';
 
 interface HNHit {
@@ -71,11 +72,16 @@ export const hackerNewsProvider: SearchProvider = {
   privacy: 'direct',
   privacyNote: 'Direct HTTPS to Algolia\u2019s HN Search API. Algolia sees the query + your IP.',
 
-  async search({ query, signal, limit = 15 }: SearchOptions): Promise<ProviderSearchResponse> {
+  async search({ query, signal, limit = 15, parsed }: SearchOptions): Promise<ProviderSearchResponse> {
     if (!query.trim()) return { results: [] };
 
+    // Algolia understands no search operators — send the text residue;
+    // filters execute on the results at the merge layer.
+    const text = parsed ? textOnly(parsed) : query.trim();
+    if (!text) return { results: [] };
+
     const params = new URLSearchParams({
-      query: query.trim(),
+      query: text,
       tags: 'story',
       hitsPerPage: String(limit),
     });

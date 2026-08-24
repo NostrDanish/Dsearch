@@ -1,9 +1,14 @@
 /**
- * Shared query tokenization + matching for client-side providers.
+ * Shared LOW-LEVEL text matching toolkit (stop words, punctuation
+ * normalization, plural folding, word/phrase matching, coverage).
  *
- * Relays can't full-text search arbitrary tags, so the community and
- * web-index providers fetch recent events and match locally. This module
- * makes that matching smarter than a naive substring AND:
+ * NEW CODE belongs one level up: queryParser.ts (raw query → structured
+ * AST: terms, phrases, AND/OR/NOT, filters) and queryEngine.ts (the
+ * authoritative evaluator). The legacy helpers below are preserved — the
+ * engine's plain-query gate reuses these exact semantics, and resultRank
+ * still runs its 50/50 title/body coverage on them.
+ *
+ * What this module has always done (all preserved):
  *
  *   - punctuation-insensitive: "C++" matches "c", "state-of-the-art"
  *     matches "state of the art";
@@ -23,7 +28,7 @@
  */
 
 /** Words too common to discriminate with (dropped when other terms exist). */
-const STOP_WORDS = new Set([
+export const STOP_WORDS = new Set([
   'a', 'an', 'the', 'and', 'or', 'but', 'of', 'to', 'in', 'on', 'for', 'at',
   'by', 'from', 'with', 'is', 'it', 'its', 'as', 'be', 'are', 'was', 'were',
   'this', 'that', 'these', 'those', 'what', 'which', 'who', 'how', 'why',
@@ -31,7 +36,7 @@ const STOP_WORDS = new Set([
 ]);
 
 /** Normalize a text chunk for matching: lowercase, fold punctuation to spaces. */
-function normalizeText(text: string): string {
+export function normalizeText(text: string): string {
   return text.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ');
 }
 
@@ -88,7 +93,7 @@ export function tokenizeRaw(query: string): QueryTerms {
 }
 
 /** Does a single term appear in the (space-padded) haystack? */
-function termMatches(haystack: string, term: string): boolean {
+export function termMatches(haystack: string, term: string): boolean {
   const folded = foldPlural(term);
   return (
     haystack.includes(` ${term} `)

@@ -17,6 +17,7 @@ import { SearchSkeleton } from '@/components/SearchSkeleton';
 import { PrivacyIndicator } from '@/components/PrivacyIndicator';
 import { InstantAnswer } from '@/components/InstantAnswer';
 import { TrendingQueries } from '@/components/TrendingQueries';
+import { QueryInsights } from '@/components/QueryInsights';
 import { Card, CardContent } from '@/components/ui/card';
 import { useProviderSearch } from '@/hooks/useProviderSearch';
 import { useInstantAnswer } from '@/hooks/useInstantAnswer';
@@ -261,6 +262,8 @@ const Index = () => {
             onSubmit={handleSubmit}
             isLoading={isFetching}
           />
+          {/* How the engine understood the query — phrases, boolean, filters */}
+          <QueryInsights query={activeQuery} className="mt-2" />
         </div>
 
         {/* Tabs + provider status */}

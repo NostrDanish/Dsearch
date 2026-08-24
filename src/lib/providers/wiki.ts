@@ -16,7 +16,8 @@ import { nip19 } from 'nostr-tools';
 
 import { getWikiRelayUrls } from '@/lib/appRelays';
 import { queryRelayPool } from '@/lib/searchRelays';
-import { matchWithRelevance, tokenizeRaw } from '@/lib/queryMatch';
+import { parseQuery } from '@/lib/queryParser';
+import { evaluateQuery } from '@/lib/queryEngine';
 import type { SearchProvider, SearchOptions, ProviderSearchResponse, SearchResult } from './types';
 
 /** NIP-54 wiki article kind. */
@@ -92,7 +93,7 @@ export const nostrWikiProvider: SearchProvider = {
       }
     }
 
-    const terms = tokenizeRaw(query);
+    const parsed = parseQuery(query);
 
     // Group versions by topic (d-tag), then match the newest version —
     // relevance decides which topics show, recency picks the displayed one.
@@ -111,7 +112,16 @@ export const nostrWikiProvider: SearchProvider = {
         .map((ev) => {
           const result = articleToResult(ev);
           if (!result) return null;
-          const m = matchWithRelevance([result.title, result.snippet, getTag(ev, 'd'), ...(result.tags ?? [])], terms);
+          // Structured local evaluation (boolean, phrases, filters).
+          const m = evaluateQuery({
+            url: result.url,
+            title: result.title,
+            description: result.snippet,
+            topics: result.tags,
+            publishedAt: result.timestamp,
+            observedAt: ev.created_at,
+            text: [result.title, result.snippet, getTag(ev, 'd'), ...(result.tags ?? [])],
+          }, parsed);
           return m.match ? { result, relevance: m.relevance } : null;
         })
         .filter((x): x is { result: SearchResult; relevance: number } => x !== null)

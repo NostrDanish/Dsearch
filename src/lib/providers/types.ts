@@ -89,6 +89,14 @@ export interface SearchOptions {
    * providers with per-result language metadata filter client-side.
    */
   languages?: string[];
+  /**
+   * The structured query (queryParser.ts) — parsed ONCE by the orchestrator.
+   * Providers use it to translate natively-supported operators or to run the
+   * authoritative local evaluation; the merge layer applies hard constraints
+   * afterwards regardless, so a provider misunderstanding an operator can
+   * never produce an incorrect final result.
+   */
+  parsed?: import('@/lib/queryParser').ParsedQuery;
 }
 
 /** The result of a provider search call. */

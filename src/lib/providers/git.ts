@@ -24,7 +24,8 @@ import { nip19 } from 'nostr-tools';
 
 import { getGitRelayUrls } from '@/lib/appRelays';
 import { queryRelayPool } from '@/lib/searchRelays';
-import { matchWithRelevance, tokenizeRaw } from '@/lib/queryMatch';
+import { parseQuery } from '@/lib/queryParser';
+import { evaluateQuery } from '@/lib/queryEngine';
 import type { SearchProvider, SearchOptions, ProviderSearchResponse, SearchResult } from './types';
 
 /** NIP-34 kinds we surface: repos, patches, PRs, issues. */
@@ -172,12 +173,22 @@ export const gitProvider: SearchProvider = {
       }
     }
 
-    const terms = tokenizeRaw(query);
+    // Structured local evaluation — boolean ops, phrases, and filters
+    // (site:/type:/lang:/before:/…) execute against the parsed query.
+    const parsed = parseQuery(query);
     const results: SearchResult[] = [];
     for (const ev of events.values()) {
       const result = eventToResult(ev);
       if (!result) continue;
-      const m = matchWithRelevance(haystackFor(ev, result), terms);
+      const m = evaluateQuery({
+        url: result.url,
+        title: result.title,
+        description: result.snippet,
+        topics: result.tags,
+        publishedAt: result.timestamp,
+        observedAt: ev.created_at,
+        text: haystackFor(ev, result),
+      }, parsed);
       if (!m.match) continue;
       // Code band: above Stack Overflow (72), below organic web (78+).
       // Relevance to the actual query words drives the spread; repos get a

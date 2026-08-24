@@ -24,6 +24,7 @@ import {
 import { proxiedFetch } from '@/lib/corsProxy';
 import { getWebEngineBases } from './enginePriority';
 import { searxngLanguageParam } from '@/lib/languageFilter';
+import { toEngineQuery } from '@/lib/queryParser';
 
 /**
  * How many instances to race in the first parallel batch. Public instances
@@ -135,10 +136,23 @@ export const searxngProvider: SearchProvider = {
   privacy: 'proxied',
   privacyNote: 'Routed through a CORS proxy to public SearXNG instances. The proxy and the instance operator can see the query.',
 
-  async search({ query, signal, languages }: SearchOptions): Promise<ProviderSearchResponse> {
+  async search({ query, signal, languages, parsed }: SearchOptions): Promise<ProviderSearchResponse> {
     if (!query.trim()) return { results: [] };
 
-    const q = query.trim();
+    // Translate to the DDG-family syntax SearXNG's engines understand
+    // (site:, intitle:, quotes, -exclusions, before:/after:); type:/tag: are
+    // enforced on the results at the merge layer, lang: rides the
+    // `language` parameter instead of the text.
+    const q = parsed ? toEngineQuery(parsed) : query.trim();
+    if (!q) return { results: [], suggestions: [] };
+
+    // lang: operator translation — SearXNG's native `language` param doesn't
+    // understand `lang:de` in the query text, so an explicit operator OVERRIDES
+    // the Settings filter for this search. site:/before: etc. stay in the raw
+    // query (the engines behind SearXNG understand site: natively) and are
+    // additionally enforced locally at the merge layer.
+    const queryLangs = parsed?.filters.filter((f) => f.field === 'lang' && !f.negated).map((f) => f.value.toLowerCase());
+    const effectiveLanguages = queryLangs && queryLangs.length > 0 ? queryLangs : languages;
 
     // Kick off (or refresh) instance discovery in the background — on by
     // default. The very first search uses the bootstrap seeds; subsequent
@@ -147,18 +161,18 @@ export const searxngProvider: SearchProvider = {
 
     // Language-aware when the filter is on: instances that have proven they
     // serve the filtered languages rank first.
-    const instances = getInstanceUrls(languages);
+    const instances = getInstanceUrls(effectiveLanguages);
 
     // Phase 1: Race the first batch of instances in parallel.
     // First one to return good results wins.
     const parallelBatch = instances.slice(0, PARALLEL_BATCH);
-    const raceResult = await raceForResults(parallelBatch, q, signal, languages);
+    const raceResult = await raceForResults(parallelBatch, q, signal, effectiveLanguages);
     if (raceResult) return raceResult;
 
     // Phase 2: Sequential fallback through remaining instances.
     const fallbackBatch = instances.slice(PARALLEL_BATCH, PARALLEL_BATCH + MAX_FALLBACK);
     for (const instance of fallbackBatch) {
-      const data = await queryInstance(instance, q, signal, languages);
+      const data = await queryInstance(instance, q, signal, effectiveLanguages);
       if (data && data.results.length > 0) {
         return {
           results: data.results.map(toSearchResult),

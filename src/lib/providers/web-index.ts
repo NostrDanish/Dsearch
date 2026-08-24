@@ -5,16 +5,16 @@
  *
  * Reading (spec §15):
  * - Baseline: plain NIP-01 filters work on every relay. We fetch recent
- *   observations and match the query client-side (AND across title,
- *   description, URL, topics).
+ *   observations and evaluate the query client-side.
  * - Acceleration: the filter also carries a NIP-50 `search` keyword.
  *   SIP-01-aware relays answer with relevance-ranked matches and understand
  *   web operators (site:, lang:, after:, type:, …); relays that don't
  *   support NIP-50 ignore the keyword (SHOULD per NIP-50) and return recent
  *   events. Operator semantics are per-relay (spec §15) — we never RELY on
- *   them: every result is re-matched client-side regardless, so a generic
- *   NIP-50 relay (or one reading `domain:` as the NIP-05 author extension)
- *   degrades gracefully.
+ *   them: every candidate is re-evaluated locally against the PARSED query
+ *   (queryParser.ts + queryEngine.ts — boolean AST, phrases, and structured
+ *   filters), so a generic NIP-50 relay (or one reading `domain:` as the
+ *   NIP-05 author extension) degrades gracefully and can never answer wrong.
  *
  * Observations are grouped by document id (`d` tag); distinct indexer count
  * is the core ranking signal ("N independent indexers saw this page").
@@ -27,23 +27,13 @@ import { getSearchRelayUrls, getIndexRelayUrls } from '@/lib/appRelays';
 import { getSearchRelay } from '@/lib/searchRelays';
 import { refreshDiscoveredRelays } from '@/lib/relayDiscovery';
 import { WEB_INDEX_KIND, parseIndexEvent, verifyObservation, type IndexObservation } from '@/lib/webIndex';
-import { matchWithRelevance, tokenizeRaw, type TermMatch } from '@/lib/queryMatch';
+import { parseQuery } from '@/lib/queryParser';
+import { evaluateQuery, docFromObservation } from '@/lib/queryEngine';
 import { passesLanguageFilter } from '@/lib/languageFilter';
 import type { SearchProvider, SearchOptions, ProviderSearchResponse, SearchResult } from './types';
 
 /** How many recent observations to pull per relay. */
 const FETCH_LIMIT = 300;
-
-/** AND-match + relevance across title, description, url, topics (smart tokenization). */
-function matchQuery(obs: IndexObservation, query: ReturnType<typeof tokenizeRaw>): TermMatch {
-  // tokenizeRaw strips NIP-50 operator tokens (site:, lang:, …) — those are
-  // relay-side directives — then matches with stop-word tolerance, plural
-  // folding, the multi-word gutting guard, and phrase-aware relevance.
-  return matchWithRelevance(
-    [obs.title, obs.description, obs.url, ...obs.topics],
-    query,
-  );
-}
 
 function extractDomain(url: string): string {
   try { return new URL(url).hostname; } catch { return ''; }
@@ -169,11 +159,14 @@ export const webIndexProvider: SearchProvider = {
 
     const groups = groupByDocument(observations, eventRelays);
 
-    // Match groups client-side (with relevance), then integrity-check the
-    // displayed observation (d ↔ u, x ↔ content — spec §18 step 2).
-    const terms = tokenizeRaw(query);
+    // AUTHORITATIVE local evaluation: the query is parsed ONCE (memoized)
+    // and every document group is evaluated against the structured query —
+    // boolean expressions, phrases, and filters (site:/lang:/type:/before:/…)
+    // all execute here, so a relay misunderstanding an operator can never
+    // produce incorrect results (NIP-50 was only an acceleration hint).
+    const parsed = parseQuery(query);
     const candidates = [...groups.values()]
-      .map((group) => ({ group, m: matchQuery(group.latest, terms) }))
+      .map((group) => ({ group, m: evaluateQuery(docFromObservation(group.latest), parsed) }))
       .filter(({ m }) => m.match);
     const verified = await Promise.all(
       candidates.map(async (c) => ((await verifyObservation(c.group.latest)) ? c : null)),

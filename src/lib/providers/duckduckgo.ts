@@ -10,6 +10,7 @@
 import type { SearchProvider, SearchOptions, ProviderSearchResponse, SearchResult } from './types';
 import { proxiedFetch } from '@/lib/corsProxy';
 import { getWebEngineBases } from './enginePriority';
+import { toEngineQuery } from '@/lib/queryParser';
 
 interface DDGRawResult {
   title: string;
@@ -139,14 +140,20 @@ export const duckduckgoProvider: SearchProvider = {
   privacy: 'proxied',
   privacyNote: 'Routed through a CORS proxy to DuckDuckGo\u2019s HTML endpoint. The proxy sees the query in plaintext.',
 
-  async search({ query, signal, limit = 20 }: SearchOptions): Promise<ProviderSearchResponse> {
+  async search({ query, signal, limit = 20, parsed }: SearchOptions): Promise<ProviderSearchResponse> {
     if (!query.trim()) return { results: [] };
+
+    // Translate to DDG-native syntax: -exclusions, quoted phrases, site:,
+    // intitle:, before:/after: go through natively; type:/tag:/lang: are
+    // enforced on the returned results at the merge layer instead.
+    const engineQuery = parsed ? toEngineQuery(parsed) : query.trim();
+    if (!engineQuery) return { results: [] };
 
     // Try the standard DDG HTML page, then the lite variant — DDG bot-gates
     // each endpoint independently, so the fallback is worth the extra shot.
     const endpoints = [
-      `https://html.duckduckgo.com/html/?q=${encodeURIComponent(query.trim())}`,
-      `https://lite.duckduckgo.com/lite/?q=${encodeURIComponent(query.trim())}`,
+      `https://html.duckduckgo.com/html/?q=${encodeURIComponent(engineQuery)}`,
+      `https://lite.duckduckgo.com/lite/?q=${encodeURIComponent(engineQuery)}`,
     ];
 
     for (const targetUrl of endpoints) {

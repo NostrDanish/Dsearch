@@ -151,6 +151,44 @@ export default function About() {
           </CardContent>
         </Card>
 
+        {/* Search syntax */}
+        <h2 className="text-xl font-semibold mb-4">Search Syntax</h2>
+        <Card className="mb-8 border-primary/20">
+          <CardContent className="py-6">
+            <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+              The search bar parses real search syntax and executes it <strong className="text-foreground">locally</strong> —
+              a relay or engine that doesn't know an operator can never answer it wrong.
+            </p>
+            <div className="grid sm:grid-cols-2 gap-x-6 gap-y-2 text-sm">
+              {[
+                ['nostr privacy', 'both words, any order'],
+                ['"decentralized search"', 'exact phrase, ranked higher'],
+                ['nostr OR bitcoin', 'either word'],
+                ['nostr NOT twitter', 'exclusion (or nostr -twitter)'],
+                ['nostr AND (privacy OR decentralization)', 'grouping + precedence'],
+                ['site:github.com', 'this site incl. subdomains'],
+                ['domain:github.com', 'this exact host only'],
+                ['title:"Nostr relay"', 'title-only search'],
+                ['type:pdf', 'document type from the index'],
+                ['lang:de', 'content language'],
+                ['tag:nostr', 'exact topic tag'],
+                ['after:2026-01-01', 'date boundary (before: too)'],
+              ].map(([example, meaning]) => (
+                <div key={example} className="flex items-baseline gap-2 min-w-0">
+                  <code className="text-xs bg-muted px-1.5 py-0.5 rounded font-mono shrink-0">{example}</code>
+                  <span className="text-xs text-muted-foreground truncate">{meaning}</span>
+                </div>
+              ))}
+            </div>
+            <p className="text-xs text-muted-foreground/70 mt-4 leading-relaxed">
+              Boolean operators are UPPERCASE (lowercase stays plain text). Everything combines:
+              <code className="text-xs bg-muted px-1 py-0.5 rounded font-mono"> nostr privacy site:github.com lang:en</code>.
+              The results page shows the parsed interpretation as chips under the search bar.
+              Full guide: <a href="https://github.com/NostrDanish/0xPresearchstr/blob/main/docs/SEARCH-QUERIES.md" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline inline-flex items-center gap-0.5">docs/SEARCH-QUERIES.md<ExternalLink className="w-3 h-3" /></a>.
+            </p>
+          </CardContent>
+        </Card>
+
         {/* Why this architecture */}
         <h2 className="text-xl font-semibold mb-4">Why an Aggregator?</h2>
         <Card className="mb-8">

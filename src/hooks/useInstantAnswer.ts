@@ -25,6 +25,7 @@ import { NIP05 } from '@nostrify/nostrify';
 import { evaluateMath, formatMathResult, isMathQuery } from '@/lib/calculator';
 import { sanitizeUrl } from '@/lib/sanitizeUrl';
 import { classifyQuery } from '@/lib/queryClassify';
+import { parseQuery, textOnly } from '@/lib/queryParser';
 import { documentId, normalizeIndexUrl, parseIndexEvent } from '@/lib/webIndex';
 import { getIndexRelayUrls } from '@/lib/appRelays';
 import { queryRelayPool } from '@/lib/searchRelays';
@@ -305,18 +306,22 @@ export function useInstantAnswer(query: string, enabled: boolean): {
   });
 
   // 6. Wikipedia — direct API, skipped in Privacy Mode and for non-text queries.
+  // Structured queries (site:, boolean, …) are stripped to their text residue —
+  // Wikipedia can't understand operators, and a filter-laden string would junk
+  // the title match entirely.
+  const answerText = queryClass === 'text' ? textOnly(parseQuery(trimmed)) : '';
   const wikiEnabled =
     enabled &&
     !calculator &&
     !nip19Answer &&
     !config.privacyMode &&
     queryClass === 'text' &&
-    trimmed.length >= 2 &&
-    trimmed.length <= 80;
+    answerText.length >= 2 &&
+    answerText.length <= 80;
 
   const { data: wikiAnswer, isLoading } = useQuery({
-    queryKey: ['instant-answer', 'wikipedia', trimmed],
-    queryFn: ({ signal }) => fetchWikipediaAnswer(trimmed, signal),
+    queryKey: ['instant-answer', 'wikipedia', answerText],
+    queryFn: ({ signal }) => fetchWikipediaAnswer(answerText, signal),
     enabled: wikiEnabled,
     staleTime: 5 * 60_000,
     retry: 0,
@@ -327,8 +332,8 @@ export function useInstantAnswer(query: string, enabled: boolean): {
   // Proxied third-party API: skipped in Privacy Mode.
   const ddgEnabled = wikiEnabled && wikiAnswer === null;
   const { data: ddgAnswer } = useQuery({
-    queryKey: ['instant-answer', 'duckduckgo', trimmed],
-    queryFn: ({ signal }) => fetchDuckDuckGoAnswer(trimmed, signal),
+    queryKey: ['instant-answer', 'duckduckgo', answerText],
+    queryFn: ({ signal }) => fetchDuckDuckGoAnswer(answerText, signal),
     enabled: ddgEnabled,
     staleTime: 5 * 60_000,
     retry: 0,

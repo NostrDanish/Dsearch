@@ -11,6 +11,7 @@ import { nip19 } from 'nostr-tools';
 import { getSearchRelayUrls } from '@/lib/appRelays';
 import { getSearchRelay } from '@/lib/searchRelays';
 import { refreshDiscoveredRelays } from '@/lib/relayDiscovery';
+import { textOnly } from '@/lib/queryParser';
 import { sanitizeUrl } from '@/lib/sanitizeUrl';
 import type { SearchProvider, SearchOptions, ProviderSearchResponse, SearchResult } from './types';
 
@@ -210,15 +211,22 @@ export const nostrProvider: SearchProvider = {
   privacy: 'nostr',
   privacyNote: 'NIP-50 search over WebSocket. Relay operators see the query + your IP, but no account is linked.',
 
-  async search({ query, signal, limit = 40 }: SearchOptions): Promise<ProviderSearchResponse> {
+  async search({ query, signal, limit = 40, parsed }: SearchOptions): Promise<ProviderSearchResponse> {
     if (!query.trim()) return { results: [] };
 
     // Kick off (or refresh) relay auto-discovery in the background —
     // verified NIP-50 / SIP-01 relays join the pools on later searches.
     void refreshDiscoveredRelays();
 
+    // NIP-50 relays full-text search CONTENT — our operators (site:, AND,
+    // NOT) are noise to them. Send the text residue (quoted phrases kept —
+    // NIP-50 allows phrase semantics); filters/NOT are enforced locally at
+    // the merge layer.
+    const text = parsed ? textOnly(parsed) : query.trim();
+    if (!text) return { results: [] };
+
     const filter: NostrFilter & { search?: string } = {
-      search: query.trim(),
+      search: text,
       kinds: SEARCH_KINDS,
       limit,
     };

@@ -5,6 +5,7 @@
  * Returns questions sorted by relevance with vote counts and answer status.
  * CORS-friendly — no proxy needed.
  */
+import { textOnly } from '@/lib/queryParser';
 import type { SearchProvider, SearchOptions, ProviderSearchResponse, SearchResult } from './types';
 
 interface SEItem {
@@ -68,13 +69,19 @@ export const stackOverflowProvider: SearchProvider = {
   privacy: 'direct',
   privacyNote: 'Direct HTTPS to the Stack Exchange API. Stack Exchange sees the query + your IP.',
 
-  async search({ query, signal, limit = 10 }: SearchOptions): Promise<ProviderSearchResponse> {
+  async search({ query, signal, limit = 10, parsed }: SearchOptions): Promise<ProviderSearchResponse> {
     if (!query.trim()) return { results: [] };
+
+    // Stack Exchange has its own operator syntax — sending OUR operators
+    // would junk the query, so it gets the text residue; filters execute
+    // on the returned results at the merge layer.
+    const text = parsed ? textOnly(parsed) : query.trim();
+    if (!text) return { results: [] };
 
     const params = new URLSearchParams({
       order: 'desc',
       sort: 'relevance',
-      q: query.trim(),
+      q: text,
       site: 'stackoverflow',
       pagesize: String(limit),
       filter: 'default',

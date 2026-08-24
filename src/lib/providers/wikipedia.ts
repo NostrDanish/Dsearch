@@ -8,6 +8,7 @@
  * da.wikipedia.org, …), so a result language filter maps directly to
  * querying the preferred languages' wikis (first two) and merging.
  */
+import { textOnly } from '@/lib/queryParser';
 import type { SearchProvider, SearchOptions, ProviderSearchResponse, SearchResult } from './types';
 
 interface WikiSearchResult {
@@ -87,15 +88,25 @@ export const wikipediaProvider: SearchProvider = {
   privacy: 'direct',
   privacyNote: 'Direct HTTPS to the Wikimedia API. Wikimedia sees the query + your IP (standard web server logs).',
 
-  async search({ query, signal, limit = 10, languages }: SearchOptions): Promise<ProviderSearchResponse> {
+  async search({ query, signal, limit = 10, languages, parsed }: SearchOptions): Promise<ProviderSearchResponse> {
     if (!query.trim()) return { results: [] };
 
+    // Wikipedia's API understands no operators — send the text residue only
+    // ("nostr privacy" out of 'nostr site:github.com'). Filters still execute
+    // on the returned results at the merge layer, so nothing is lost.
+    const text = parsed ? textOnly(parsed) : query.trim();
+    if (!text) return { results: [] };
+
     // Default English; with a result language filter, query the preferred
-    // languages' wikis (first two) and merge in preference order.
-    const langs = languages && languages.length > 0 ? languages.slice(0, 2) : ['en'];
+    // languages' wikis (first two) and merge in preference order. An explicit
+    // lang: operator in the query overrides the Settings filter.
+    const queryLangs = parsed?.filters.filter((f) => f.field === 'lang' && !f.negated).map((f) => f.value.toLowerCase());
+    const langs = queryLangs && queryLangs.length > 0
+      ? queryLangs.slice(0, 2)
+      : languages && languages.length > 0 ? languages.slice(0, 2) : ['en'];
 
     const settled = await Promise.allSettled(
-      langs.map((lang) => queryWiki(lang, query.trim(), limit, signal)),
+      langs.map((lang) => queryWiki(lang, text, limit, signal)),
     );
 
     const results: SearchResult[] = [];

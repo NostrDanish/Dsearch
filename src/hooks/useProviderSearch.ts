@@ -15,6 +15,8 @@ import { useQuery, useQueryClient } from '@tanstack/react-query';
 import type { SearchResult, SearchSource, ProviderSearchResponse } from '@/lib/providers/types';
 import { getProvidersForPrivacy, getProvidersForSource } from '@/lib/providers/registry';
 import { classifyQuery, providerAllowlistFor } from '@/lib/queryClassify';
+import { parseQuery } from '@/lib/queryParser';
+import { applyHardConstraints } from '@/lib/queryEngine';
 import { sortByQueryRelevance } from '@/lib/resultRank';
 import { isHiddenResult } from '@/lib/moderation';
 import { useSearchIndexer } from '@/hooks/useSearchIndexer';
@@ -89,6 +91,12 @@ export function useProviderSearch({
     if (allowlist) providers = providers.filter((p) => allowlist.has(p.id));
     return providers;
   }, [source, privacyMode, query, config.disabledProviders]);
+  /**
+   * The parsed structured query — computed once per query string (memoized
+   * in the parser too). Providers get it for operator translation/local
+   * evaluation; the merge layer applies hard constraints to every result.
+   */
+  const parsedQuery = useMemo(() => parseQuery(query), [query]);
   /** Providers that exist for this source but are blocked by Privacy Mode. */
   const suppressedProviders = useMemo(() => {
     if (!privacyMode) return [];
@@ -118,12 +126,15 @@ export function useProviderSearch({
     setStreamed([]);
   }
 
-  /** Append a provider's results to the visible stream (dedupe + coverage rank). */
+  /** Append a provider's results to the visible stream (dedupe + constraints + coverage rank). */
   const appendStreamed = useCallback((key: string, fresh: SearchResult[], query: string) => {
     if (fresh.length === 0) return;
     setStreamed((prev) => {
       if (streamKeyRef.current !== key) return prev; // stale provider from an old query
-      const merged = deduplicateResults([...prev, ...fresh]);
+      // Hard constraints (filters + NOT) apply to EVERY provider's results —
+      // an engine that misunderstood site: can't leak a wrong result through.
+      const constrained = applyHardConstraints(fresh, parseQuery(query));
+      const merged = deduplicateResults([...prev, ...constrained]);
       return sortByQueryRelevance(merged, query);
     });
   }, []);
@@ -173,6 +184,7 @@ export function useProviderSearch({
               query: query.trim(),
               signal,
               languages: languageFilter,
+              parsed: parsedQuery,
             });
 
             const latencyMs = Math.round(performance.now() - start);
@@ -209,12 +221,16 @@ export function useProviderSearch({
       // Deduplicate by URL (prefer the result with the higher score).
       const deduped = deduplicateResults(results);
 
+      // Apply the query's hard constraints (structured filters + NOT) across
+      // ALL providers — the local backstop that makes operators authoritative.
+      const constrained = applyHardConstraints(deduped, parsedQuery);
+
       // Sort by coverage-adjusted score, then recency inside the tie band —
       // results matching all/most query words outrank loose engine hits.
-      sortByQueryRelevance(deduped, query);
+      sortByQueryRelevance(constrained, query);
 
       return {
-        results: deduped,
+        results: constrained,
         suggestions: [...new Set(allSuggestions)].slice(0, 8),
       };
     },

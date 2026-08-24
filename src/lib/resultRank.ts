@@ -24,7 +24,9 @@
  * search and leaks the full result set to a third party. This is instant,
  * offline-capable, and private — and it's exactly the ranking rule asked for.
  */
-import { tokenizeRaw, wordCoverage, type QueryTerms } from '@/lib/queryMatch';
+import { wordCoverage, STOP_WORDS, type QueryTerms } from '@/lib/queryMatch';
+import { parseQuery, collectTextLeaves, type ParsedQuery } from '@/lib/queryParser';
+import { evaluateQuery, docFromSearchResult } from '@/lib/queryEngine';
 import type { SearchResult } from '@/lib/providers/types';
 
 /** Providers whose placement is contractual, not relevance-driven. */
@@ -34,6 +36,33 @@ const RERANK_EXEMPT = new Set(['keyword-stake']);
 const NO_MATCH_FACTOR = 0.45;
 /** How much of the base score is immune to coverage (keeps source priority sane). */
 const BASE_WEIGHT = 0.55;
+/**
+ * Explainable ranking ladder: exact phrase > title match > term coverage.
+ * Sized to clear the ±5 recency tie-band at typical provider bases (~80):
+ * phrase ≈ +14 points, title ≈ +8 — strong enough to matter, small enough
+ * that provider bands still show through for non-phrase queries.
+ */
+const PHRASE_BOOST = 1.18;
+const TITLE_BOOST = 1.10;
+
+/** Build legacy QueryTerms from the parsed query's text leaves only —
+ *  filter values and operators never count as matchable words. */
+function termsFromParsed(parsed: ParsedQuery): QueryTerms {
+  const { terms, phrases } = collectTextLeaves(parsed.expr);
+  const raw = [...terms, ...phrases]
+    .join(' ')
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}]+/gu, ' ')
+    .split(/\s+/)
+    .filter((t) => t.length >= 2);
+  const meaningful = raw.filter((t) => !STOP_WORDS.has(t));
+  return {
+    terms: meaningful.length > 0 ? meaningful : raw,
+    allTerms: [...new Set(raw)],
+    phrase: raw.join(' ').trim(),
+    onlyStopWords: raw.length > 0 && meaningful.length === 0,
+  };
+}
 
 function coverageOf(result: SearchResult, terms: QueryTerms): number {
   const titleCov = wordCoverage([result.title], terms);
@@ -44,27 +73,34 @@ function coverageOf(result: SearchResult, terms: QueryTerms): number {
   return titleCov * 0.5 + bodyCov * 0.5;
 }
 
-/** Adjusted score: base reweighted by query-word coverage. */
-export function coverageScore(result: SearchResult, terms: QueryTerms): number {
+/** Adjusted score: base reweighted by coverage, then phrase/title boosts. */
+function scoreResult(result: SearchResult, terms: QueryTerms, parsed: ParsedQuery): number {
   const base = result.score ?? 50;
   if (RERANK_EXEMPT.has(result.provider)) return base;
   const cov = coverageOf(result, terms);
-  return base * (cov === 0 ? NO_MATCH_FACTOR : BASE_WEIGHT + (1 - BASE_WEIGHT) * cov);
+  let score = base * (cov === 0 ? NO_MATCH_FACTOR : BASE_WEIGHT + (1 - BASE_WEIGHT) * cov);
+  // Explainable ladder signals from the authoritative local evaluation.
+  const ev = evaluateQuery(docFromSearchResult(result), parsed);
+  if (ev.phraseHit) score *= PHRASE_BOOST;
+  if (ev.titleHit) score *= TITLE_BOOST;
+  return score;
 }
 
 /**
  * Sort a merged result list by coverage-adjusted score (in place, returns
- * the same array). Tokenizes once per call; per-result scores are memoized.
+ * the same array). The query is parsed once (memoized); per-result scores
+ * are memoized.
  */
 export function sortByQueryRelevance(results: SearchResult[], query: string): SearchResult[] {
-  const terms = tokenizeRaw(query);
-  if (terms.terms.length === 0) return results;
+  const parsed = parseQuery(query);
+  const terms = termsFromParsed(parsed);
+  if (terms.terms.length === 0 && !parsed.hasFilters) return results;
 
   const adjusted = new Map<string, number>();
   const scoreOf = (r: SearchResult): number => {
     let s = adjusted.get(r.id);
     if (s === undefined) {
-      s = coverageScore(r, terms);
+      s = scoreResult(r, terms, parsed);
       adjusted.set(r.id, s);
     }
     return s;

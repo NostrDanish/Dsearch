@@ -308,6 +308,38 @@ The search bar understands what you typed and routes accordingly:
 Provider skipping isn't just speed — it's privacy: a NIP-19 identifier or URL never
 leaves for a third-party engine.
 
+### Structured query engine
+
+The search bar parses real search syntax into a structured form
+(`src/lib/queryParser.ts`) and executes it **locally and authoritatively**
+(`src/lib/queryEngine.ts`) — operators are never "stripped and hoped for":
+
+```
+nostr privacy                              both words, order-free
+"decentralized search"                     exact phrase — ranked above loose matches
+nostr AND privacy                          explicit boolean (UPPERCASE; lowercase stays text)
+nostr OR bitcoin                           either
+nostr NOT twitter                          exclusion ("nostr -twitter" works too)
+nostr AND (privacy OR decentralization)    parentheses, correct precedence
+site:github.com                            host + subdomains (never evilgithub.com)
+domain:github.com                          exact host only
+title:"Nostr relay"                        title-only search (phrase or words)
+type:pdf / type:repository                 SIP-01 type/mime metadata
+lang:de                                    language (unknown language passes through)
+tag:nostr                                  exact topic tag (never "nostr-tools")
+before:2026-08-01 / after:2026-01-01       published/observed date boundaries
+nostr privacy site:github.com lang:en      everything combines
+```
+
+NIP-50 relays still receive the raw query as an *acceleration hint*, but every
+candidate is re-evaluated against the parsed AST locally — a relay that
+misunderstands `site:` cannot answer it wrong. Engines that natively support
+an operator get it (DuckDuckGo/Brave/SearXNG understand `site:`; `lang:` is
+translated to their language parameters); engines that don't get the text
+residue, and the merge layer enforces the filters on whatever returns. The
+results page shows the parsed interpretation as "Understood as:" chips.
+Full guide: [docs/SEARCH-QUERIES.md](docs/SEARCH-QUERIES.md).
+
 ---
 
 ## Team Console (`/admin`)

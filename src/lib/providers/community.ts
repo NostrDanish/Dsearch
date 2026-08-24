@@ -24,19 +24,18 @@ import {
   parseNostraEvent,
   parseBookmarkEvent,
 } from '@/lib/communityIndex';
-import { matchesTerms, tokenizeRaw } from '@/lib/queryMatch';
+import { parseQuery } from '@/lib/queryParser';
+import { evaluateQuery, docFromSearchResult } from '@/lib/queryEngine';
 import type { SearchProvider, SearchOptions, ProviderSearchResponse, SearchResult } from './types';
 
 /** How many recent events to pull per family before client-side filtering. */
 const FETCH_LIMIT = 150;
 
-/** Does this result match the query? Smart AND-match across searchable fields,
- *  with the multi-word gutting guard ("how to build" must match more than "build"). */
+/** Does this result match the query? Full structured evaluation — boolean
+ *  operators, phrases, and filters (site:/tag:/before:/…) all execute
+ *  locally, on top of the proven stop-word/plural/gutting-guard semantics. */
 function matchesQuery(result: SearchResult, query: string): boolean {
-  return matchesTerms(
-    [result.title, result.snippet, result.url, ...(result.tags ?? [])],
-    tokenizeRaw(query),
-  );
+  return evaluateQuery(docFromSearchResult(result), parseQuery(query)).match;
 }
 
 export const communityProvider: SearchProvider = {
