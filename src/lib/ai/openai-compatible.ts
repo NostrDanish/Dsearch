@@ -8,7 +8,7 @@
  * providers). The proxy sees the request including the API key — this is
  * disclosed in Settings → AI.
  */
-import { proxiedFetch } from '@/lib/corsProxy';
+import { proxiedFetch, isLoopbackOrPrivateUrl } from '@/lib/corsProxy';
 import { ANSWER_SYSTEM_PROMPT, buildEvidencePrompt } from './prompts';
 import type { AIProvider, AIModel, AIAnswerRequest, AIAnswer } from './types';
 
@@ -39,10 +39,15 @@ export function createOpenAICompatibleProvider(partial: {
       const headers: Record<string, string> = { Accept: 'application/json' };
       if (apiKey) headers.Authorization = `Bearer ${apiKey}`;
 
-      const res = await proxiedFetch(`${base}/models`, {
-        headers,
-        signal: signal ?? AbortSignal.timeout(12000),
-      });
+      let res: Response;
+      try {
+        res = await proxiedFetch(`${base}/models`, {
+          headers,
+          signal: signal ?? AbortSignal.timeout(12000),
+        });
+      } catch (err) {
+        throw localHint(endpoint, err);
+      }
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
       const data = (await res.json()) as OpenAIModelsResponse;
@@ -55,6 +60,21 @@ export function createOpenAICompatibleProvider(partial: {
       const base = endpoint.replace(/\/$/, '');
       const headers: Record<string, string> = { 'Content-Type': 'application/json' };
       if (apiKey) headers.Authorization = `Bearer ${apiKey}`;
+
+      // 'auto' is a router default on hosted gateways (PPQ/OpenRouter) but
+      // a hard error on local servers (Ollama 404s on unknown models).
+      // For loopback/private endpoints, resolve it to the first installed
+      // model; hosted providers keep 'auto' untouched.
+      let model = req.model;
+      if ((model === 'auto' || !model) && isLoopbackOrPrivateUrl(base)) {
+        try {
+          const installed = await this.models(endpoint, apiKey, req.signal);
+          if (installed.length > 0) model = installed[0].id;
+        } catch {
+          // Fall through with 'auto' — the real error surfaces from the
+          // completion call with a proper hint.
+        }
+      }
 
       const messages = [
         { role: 'system', content: ANSWER_SYSTEM_PROMPT },
@@ -69,7 +89,7 @@ export function createOpenAICompatibleProvider(partial: {
       // that names a rejected argument, strip/swap just that argument and
       // retry — at most twice. Self-heals across providers without knobs.
       const body: Record<string, unknown> = {
-        model: req.model,
+        model,
         messages,
         temperature: 0.3,
         max_tokens: 1200,
@@ -86,7 +106,11 @@ export function createOpenAICompatibleProvider(partial: {
       let res: Response | null = null;
       let fixes = 0;
       while (fixes <= 2) {
-        res = await callApi();
+        try {
+          res = await callApi();
+        } catch (err) {
+          throw localHint(endpoint, err);
+        }
         if (res.ok) break;
 
         const errText = res.status === 400 ? await res.text().catch(() => '') : '';
@@ -112,7 +136,25 @@ export function createOpenAICompatibleProvider(partial: {
       const text = data.choices?.[0]?.message?.content?.trim();
       if (!text) throw new Error('Empty answer from the model');
 
-      return { text, model: req.model, provider: name };
+      return { text, model, provider: name };
     },
   };
+}
+
+/**
+ * Loopback/private endpoint failures get an actionable hint instead of a
+ * bare network error — the classic case is Ollama refusing the page origin
+ * (needs OLLAMA_ORIGINS) or the server simply not running.
+ */
+function localHint(endpoint: string, err: unknown): Error {
+  if (!isLoopbackOrPrivateUrl(endpoint)) {
+    return err instanceof Error ? err : new Error(String(err));
+  }
+  const origin = typeof location !== 'undefined' ? location.origin : 'this site';
+  return new Error(
+    `Local endpoint unreachable (${endpoint}). Is the server running? ` +
+    `If it's Ollama, allow this app's origin — e.g. OLLAMA_ORIGINS="${origin}" ` +
+    `(or OLLAMA_ORIGINS=*) ollama serve. ` +
+    `(${err instanceof Error ? err.message : String(err)})`,
+  );
 }

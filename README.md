@@ -198,6 +198,8 @@ src/lib/providers/
 ├── stakes.ts         ← Keyword stakes (Presearch-style top placements)
 ├── searxng.ts        ← SearXNG meta-search with failover
 ├── duckduckgo.ts     ← DuckDuckGo HTML scraper
+├── brave.ts          ← Brave Search API (BYOK — lead engine when a key is set)
+├── parallel.ts       ← Parallel Search API (BYOK — long dense excerpts)
 ├── wikipedia.ts      ← MediaWiki API
 ├── hacker-news.ts    ← Algolia HN Search API
 ├── stackoverflow.ts  ← StackExchange API
@@ -238,6 +240,7 @@ interface SearchProvider {
 | **Nostr Wiki** | Wiki relays (NIP-54) | WebSocket, read-only | Decentralized wiki articles (Wikifreedia corpus) — pool editable in Settings → Wiki Relays |
 | **Cache Index** | Federated Nostr index | WebSocket | Legacy kind 30078 cache — **off by default** (frozen, read-only) |
 | **Brave** | Brave Search API | CORS proxy | BYOK: paste your free-tier key (2k queries/mo) in Settings → Brave — **with a key set, Brave becomes the lead web engine** |
+| **Parallel** | Parallel Search API | CORS proxy | BYOK: free starting credits — Settings → Parallel. Long dense excerpts; every result feeds the SIP-01 index with richer descriptions |
 | **Wikipedia** | MediaWiki API | Direct (CORS) | **Off by default** — enable in Settings → Engines |
 | **Stack Overflow** | StackExchange API | Direct (CORS) | **Off by default** — enable in Settings → Engines |
 | **Tor (Ahmia)** | HTML scraping | CORS proxy | **Off by default** — policy-compliant .onion search |

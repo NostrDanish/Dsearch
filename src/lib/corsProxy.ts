@@ -26,6 +26,29 @@ const CORS_PROXIES = [
 /** Per-attempt timeout (each proxy gets its own window). */
 const ATTEMPT_TIMEOUT_MS = 12_000;
 
+/**
+ * Loopback/private targets (localhost, 127.x, ::1, *.local, RFC-1918) mean
+ * the USER'S OWN machine — a remote CORS proxy can never reach them (it
+ * would hit the proxy's own localhost). These go direct. This is what makes
+ * local AI (Ollama, llama.cpp, vLLM on LAN) work at all.
+ */
+export function isLoopbackOrPrivateUrl(url: string): boolean {
+  try {
+    const h = new URL(url).hostname.toLowerCase().replace(/^\[|\]$/g, '');
+    return (
+      h === 'localhost' || h.endsWith('.localhost')
+      || h === '127.0.0.1' || h === '::1' || h === '0.0.0.0'
+      || h.endsWith('.local')
+      || /^10\./.test(h)
+      || /^192\.168\./.test(h)
+      || /^172\.(1[6-9]|2\d|3[01])\./.test(h)
+      || /^169\.254\./.test(h)
+    );
+  } catch {
+    return false;
+  }
+}
+
 export async function proxiedFetch(
   url: string,
   init?: RequestInit,
@@ -36,6 +59,16 @@ export async function proxiedFetch(
   // need no CORS proxy at all — and must never be routed through one,
   // since that would send engine-tier traffic to a third party.
   if (url.startsWith('/')) return fetch(url, init);
+
+  // Loopback/private targets (the user's own machine / LAN): fetch
+  // directly. A remote proxy physically cannot reach them.
+  if (isLoopbackOrPrivateUrl(url)) {
+    const signal = AbortSignal.any([
+      ...(init?.signal ? [init.signal] : []),
+      AbortSignal.timeout(attemptTimeoutMs),
+    ]);
+    return fetch(url, { ...init, signal });
+  }
 
   let lastError: unknown = new Error('All CORS proxies failed');
 

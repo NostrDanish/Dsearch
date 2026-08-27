@@ -39,6 +39,7 @@ import { useSearxngInstances } from '@/hooks/useSearxngInstances';
 import { useSearchRelayPool, useIndexRelayPool, useGitRelayPool, useWikiRelayPool } from '@/hooks/useSearchRelayPool';
 import { useRelayDiscovery } from '@/hooks/useRelayDiscovery';
 import { getBraveApiKey, setBraveApiKey } from '@/lib/providers/brave';
+import { getParallelApiKey, setParallelApiKey } from '@/lib/providers/parallel';
 import { ALL_PROVIDERS } from '@/lib/providers/registry';
 import { AI_PROVIDERS, getAIProvider, PPQ_INVITE_URL } from '@/lib/ai/registry';
 import { COMMUNITY_AI_MODEL, getAIConfig, hasOwnAIKey, resolveAIConfig, setAIConfig, type AIConfig } from '@/lib/aiConfig';
@@ -795,6 +796,7 @@ const ENGINE_META: Record<string, { icon: React.ReactNode; note: string }> = {
   searxng: { icon: <Globe className="w-4 h-4" />, note: 'The fallback band — meta-search across dozens of engines via discovered community instances' },
   duckduckgo: { icon: <Globe className="w-4 h-4" />, note: 'The lead web engine by default (direct HTML endpoint)' },
   brave: { icon: <Shield className="w-4 h-4" />, note: 'Official Brave Search API — add your free key in the Brave tab and Brave becomes the lead engine' },
+  parallel: { icon: <Sparkles className="w-4 h-4" />, note: 'Parallel Search API — long dense excerpts (BYOK, free starting credits); every result feeds the index' },
   'web-index': { icon: <Search className="w-4 h-4" />, note: 'The shared SIP-01 community web index (kind 39697)' },
   'cached-index': { icon: <Database className="w-4 h-4" />, note: 'Legacy federated query cache (kind 30078)' },
   'keyword-stakes': { icon: <Star className="w-4 h-4" />, note: 'Community keyword stakes — Presearch-style top placements' },
@@ -1136,9 +1138,22 @@ function AISection() {
                     id="ai-endpoint"
                     value={cfg.endpoint}
                     onChange={(e) => save({ endpoint: e.target.value })}
-                    placeholder="https://api.ppq.ai/v1"
+                    placeholder={cfg.providerId === 'custom' ? 'https://your-server.example/v1' : 'https://api.ppq.ai/v1'}
                     className="font-mono text-sm"
                   />
+                  {cfg.providerId === 'custom' && !cfg.endpoint.trim() && (
+                    <p className="text-[11px] text-amber-600 dark:text-amber-500">
+                      Custom provider needs an endpoint — the OpenAI-compatible base URL
+                      (…/v1). Keyless is fine for local/self-hosted servers.
+                    </p>
+                  )}
+                  {cfg.providerId === 'ollama' && (
+                    <p className="text-[11px] text-muted-foreground/70">
+                      Local endpoints are called directly (never through the proxy). Ollama must
+                      allow this site's origin — <code className="font-mono">OLLAMA_ORIGINS=*</code> if
+                      in doubt.
+                    </p>
+                  )}
                 </div>
 
                 {/* Model */}
@@ -1747,6 +1762,111 @@ function InstancesSection() {
   );
 }
 
+/** Parallel tab — BYOK card for the Parallel Search API. */
+function ParallelSection() {
+  return (
+    <section className="mb-10">
+      <h2 className="text-sm font-semibold mb-1">Parallel Search</h2>
+      <p className="text-xs text-muted-foreground mb-4">
+        Parallel's Search API returns ranked pages with long, dense excerpts — noticeably
+        better snippets, and every result feeds the shared SIP-01 index with richer
+        descriptions. Free starting credits when you create a key.
+      </p>
+      <ParallelKeyCard />
+    </section>
+  );
+}
+
+/** Parallel Search API key (BYOK — free starting credits, stored locally only). */
+function ParallelKeyCard() {
+  const { toast } = useToast();
+  const { config, updateConfig } = useAppContext();
+  const [key, setKey] = useState(() => getParallelApiKey());
+
+  const active = getParallelApiKey().length > 0;
+
+  /** Adding a key opts the engine in; removing it parks the engine again. */
+  const syncEngineToggle = (hasKey: boolean) => {
+    const current = config.disabledProviders ?? [];
+    if (hasKey && current.includes('parallel')) {
+      updateConfig(() => ({ disabledProviders: current.filter((p) => p !== 'parallel') }));
+    } else if (!hasKey && !current.includes('parallel')) {
+      updateConfig(() => ({ disabledProviders: [...current, 'parallel'] }));
+    }
+  };
+
+  return (
+    <Card className={cn('mb-6 transition-colors', active ? 'border-primary/30 bg-primary/5' : 'border-border/60')}>
+      <CardContent className="py-4">
+        <div className="flex items-center gap-2 mb-2">
+          <Sparkles className="w-4 h-4 text-primary" />
+          <span className="text-sm font-medium">Parallel Search API</span>
+          {active && (
+            <Badge variant="outline" className="text-[10px] border-primary/30 text-primary">
+              Active
+            </Badge>
+          )}
+        </div>
+        <p className="text-xs text-muted-foreground mb-3 leading-relaxed">
+          Create a free key at Parallel's platform (starting credits included), paste it here —
+          it's stored only in this browser and joins every web search instantly.{' '}
+          <a
+            href="https://platform.parallel.ai"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary hover:underline inline-flex items-center gap-0.5"
+          >
+            Get a key
+            <ExternalLink className="w-3 h-3" />
+          </a>
+        </p>
+        <div className="flex gap-2">
+          <Input
+            type="password"
+            placeholder="Your Parallel API key"
+            value={key}
+            onChange={(e) => setKey(e.target.value)}
+            className="font-mono text-sm"
+            aria-label="Parallel Search API key"
+            autoComplete="off"
+          />
+          <Button
+            variant={active ? 'outline' : 'default'}
+            className="shrink-0"
+            onClick={() => {
+              setParallelApiKey(key);
+              const nowActive = getParallelApiKey().length > 0;
+              syncEngineToggle(nowActive);
+              toast({
+                title: nowActive ? 'Parallel enabled' : 'Parallel disabled',
+                description: nowActive
+                  ? 'Parallel results now join every web search — and grow the shared index.'
+                  : 'Key removed — the Parallel provider is dormant.',
+              });
+            }}
+          >
+            {active ? 'Update' : 'Save'}
+          </Button>
+          {active && (
+            <Button
+              variant="ghost"
+              className="shrink-0 text-muted-foreground hover:text-destructive"
+              onClick={() => {
+                setParallelApiKey('');
+                setKey('');
+                syncEngineToggle(false);
+                toast({ title: 'Parallel disabled', description: 'Key removed.' });
+              }}
+            >
+              <Trash2 className="w-4 h-4" />
+            </Button>
+          )}
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
 /** Brave tab — BYOK card for the Brave Search API. */
 function BraveSection() {
   return (
@@ -1982,6 +2102,7 @@ export default function Settings() {
             <TabsTrigger value="engines">Engines</TabsTrigger>
             <TabsTrigger value="searxng">SearXNG</TabsTrigger>
             <TabsTrigger value="brave">Brave</TabsTrigger>
+            <TabsTrigger value="parallel">Parallel</TabsTrigger>
             <TabsTrigger value="ai">AI</TabsTrigger>
             <TabsTrigger value="relays">Relays</TabsTrigger>
             <TabsTrigger value="indexer">Auto Indexer</TabsTrigger>
@@ -2011,6 +2132,11 @@ export default function Settings() {
           {/* Brave Search API key */}
           <TabsContent value="brave">
             <BraveSection />
+          </TabsContent>
+
+          {/* Parallel Search API key */}
+          <TabsContent value="parallel">
+            <ParallelSection />
           </TabsContent>
 
           {/* AI answer layer */}

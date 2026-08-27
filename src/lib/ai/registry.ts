@@ -39,6 +39,10 @@ export const AI_PROVIDERS: AIProvider[] = [
     id: 'custom',
     name: 'Custom (OpenAI-compatible)',
     defaultEndpoint: '',
+    // Custom/self-hosted endpoints are often keyless (vLLM, llama.cpp,
+    // local gateways). requiresKey: false so the fields unlock and the
+    // endpoint actually runs without a pasted key — a key still works.
+    requiresKey: false,
   }),
 ];
 

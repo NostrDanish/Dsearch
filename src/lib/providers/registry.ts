@@ -15,6 +15,7 @@ import { stakesProvider } from './stakes';
 import { searxngProvider } from './searxng';
 import { duckduckgoProvider } from './duckduckgo';
 import { braveProvider } from './brave';
+import { parallelProvider } from './parallel';
 import { torProvider } from './tor';
 import { wikipediaProvider } from './wikipedia';
 import { hackerNewsProvider } from './hacker-news';
@@ -26,13 +27,15 @@ import { nostrWikiProvider } from './wiki';
  * All registered search providers, in display/priority order.
  *
  * Web engines lead — Brave first (it's the default engine when the user's
- * API key is set, and hidden entirely when not), then DuckDuckGo, then the
- * SearXNG fallback — then the community index (web-index + cached-index),
- * then the rest. Everything runs in parallel — order drives the
- * provider-status chips and result streaming, not speed.
+ * API key is set, and hidden entirely when not), then Parallel (same BYOK
+ * pattern — long dense excerpts), then DuckDuckGo, then the SearXNG
+ * fallback — then the community index (web-index + cached-index), then the
+ * rest. Everything runs in parallel — order drives the provider-status
+ * chips and result streaming, not speed.
  */
 export const ALL_PROVIDERS: SearchProvider[] = [
   braveProvider,
+  parallelProvider,
   duckduckgoProvider,
   searxngProvider,
   webIndexProvider,

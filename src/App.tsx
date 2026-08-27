@@ -51,13 +51,14 @@ const defaultConfig: AppConfig = {
   voteWithIdentity: false,
   // Engines off by default (speed + principle of least surprise):
   //   brave         — BYOK; dormant until the user adds their own key anyway
+  //   parallel      — BYOK; dormant until the user adds their own key anyway
   //   cached-index  — legacy kind 30078 cache (frozen/read-only; SIP-01 wins)
   //   wikipedia     — Wiki tab engine (tab hidden by default too)
   //   tor           — .onion search (Tor tab hidden by default)
   //   stackoverflow — Code tab engine (tab hidden by default too)
   // The SIP-01 web index, SearXNG, DuckDuckGo, Nostr, stakes, and community
   // stay on. Users re-enable anything in Settings → Engines.
-  disabledProviders: ['brave', 'cached-index', 'wikipedia', 'tor', 'stackoverflow'],
+  disabledProviders: ['brave', 'parallel', 'cached-index', 'wikipedia', 'tor', 'stackoverflow'],
   // Language filter defaults to the browser's primary language (English
   // when it can't be detected). Only applies while the user has never
   // touched the filter — a stored choice, including a cleared one, wins.
