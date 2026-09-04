@@ -98,7 +98,7 @@
   }
 }
 
-/* ─── Light theme (Presearch-branded) ─── */
+/* ─── Light theme (DSearch-branded) ─── */
 :root {
   --radius: 0.75rem;
 
@@ -111,40 +111,40 @@
   --popover: hsl(0 0% 100%);
   --popover-foreground: hsl(222 47% 11%);
 
-  /* Presearch dodger blue, deepened a notch for AA contrast on white */
-  --primary: hsl(212 90% 44%);
+  /* DSearch signal amber, deepened for AA contrast on white */
+  --primary: hsl(28 92% 36%);
   --primary-foreground: hsl(0 0% 100%);
 
-  --secondary: hsl(212 40% 94%);
+  --secondary: hsl(36 30% 94%);
   --secondary-foreground: hsl(222 47% 11%);
 
-  --muted: hsl(212 30% 94%);
+  --muted: hsl(36 20% 94%);
   --muted-foreground: hsl(217 15% 42%);
 
-  --accent: hsl(212 50% 93%);
+  --accent: hsl(38 55% 92%);
   --accent-foreground: hsl(222 47% 11%);
 
   --destructive: hsl(0 74% 51%);
   --destructive-foreground: hsl(0 0% 100%);
 
-  --border: hsl(214 25% 88%);
-  --input: hsl(214 25% 88%);
-  --ring: hsl(212 90% 44%);
+  --border: hsl(30 20% 88%);
+  --input: hsl(30 20% 88%);
+  --ring: hsl(28 92% 36%);
 
-  --chart-1: hsl(212 90% 44%);
+  --chart-1: hsl(28 92% 36%);
   --chart-2: hsl(190 80% 38%);
   --chart-3: hsl(197 37% 24%);
   --chart-4: hsl(43 74% 56%);
-  --chart-5: hsl(27 87% 60%);
+  --chart-5: hsl(340 70% 55%);
 
-  --sidebar: hsl(210 40% 97%);
+  --sidebar: hsl(36 30% 97%);
   --sidebar-foreground: hsl(222 30% 20%);
-  --sidebar-primary: hsl(212 90% 44%);
+  --sidebar-primary: hsl(28 92% 36%);
   --sidebar-primary-foreground: hsl(0 0% 100%);
-  --sidebar-accent: hsl(212 40% 94%);
+  --sidebar-accent: hsl(36 30% 94%);
   --sidebar-accent-foreground: hsl(222 30% 10%);
-  --sidebar-border: hsl(214 25% 88%);
-  --sidebar-ring: hsl(212 90% 44%);
+  --sidebar-border: hsl(30 20% 88%);
+  --sidebar-ring: hsl(28 92% 36%);
 
   /* Source colors */
   --nostr: hsl(263 70% 50%);
@@ -153,11 +153,11 @@
   --clearnet-foreground: hsl(0 0% 100%);
   --tor: hsl(275 60% 45%);
   --tor-foreground: hsl(0 0% 100%);
-  --i2p: hsl(30 85% 45%);
+  --i2p: hsl(16 80% 42%);
   --i2p-foreground: hsl(0 0% 100%);
 }
 
-/* ─── Dark theme (Presearch navy — the brand dark) ─── */
+/* ─── Dark theme (DSearch night grid — the brand dark) ─── */
 .dark {
   --background: hsl(222 47% 6%);
   --foreground: hsl(214 40% 96%);
@@ -168,8 +168,8 @@
   --popover: hsl(221 44% 9%);
   --popover-foreground: hsl(214 40% 96%);
 
-  --primary: hsl(212 100% 59%);
-  --primary-foreground: hsl(0 0% 100%);
+  --primary: hsl(38 92% 60%);
+  --primary-foreground: hsl(24 50% 8%);
 
   --secondary: hsl(220 35% 14%);
   --secondary-foreground: hsl(214 40% 96%);
@@ -185,9 +185,9 @@
 
   --border: hsl(220 30% 17%);
   --input: hsl(220 30% 17%);
-  --ring: hsl(212 100% 59%);
+  --ring: hsl(38 92% 60%);
 
-  --chart-1: hsl(212 100% 59%);
+  --chart-1: hsl(38 92% 60%);
   --chart-2: hsl(190 90% 50%);
   --chart-3: hsl(263 70% 62%);
   --chart-4: hsl(43 74% 60%);
@@ -195,12 +195,12 @@
 
   --sidebar: hsl(222 47% 7%);
   --sidebar-foreground: hsl(214 40% 96%);
-  --sidebar-primary: hsl(212 100% 59%);
-  --sidebar-primary-foreground: hsl(0 0% 100%);
+  --sidebar-primary: hsl(38 92% 60%);
+  --sidebar-primary-foreground: hsl(24 50% 8%);
   --sidebar-accent: hsl(220 35% 13%);
   --sidebar-accent-foreground: hsl(214 40% 96%);
   --sidebar-border: hsl(220 30% 15%);
-  --sidebar-ring: hsl(212 100% 59%);
+  --sidebar-ring: hsl(38 92% 60%);
 
   /* Source colors */
   --nostr: hsl(263 70% 66%);
@@ -209,20 +209,20 @@
   --clearnet-foreground: hsl(0 0% 100%);
   --tor: hsl(275 70% 62%);
   --tor-foreground: hsl(0 0% 100%);
-  --i2p: hsl(30 85% 55%);
+  --i2p: hsl(16 80% 52%);
   --i2p-foreground: hsl(0 0% 100%);
 }
 
-/* ─── Dark theme extras (the Presearch brand layer) ─── */
-/* The dark theme IS the Presearch theme: navy palette + horizon glow. */
+/* ─── Dark theme extras (the DSearch brand layer) ─── */
+/* The dark theme IS the DSearch theme: night-grid palette + amber horizon glow. */
 .dark body {
   background-image:
-    radial-gradient(ellipse 90% 55% at 50% -15%, hsl(212 100% 59% / 0.14), transparent),
+    radial-gradient(ellipse 90% 55% at 50% -15%, hsl(38 92% 60% / 0.12), transparent),
     radial-gradient(ellipse 60% 40% at 85% 110%, hsl(263 70% 55% / 0.06), transparent);
   background-attachment: fixed;
 }
 
-/* Hacker theme keeps its own scrollbar (green), so scope the blue one out. */
+/* Hacker theme keeps its own scrollbar (green), so scope the amber one out. */
 .dark:not(.hacker) ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -238,16 +238,16 @@
 }
 
 .dark:not(.hacker) ::-webkit-scrollbar-thumb:hover {
-  background: hsl(212 80% 40%);
+  background: hsl(38 80% 42%);
 }
 
-/* Dark theme: brand blue halo */
+/* Dark theme: brand amber halo */
 .dark .glow-primary {
-  box-shadow: 0 0 20px hsl(212 100% 59% / 0.25), 0 0 50px hsl(212 100% 59% / 0.08);
+  box-shadow: 0 0 20px hsl(38 92% 60% / 0.25), 0 0 50px hsl(38 92% 60% / 0.08);
 }
 
 .dark .glow-primary-lg {
-  box-shadow: 0 0 30px hsl(212 100% 59% / 0.3), 0 0 80px hsl(212 100% 59% / 0.12);
+  box-shadow: 0 0 30px hsl(38 92% 60% / 0.3), 0 0 80px hsl(38 92% 60% / 0.12);
 }
 
 /* ─── Hacker theme (green-on-black terminal) ─── */

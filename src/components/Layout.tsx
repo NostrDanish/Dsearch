@@ -12,6 +12,14 @@ interface LayoutProps {
   minimal?: boolean;
 }
 
+/** The ecosystem hub sections — desktop nav + footer. */
+const HUB_LINKS = [
+  { to: '/network', label: 'Network' },
+  { to: '/build', label: 'Build' },
+  { to: '/protocol', label: 'Protocol' },
+  { to: '/community', label: 'Community' },
+] as const;
+
 export function Layout({ children, minimal = false }: LayoutProps) {
   const location = useLocation();
   const isHome = location.pathname === '/';
@@ -35,17 +43,38 @@ export function Layout({ children, minimal = false }: LayoutProps) {
         minimal && 'border-transparent bg-transparent backdrop-blur-none',
       )}>
         <div className="container flex items-center justify-between h-14 gap-4">
-          <Link to="/" className="flex items-center gap-2.5 shrink-0 group">
-            <div className="relative flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 group-hover:border-primary/40 transition-colors">
-              <Search className="w-4 h-4 text-primary" />
-            </div>
+          <Link to="/" className="flex items-center gap-2.5 shrink-0 group" aria-label="DSearch home">
+            <img
+              src="/favicon.svg"
+              alt=""
+              className="w-8 h-8 rounded-lg border border-primary/20 group-hover:border-primary/40 transition-colors"
+            />
             <span className="font-semibold text-lg tracking-tight">
-              <span className="text-primary">Pre</span>
-              <span className="text-foreground">searchstr</span>
+              <span className="text-primary">D</span>
+              <span className="text-foreground">Search</span>
             </span>
           </Link>
 
-          <nav className="flex items-center gap-1">
+          {/* Hub navigation — the ecosystem sections. Desktop only; mobile
+              users reach the same pages from the footer. */}
+          <nav className="hidden lg:flex items-center gap-1" aria-label="Ecosystem">
+            {HUB_LINKS.map((link) => (
+              <Button
+                key={link.to}
+                variant="ghost"
+                size="sm"
+                asChild
+                className={cn(
+                  'text-muted-foreground hover:text-foreground',
+                  location.pathname.startsWith(link.to) && 'text-foreground bg-accent/50',
+                )}
+              >
+                <Link to={link.to}>{link.label}</Link>
+              </Button>
+            ))}
+          </nav>
+
+          <nav className="flex items-center gap-1" aria-label="App">
             {!isHome && (
               <Button variant="ghost" size="sm" asChild className="text-muted-foreground hover:text-foreground">
                 <Link to="/">
@@ -90,11 +119,16 @@ export function Layout({ children, minimal = false }: LayoutProps) {
       <footer className="border-t border-border/50 py-6">
         <div className="container flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
           <div className="flex items-center gap-2">
-            <span className="font-semibold"><span className="text-primary/70">Pre</span>searchstr</span>
+            <span className="font-semibold"><span className="text-primary/70">D</span>Search</span>
             <span className="text-border">|</span>
-            <span>Community-driven search, powered by Nostr</span>
+            <span>Search the Web. Build the Index.</span>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
+            {HUB_LINKS.map((link) => (
+              <Link key={link.to} to={link.to} className="hover:text-foreground transition-colors">
+                {link.label}
+              </Link>
+            ))}
             <Link to="/explore" className="hover:text-foreground transition-colors">Explore</Link>
             <Link to="/policy" className="hover:text-foreground transition-colors">Content Policy</Link>
             <Link to="/about" className="hover:text-foreground transition-colors">About</Link>

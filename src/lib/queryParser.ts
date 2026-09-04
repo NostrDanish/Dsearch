@@ -1,5 +1,5 @@
 /**
- * Presearchstr structured query parser — INTERNAL search-engine machinery.
+ * DSearch structured query parser — INTERNAL search-engine machinery.
  *
  * Turns the raw user query into a structured representation:
  *
@@ -30,7 +30,7 @@
  * unclosed quote/paren, empty filter value, unknown field) degrades to
  * useful fallback behavior with `hadErrors` set.
  *
- * This is deliberately NOT a protocol — it's Presearchstr's local query
+ * This is deliberately NOT a protocol — it's DSearch's local query
  * understanding. SIP-01 events are untouched; relays still get the raw
  * query as a NIP-50 acceleration hint.
  */

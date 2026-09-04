@@ -57,7 +57,7 @@ export function buildVoteEvent(target: VoteTarget, direction: VoteDirection): {
     content: direction === 1 ? '+' : '-',
     tags: [
       target.tag,
-      ['alt', `Presearchstr ${direction === 1 ? 'upvote' : 'downvote'}`],
+      ['alt', `DSearch ${direction === 1 ? 'upvote' : 'downvote'}`],
     ],
   };
 }

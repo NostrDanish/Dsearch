@@ -1,11 +1,11 @@
 {
-  "name": "Presearchstr",
-  "short_name": "Presearchstr",
-  "description": "Community-driven, Nostr-native search — the federated search engine where every search grows the shared index.",
+  "name": "DSearch",
+  "short_name": "DSearch",
+  "description": "Search the Web. Build the Index. The decentralized search engine built by its users — Nostr-native, federated via SIP-01, owned by no one.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#070b1a",
-  "theme_color": "#2d8eff",
+  "theme_color": "#f0b45a",
   "icons": [
     {
       "src": "/favicon.svg",

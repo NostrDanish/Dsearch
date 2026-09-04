@@ -1,5 +1,5 @@
 /**
- * Presearchstr — Cloudflare Worker config
+ * DSearch — Cloudflare Worker config
  *
  * The worker (worker.ts) serves the static app AND the engine-AI proxy at
  * /api/ai/* — same origin, so no CORS and no key ever reaches a browser.
@@ -17,7 +17,7 @@
  * reports "not configured" and users simply add their own key.
  */
 {
-  "name": "presearchstr",
+  "name": "dsearch",
   "main": "worker.ts",
   "compatibility_date": "2026-08-01",
   "assets": {

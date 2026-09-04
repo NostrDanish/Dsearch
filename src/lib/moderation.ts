@@ -69,7 +69,7 @@ export const REPORT_NS = '0xsearchstr.abuse';
 export const ROLES_KIND = 30078;
 export const ADMIN_ROLES_D_TAG = 'presearchstr:admin-roles';
 export const MOD_ROLES_D_TAG = 'presearchstr:mod-roles';
-export const ROLES_T_TAG = 'presearchstr-roles';
+export const ROLES_T_TAG = 'presearchstr-roles'; // frozen federation namespace — do not rename (breaks existing role lists)
 
 export type AppRole = 'owner' | 'admin' | 'moderator' | 'user';
 
@@ -99,7 +99,7 @@ export function buildRoleListEvent(dTag: string, pubkeys: string[]): {
     tags: [
       ['d', dTag],
       ['t', ROLES_T_TAG],
-      ['alt', `Presearchstr ${label} list`],
+      ['alt', `DSearch ${label} list`],
     ],
   };
 }
@@ -156,7 +156,7 @@ export function buildHideLabel(target: { url?: string; eventId?: string }): {
       ['L', MODERATION_NS],
       ['l', 'hidden', MODERATION_NS],
       targetTag,
-      ['alt', `Presearchstr moderation: hidden ${targetTag[0] === 'u' ? targetTag[1] : 'event'}`],
+      ['alt', `DSearch moderation: hidden ${targetTag[0] === 'u' ? targetTag[1] : 'event'}`],
     ],
   };
 }

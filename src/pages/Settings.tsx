@@ -71,7 +71,7 @@ function AppearanceSection() {
   return (
     <section className="mb-10">
       <h2 className="text-sm font-semibold mb-1">Appearance</h2>
-      <p className="text-xs text-muted-foreground mb-4">Choose how Presearchstr looks.</p>
+      <p className="text-xs text-muted-foreground mb-4">Choose how DSearch looks.</p>
       <div className="grid grid-cols-2 gap-2">
         {THEMES.map((t) => {
           const active = theme === t.value;
@@ -428,7 +428,7 @@ function PrivacySection() {
       </div>
 
       <p className="text-[11px] text-muted-foreground/70 mt-3 leading-relaxed">
-        Presearchstr itself never logs, stores, or transmits your searches to its own servers — there are no
+        DSearch itself never logs, stores, or transmits your searches to its own servers — there are no
         servers. Contributed index entries are published to public Nostr relays under this device's dedicated
         indexing identity (see the Auto Indexer tab), never under your personal Nostr account, and never contain
         your query. For the full picture, read the <a href="/about" className="text-primary hover:underline">threat model</a>.
@@ -637,7 +637,7 @@ function YourRelaysSection() {
       <h2 className="text-sm font-semibold mb-1">Your Relays</h2>
       <p className="text-xs text-muted-foreground mb-4">
         Your NIP-65 relay list — where your profile, submissions, and other events are
-        published and read. Defaults to the Presearchstr app relays for new users;
+        published and read. Defaults to the DSearch app relays for new users;
         changes sync to Nostr (kind 10002) when you're logged in.
       </p>
       <Card className="border-border/60">
@@ -2079,8 +2079,8 @@ function InstanceRow({ inst, onRemove, onToggle }: {
 
 export default function Settings() {
   useSeoMeta({
-    title: 'Settings - Presearchstr',
-    description: 'Configure appearance and SearXNG instances for Presearchstr.',
+    title: 'Settings - DSearch',
+    description: 'Configure appearance, search engines, relays and indexing for DSearch.',
   });
 
   return (
@@ -2157,7 +2157,7 @@ export default function Settings() {
             <Separator className="mb-10" />
             <RelayPoolSection
               title="Search Relays"
-              description="NIP-50 relays queried in parallel for every full-text Nostr search — including the UNCAGED SIP cluster (web-index operators over the SIP-01 document index) plus auto-discovered NIP-11-verified relays. Presearchstr's defaults are suggestions — hide any of them or add your own."
+              description="NIP-50 relays queried in parallel for every full-text Nostr search — including the UNCAGED SIP cluster (web-index operators over the SIP-01 document index) plus auto-discovered NIP-11-verified relays. DSearch's defaults are suggestions — hide any of them or add your own."
               addLabel="Custom search relay URL"
               kind="search"
             />

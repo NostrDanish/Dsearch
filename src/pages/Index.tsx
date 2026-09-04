@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo, useEffect, useRef } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { useSeoMeta } from '@unhead/react';
 import { Search, Network, ExternalLink, Gem, ChevronLeft, ChevronRight } from 'lucide-react';
 
@@ -151,8 +151,8 @@ const Index = () => {
   const ai = useAIAnswer(activeQuery, organicResults, hasSearched && source !== 'i2p');
 
   useSeoMeta({
-    title: hasSearched ? `${activeQuery} - Presearchstr` : 'Presearchstr - Decentralized Search Aggregator',
-    description: 'Search Nostr first, enriched with privacy-respecting web results. No backend, no crawler, no tracking.',
+    title: hasSearched ? `${activeQuery} - DSearch` : 'DSearch — Search the Web. Build the Index.',
+    description: 'The decentralized search engine built by its users. Nostr-first, SIP-01 federated web index, enriched with privacy-respecting web results. No backend, no tracking.',
   });
 
   const handleSubmit = useCallback((value: string) => {
@@ -178,22 +178,27 @@ const Index = () => {
   if (!hasSearched) {
     return (
       <Layout minimal>
-        <div className="flex flex-col items-center justify-center min-h-[calc(100vh-8rem)] px-4">
+        <div className="flex flex-col items-center justify-center min-h-[calc(100vh-8rem)] px-4 py-16">
           <div className="text-center mb-10 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-4 motion-safe:duration-700">
             <div className="flex items-center justify-center mb-6">
               <div className="relative">
-                <div className="flex items-center justify-center w-16 h-16 rounded-2xl bg-primary/10 border border-primary/20 glow-primary-lg">
-                  <Search className="w-8 h-8 text-primary" />
-                </div>
+                <img
+                  src="/favicon.svg"
+                  alt=""
+                  className="w-16 h-16 rounded-2xl border border-primary/20 glow-primary-lg"
+                />
                 <div className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-primary animate-search-pulse" />
               </div>
             </div>
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-4">
-              <span className="text-primary">Pre</span>
-              <span className="text-foreground">searchstr</span>
+              <span className="text-primary">D</span>
+              <span className="text-foreground">Search</span>
             </h1>
             <p className="text-lg sm:text-xl text-muted-foreground max-w-lg mx-auto leading-relaxed">
-              The community-driven search engine. Powered by Nostr, owned by no one.
+              Search the Web. Build the Index.
+            </p>
+            <p className="text-sm text-muted-foreground/80 max-w-md mx-auto leading-relaxed mt-2">
+              An open, community-built decentralized search ecosystem — powered by Nostr, owned by no one.
             </p>
           </div>
 
@@ -231,20 +236,32 @@ const Index = () => {
             className="mt-8 motion-safe:animate-in motion-safe:fade-in motion-safe:duration-500 motion-safe:delay-700"
           />
 
-          {/* Community pillars — what makes this Presearch-on-Nostr */}
-          <div className="mt-10 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs text-muted-foreground/70 motion-safe:animate-in motion-safe:fade-in motion-safe:duration-500 motion-safe:delay-1000">
-            <span className="inline-flex items-center gap-1.5">
-              <Gem className="w-3 h-3 text-primary/70" />
-              Keyword staking with your Nostr key
-            </span>
-            <span className="inline-flex items-center gap-1.5">
-              <Search className="w-3 h-3 text-primary/70" />
-              Every search grows the shared index
-            </span>
-            <span className="inline-flex items-center gap-1.5">
-              <Network className="w-3 h-3 text-primary/70" />
-              Federated with 0xSearchstr
-            </span>
+          {/* The four pillars — what you can do inside the DSearch ecosystem */}
+          <div className="mt-12 grid grid-cols-2 lg:grid-cols-4 gap-3 w-full max-w-3xl motion-safe:animate-in motion-safe:fade-in motion-safe:duration-500 motion-safe:delay-1000">
+            <HomePillar
+              to="/explore"
+              icon={<Search className="w-4 h-4 text-primary" />}
+              title="Search"
+              description="The community-built web index"
+            />
+            <HomePillar
+              to="/build/crawlstr"
+              icon={<Gem className="w-4 h-4 text-primary" />}
+              title="Contribute"
+              description="Crawl the web, grow the index"
+            />
+            <HomePillar
+              to="/build"
+              icon={<Network className="w-4 h-4 text-primary" />}
+              title="Build"
+              description="Run a crawler, indexer or relay"
+            />
+            <HomePillar
+              to="/protocol"
+              icon={<ExternalLink className="w-4 h-4 text-primary" />}
+              title="Protocol"
+              description="Build on SIP, the open standard"
+            />
           </div>
         </div>
       </Layout>
@@ -557,6 +574,27 @@ function I2PDirectory({ query }: { query: string }) {
       </div>
       <BrowserFallback query={query} />
     </div>
+  );
+}
+
+/* ─── Home pillar card ─── */
+function HomePillar({ to, icon, title, description }: {
+  to: string;
+  icon: React.ReactNode;
+  title: string;
+  description: string;
+}) {
+  return (
+    <Link
+      to={to}
+      className="group flex flex-col items-start gap-2 rounded-xl border border-border/50 bg-card/50 p-4 text-left transition-colors hover:border-primary/30 hover:bg-primary/5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+    >
+      <span className="flex items-center justify-center w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 group-hover:border-primary/40 transition-colors">
+        {icon}
+      </span>
+      <span className="text-sm font-semibold text-foreground">{title}</span>
+      <span className="text-xs text-muted-foreground leading-relaxed">{description}</span>
+    </Link>
   );
 }
 

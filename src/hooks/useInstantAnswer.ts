@@ -152,7 +152,7 @@ async function fetchDuckDuckGoAnswer(query: string, signal?: AbortSignal): Promi
     format: 'json',
     no_html: '1',
     skip_disambig: '1',
-    t: 'presearchstr',
+    t: 'dsearch',
   });
   const target = `https://api.duckduckgo.com/?${params}`;
   const res = await proxiedFetch(target, {

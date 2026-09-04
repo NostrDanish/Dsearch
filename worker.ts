@@ -1,5 +1,5 @@
 /**
- * Presearchstr AI proxy — Cloudflare Worker.
+ * DSearch AI proxy — Cloudflare Worker.
  *
  * ONE job: let the engine operator offer AI answers to all users without
  * the API key ever touching a browser, the repo, or a public response.

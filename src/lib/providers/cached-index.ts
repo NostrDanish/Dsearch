@@ -3,15 +3,14 @@
  *
  * Before hitting any external API, this provider checks if the query
  * has been searched before and has cached results published by ANY
- * trusted indexer (Presearchstr bot, 0xSearchstr bot, …).
+ * trusted indexer (DSearch bot, 0xSearchstr bot, …).
  *
  * The index is shared across every compatible client: same kind,
  * same d-tags, same t-tags — only the signer differs per app. So a
- * search on 0xSearchstr warms the cache for Presearchstr users and
+ * search on 0xSearchstr warms the cache for DSearch users and
  * vice versa.
  */
 import type { NostrEvent, NostrFilter } from '@nostrify/nostrify';
-
 import { getSearchRelay } from '@/lib/searchRelays';
 import { getSearchRelayUrls, getIndexRelayUrls } from '@/lib/appRelays';
 import {
@@ -21,27 +20,22 @@ import {
   parseCacheEvent,
 } from '@/lib/searchIndex';
 import type { SearchProvider, SearchOptions, ProviderSearchResponse } from './types';
-
 export const cachedIndexProvider: SearchProvider = {
   id: 'cached-index',
   name: 'Index',
   source: 'web', // cached results are primarily web results
   privacy: 'nostr',
   privacyNote: 'Reads previous results from Nostr relays. Relay operators see the query, but no account is linked.',
-
   async search({ query, signal }: SearchOptions): Promise<ProviderSearchResponse> {
     if (!query.trim()) return { results: [] };
-
     const normalized = normalizeQuery(query);
     const dTag = `0xsearchstr:cache:${normalized}`;
-
     const filter: NostrFilter = {
       kinds: [INDEX_KIND],
       authors: [...INDEXER_PUBKEYS], // CRITICAL: only trust known indexer events
       '#d': [dTag],
       limit: INDEXER_PUBKEYS.length, // one event per indexer
     };
-
     // Race the user's search + index relays for the fastest cache hit
     // (union: legacy cache events predate the index-pool split).
     const results = await Promise.allSettled(
@@ -55,7 +49,6 @@ export const cachedIndexProvider: SearchProvider = {
         });
       }),
     );
-
     // Find the first valid cache event (most recent across all indexers).
     const candidates: NostrEvent[] = [];
     for (const r of results) {
@@ -63,14 +56,12 @@ export const cachedIndexProvider: SearchProvider = {
       candidates.push(...r.value);
     }
     candidates.sort((a, b) => b.created_at - a.created_at);
-
     for (const event of candidates) {
       const cached = parseCacheEvent(event);
       if (cached && cached.results.length > 0) {
         return { results: cached.results };
       }
     }
-
     return { results: [] };
   },
 };

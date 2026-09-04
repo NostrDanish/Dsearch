@@ -8,6 +8,15 @@ import Settings from "./pages/Settings";
 import Explore from "./pages/Explore";
 import Admin from "./pages/Admin";
 import RemoteLoginSuccess from "./pages/RemoteLoginSuccess";
+import NetworkPage from "./pages/Network";
+import BuildPage from "./pages/Build";
+import BuildCrawlstr from "./pages/BuildCrawlstr";
+import BuildIndexstr from "./pages/BuildIndexstr";
+import BuildRelay from "./pages/BuildRelay";
+import ProtocolPage from "./pages/Protocol";
+import ProtocolSip01 from "./pages/ProtocolSip01";
+import ProtocolSip02 from "./pages/ProtocolSip02";
+import CommunityPage from "./pages/Community";
 import { NIP19Page } from "./pages/NIP19Page";
 import NotFound from "./pages/NotFound";
 
@@ -21,6 +30,16 @@ export function AppRouter() {
         <Route path="/about" element={<About />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="/explore" element={<Explore />} />
+        {/* Ecosystem hub */}
+        <Route path="/network" element={<NetworkPage />} />
+        <Route path="/build" element={<BuildPage />} />
+        <Route path="/build/crawlstr" element={<BuildCrawlstr />} />
+        <Route path="/build/indexstr" element={<BuildIndexstr />} />
+        <Route path="/build/relay" element={<BuildRelay />} />
+        <Route path="/protocol" element={<ProtocolPage />} />
+        <Route path="/protocol/sip-01" element={<ProtocolSip01 />} />
+        <Route path="/protocol/sip-02" element={<ProtocolSip02 />} />
+        <Route path="/community" element={<CommunityPage />} />
         {/* Hidden owner console — not linked in any nav */}
         <Route path="/admin" element={<Admin />} />
         {/* Legacy: instance management moved into Settings */}

@@ -142,7 +142,7 @@ export interface IndexObservationInput {
   tags?: string[];
   language?: string;
   published?: number;
-  source?: string; // indexer software id, e.g. "0xpresearchstr-web/1"
+  source?: string; // indexer software id, e.g. "dsearch-web/1"
   /* Registered extension tags (spec §9.2) — all optional, all validated. */
   /** Logical document type: page, article, repository, video, image, file, … */
   type?: string;
@@ -367,6 +367,6 @@ export function observationFromResult(result: SearchResult): IndexObservationInp
     image: result.thumbnail,
     tags: result.tags,
     published: result.timestamp,
-    source: 'presearchstr-web/1',
+    source: 'dsearch-web/1',
   };
 }

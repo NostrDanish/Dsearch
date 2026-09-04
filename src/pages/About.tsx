@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { useSeoMeta } from '@unhead/react';
 import {
   Search, Zap, Globe, Database, ArrowRight, Lock, Code,
@@ -11,8 +12,8 @@ import { Badge } from '@/components/ui/badge';
 
 export default function About() {
   useSeoMeta({
-    title: 'About - Presearchstr',
-    description: 'Learn about Presearchstr — the community-driven, Nostr-native fork of 0xSearchstr with Presearch-style keyword staking. Nostr-first, with SearXNG, Wikipedia, Hacker News, and Tor fallback.',
+    title: 'About - DSearch',
+    description: 'Learn about DSearch — the decentralized search engine built by its users. A community web index on Nostr (SIP-01), keyword staking, and privacy-first results across Nostr, the clearnet, and dark web services.',
   });
 
   return (
@@ -20,19 +21,46 @@ export default function About() {
       <div className="container max-w-3xl py-10">
         {/* Header */}
         <div className="flex items-center gap-3 mb-2">
-          <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-primary/10 border border-primary/20">
-            <Search className="w-5 h-5 text-primary" />
-          </div>
-          <h1 className="text-3xl font-bold tracking-tight">About Presearchstr</h1>
+          <img src="/favicon.svg" alt="" className="w-10 h-10 rounded-xl border border-primary/20" />
+          <h1 className="text-3xl font-bold tracking-tight">About DSearch</h1>
         </div>
         <p className="text-muted-foreground mb-8 leading-relaxed max-w-2xl">
-          The <strong>community-driven fork of 0xSearchstr</strong>, inspired by Presearch.
-          A decentralized search aggregator built on a <strong>plugin-based provider architecture</strong>.
-          Every search source is a standalone provider that returns a universal <code className="text-xs bg-muted px-1.5 py-0.5 rounded font-mono">SearchResult[]</code>.
-          The UI merges, deduplicates, and ranks results from all providers — no backend, no crawler, no tracking.
+          <strong className="text-foreground">Search the Web. Build the Index.</strong>{' '}
+          DSearch is the decentralized search engine built by its users — a search engine and the
+          home of an open search-infrastructure ecosystem. Every search source is a standalone provider
+          returning a universal <code className="text-xs bg-muted px-1.5 py-0.5 rounded font-mono">SearchResult[]</code>.
+          The UI merges, deduplicates, and ranks results from all providers — no backend, no tracking.
         </p>
 
         <Separator className="mb-8" />
+
+        {/* Lineage */}
+        <h2 className="text-xl font-semibold mb-4">Lineage</h2>
+        <Card className="mb-8 border-primary/20">
+          <CardContent className="py-6">
+            <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+              DSearch is the independent continuation of several iterations of community
+              decentralized-search work. Each generation added a layer of the stack we run today:
+            </p>
+            <div className="space-y-3">
+              {[
+                { name: '0xSearchstr', role: 'The original Nostr-native search aggregator — provider architecture, federated query cache, keyword stakes, term signals.' },
+                { name: 'UNCAGED Engine', role: 'The minimal template distillation — the pure search core others can build engines on.' },
+                { name: 'Presearchstr', role: 'The community fork — Presearch-style keyword staking rebuilt on Nostr keys, language-aware engine pools, structured queries, AI answers.' },
+                { name: 'DSearch', role: 'The independent ecosystem — the search engine plus the protocol, crawlers, indexers, and relays under one open roof.', current: true },
+              ].map((item) => (
+                <div key={item.name} className={`flex items-start gap-3 p-3 rounded-lg border ${item.current ? 'bg-primary/5 border-primary/30' : 'bg-muted/40 border-border/50'}`}>
+                  <span className={`mt-0.5 shrink-0 font-mono text-sm ${item.current ? 'text-primary' : 'text-muted-foreground/60'}`}>{item.current ? '▸' : '·'}</span>
+                  <div>
+                    <span className="text-sm font-semibold text-foreground">{item.name}</span>
+                    {item.current && <Badge variant="default" className="ml-2 text-[10px]">you are here</Badge>}
+                    <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">{item.role}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
 
         {/* Federation */}
         <h2 className="text-xl font-semibold mb-4">One Index, Many Frontends</h2>
@@ -41,7 +69,7 @@ export default function About() {
             <div className="flex items-start gap-3 mb-4">
               <Users className="w-5 h-5 text-primary shrink-0 mt-0.5" />
               <p className="text-sm text-muted-foreground leading-relaxed">
-                Presearchstr and 0xSearchstr share <strong className="text-foreground">one federated search index</strong>.
+                DSearch and 0xSearchstr share <strong className="text-foreground">one federated search index</strong>.
                 Both publish the SIP-01 web document index
                 (<code className="text-xs bg-muted px-1 py-0.5 rounded font-mono">kind 39697</code>, signed by per-device indexing
                 identities), and both read the legacy query cache
@@ -56,7 +84,7 @@ export default function About() {
                 <p className="text-xs text-muted-foreground font-mono break-all">12ad55ad…77d199</p>
               </div>
               <div className="p-3 rounded-lg bg-primary/5 border border-primary/20">
-                <p className="font-medium text-foreground mb-1">Presearchstr legacy signer (retired)</p>
+                <p className="font-medium text-foreground mb-1">DSearch legacy signer (retired)</p>
                 <p className="text-xs text-muted-foreground font-mono break-all">be7cad9a…c4289</p>
                 <p className="text-[11px] text-muted-foreground/70 mt-1">Signed the legacy query cache before SIP-01 — reads still trust its history</p>
               </div>
@@ -69,15 +97,43 @@ export default function About() {
           </CardContent>
         </Card>
 
+        {/* Ecosystem */}
+        <h2 className="text-xl font-semibold mb-4">The Ecosystem</h2>
+        <Card className="mb-8">
+          <CardContent className="py-6">
+            <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+              DSearch is the flagship search engine of a modular stack. Every layer is open,
+              separable, and runnable by anyone:
+            </p>
+            <div className="space-y-3 text-sm">
+              {[
+                { name: 'SIP — Search Index Protocol', desc: 'The open Nostr standard for web-index observations (kind 39697). The contract everything else speaks.', to: '/protocol' },
+                { name: 'Crawlstr', desc: 'The lightweight browser crawler — turn a tab into a voluntary crawl node.', to: '/build/crawlstr' },
+                { name: 'Indexstr', desc: 'The heavyweight distributed indexer — curated collections, deterministic sharding, enrichment.', to: '/build/indexstr' },
+                { name: 'SIP Relays', desc: 'Validating, searchable, federating index relays — one-click Cloudflare, self-hosted VPS/Docker, or Android.', to: '/build/relay' },
+                { name: 'Network', desc: 'Live view of the shared index: relays, indexers, observations.', to: '/network' },
+              ].map((item) => (
+                <Link key={item.name} to={item.to} className="flex items-start gap-3 p-3 rounded-lg border border-border/50 hover:border-primary/30 hover:bg-primary/5 transition-colors group">
+                  <span className="text-primary/70 mt-0.5 shrink-0 group-hover:text-primary transition-colors">→</span>
+                  <div>
+                    <span className="font-medium text-foreground">{item.name}</span>
+                    <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">{item.desc}</p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Keyword staking */}
-        <h2 className="text-xl font-semibold mb-4">Keyword Staking — Presearch, but Nostr</h2>
+        <h2 className="text-xl font-semibold mb-4">Keyword Staking — Your Key Is the Stake</h2>
         <Card className="mb-8 border-primary/20">
           <CardContent className="py-6">
             <div className="flex items-start gap-3 mb-4">
               <Gem className="w-5 h-5 text-primary shrink-0 mt-0.5" />
               <p className="text-sm text-muted-foreground leading-relaxed">
-                Presearch lets advertisers stake PRE tokens on keywords. Here, your{' '}
-                <strong className="text-foreground">Nostr identity is the stake</strong>: sign an addressable
+                Keyword staking without tokens: your{' '}
+                <strong className="text-foreground">Nostr identity is the stake</strong>. Sign an addressable
                 event binding a keyword to your link, and it takes the top placement whenever anyone
                 searches that keyword — on every compatible client.
               </p>
@@ -108,8 +164,8 @@ export default function About() {
                 <span>All providers run <strong className="text-foreground">in parallel</strong> — results stream in as each provider completes</span>
               </div>
               <Step number={1} icon={<FileText className="w-4 h-4 text-primary" />} title="Web Index Provider (SIP-01)" description="Searches the shared kind 39697 document index — pages observed by independent per-device indexers, ranked by observation count and recency." active />
-              <Step number={2} icon={<Database className="w-4 h-4 text-primary" />} title="Cached Index Provider" description="Reads the legacy federated query cache — hits from both Presearchstr and 0xSearchstr indexers are instant." active />
-              <Step number={3} icon={<Zap className="w-4 h-4 text-nostr" />} title="Nostr Provider" description="NIP-50 search queries to relay.nostr.band and relay.ditto.pub. Profiles, notes, articles, and files — all with rich rendering." active />
+              <Step number={2} icon={<Database className="w-4 h-4 text-primary" />} title="Cached Index Provider" description="Reads the legacy federated query cache — hits from both DSearch and 0xSearchstr indexers are instant." active />
+              <Step number={3} icon={<Zap className="w-4 h-4 text-nostr" />} title="Nostr Provider" description="NIP-50 search across NIP-50-capable relays. Profiles, notes, articles, wiki pages, and files — all with rich rendering." active />
               <Step number={4} icon={<Gem className="w-4 h-4 text-primary" />} title="Keyword Stakes Provider" description="Community-staked keywords — Nostr-native top placements, signed by the staker's own key." active />
               <Step number={5} icon={<Globe className="w-4 h-4 text-clearnet" />} title="SearXNG Provider" description="Meta-search across DuckDuckGo, Brave, Wikipedia, and dozens more via public instances with automatic failover." active />
               <Step number={6} icon={<BookOpen className="w-4 h-4" />} title="Wikipedia Provider" description="Direct MediaWiki API queries. No proxy needed — Wikipedia sets CORS headers." active />
@@ -184,7 +240,8 @@ export default function About() {
               Boolean operators are UPPERCASE (lowercase stays plain text). Everything combines:
               <code className="text-xs bg-muted px-1 py-0.5 rounded font-mono"> nostr privacy site:github.com lang:en</code>.
               The results page shows the parsed interpretation as chips under the search bar.
-              Full guide: <a href="https://github.com/NostrDanish/0xPresearchstr/blob/main/docs/SEARCH-QUERIES.md" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline inline-flex items-center gap-0.5">docs/SEARCH-QUERIES.md<ExternalLink className="w-3 h-3" /></a>.
+              This query language is the basis of the in-development{' '}
+              <Link to="/protocol/sip-02" className="text-primary hover:underline">SIP-02 query-layer draft</Link>.
             </p>
           </CardContent>
         </Card>
@@ -197,7 +254,7 @@ export default function About() {
               {[
                 { label: 'No backend required', detail: 'Everything runs in the browser. No servers, no crawlers, no infrastructure to maintain.' },
                 { label: 'Nostr-native', detail: 'Nostr results are first-class citizens with rich rendering — avatars, content previews, NIP-19 links.' },
-                { label: 'Federated index', detail: 'Shares one search index with 0xSearchstr — same kinds, same tags, different signer keys. Every search on either app helps both communities.' },
+                { label: 'Federated index', detail: 'Shares one search index with 0xSearchstr and every SIP-01 client — same kinds, same tags, different signer keys. Every search on any app helps every community.' },
                 { label: 'Keyword staking', detail: 'Presearch-style keyword placement without tokens. Your Nostr key is the stake — sign once, own the top spot for that keyword everywhere.' },
                 { label: 'Privacy as a spectrum', detail: 'Nostr-only searches never touch third-party servers. Web providers expose queries to their operators — see the threat model below and the traffic-light indicator by the search bar.' },
                 { label: 'Plugin architecture', detail: 'Every provider is a standalone module. Add Wikipedia, Hacker News, GitHub, Archive.org — one file each, no core changes.' },
@@ -227,7 +284,7 @@ export default function About() {
             features={[
               'Direct client-side relay connections — no intermediary',
               'Indexes kinds 0 (profiles), 1 (notes), 30023 (articles), 1063 (files)',
-              'Deduplicates across relay.nostr.band + relay.ditto.pub',
+              'Deduplicates across the NIP-50 relay pool',
               'Results ranked by relay relevance, sorted by recency',
             ]}
           />
@@ -288,7 +345,7 @@ export default function About() {
                 { name: 'TypeScript', category: 'Language' },
                 { name: 'TailwindCSS 4', category: 'Styling' },
                 { name: 'Nostrify', category: 'Nostr SDK' },
-                { name: 'NIP-50', category: 'Search Protocol' },
+                { name: 'SIP-01 / NIP-50', category: 'Search Protocol' },
                 { name: 'SearXNG', category: 'Web Meta-Search' },
                 { name: 'TanStack Query', category: 'Data Fetching' },
                 { name: 'shadcn/ui', category: 'Components' },
@@ -314,7 +371,7 @@ export default function About() {
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-sm text-muted-foreground leading-relaxed">
-              "No backend" means <strong className="text-foreground">Presearchstr itself</strong> has no servers
+              "No backend" means <strong className="text-foreground">DSearch itself</strong> has no servers
               logging you — the app is static files in your browser. It does <em>not</em> mean your queries
               travel nowhere. Here is exactly who sees what:
             </p>
@@ -376,7 +433,7 @@ export default function About() {
             </div>
 
             <div>
-              <h4 className="text-sm font-medium text-foreground mb-2">What Presearchstr itself never does:</h4>
+              <h4 className="text-sm font-medium text-foreground mb-2">What DSearch itself never does:</h4>
               <ul className="space-y-1.5 text-sm text-muted-foreground">
                 {[
                   'Log, store, or transmit your searches to its own servers (there are none)',
@@ -397,7 +454,7 @@ export default function About() {
         {/* Links */}
         <div className="flex flex-wrap gap-3">
           <a
-            href="https://github.com/NostrDanish/0xPresearchstr.git"
+            href="https://github.com/NostrDanish/Dsearch.git"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg border border-border hover:border-primary/30 hover:bg-primary/5 text-sm font-medium transition-colors"
@@ -407,7 +464,7 @@ export default function About() {
             <ExternalLink className="w-3 h-3 text-muted-foreground" />
           </a>
           <a
-            href="https://shakespeare.diy/clone?url=https%3A%2F%2Fgithub.com%2FNostrDanish%2F0xPresearchstr.git"
+            href="https://shakespeare.diy/clone?url=https%3A%2F%2Fgithub.com%2FNostrDanish%2FDsearch.git"
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg border border-primary/30 bg-primary/5 hover:bg-primary/10 text-sm font-medium text-primary transition-colors"

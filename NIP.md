@@ -1,4 +1,4 @@
-# Presearchstr Custom Event Schemas
+# DSearch Custom Event Schemas
 
 ## NIP Support Matrix
 
@@ -39,9 +39,9 @@ NIP-B7 (Blossom URL fallback — uploads already go through Blossom).
 
 
 > **Federation note:** these schemas are the shared **`0xsearchstr` protocol** — originally
-> defined by 0xSearchstr, implemented identically by Presearchstr, and open to any fork.
+> defined by 0xSearchstr, implemented identically by DSearch, and open to any fork.
 > Same kinds, same d-tag namespaces, same t-tags. The only per-app difference is **which
-> key signs legacy cache events** (Presearchstr no longer writes them — SIP-01 only).
+> key signs legacy cache events** (DSearch no longer writes them — SIP-01 only).
 > Readers trust every known indexer pubkey, so the index is one shared pool across all
 > compatible clients.
 
@@ -60,9 +60,9 @@ Cache events (below) are only read from these author pubkeys:
 | App | Pubkey (hex) |
 |-----|--------------|
 | 0xSearchstr bot | `12ad55ad1fdb918f5314c9e9a5cd135be9b746e6eee15fd871df131a5677d199` |
-| Presearchstr legacy cache signer (retired) | `be7cad9a8e47ab0adfc877a008aea17692c08c49c1a5a6d87ee79ca4370c4289` |
+| DSearch legacy cache signer (retired) | `be7cad9a8e47ab0adfc877a008aea17692c08c49c1a5a6d87ee79ca4370c4289` |
 
-Presearchstr no longer publishes kind 30078 cache events — its legacy signing service
+DSearch no longer publishes kind 30078 cache events — its legacy signing service
 is retired and the code removed. The pubkey stays in the trust list so historical
 cache entries it signed remain readable until they age out (24h staleness window).
 All new indexing is SIP-01 document observations (kind 39697), signed by per-device
@@ -75,11 +75,11 @@ Running a fork with your own auto-indexing signer? Add your pubkey to
 
 ## Search Cache (kind 30078) — legacy, frozen, read-only here
 
-Presearchstr uses **kind 30078** (NIP-78 Application-specific Data) to cache search results on Nostr.
+DSearch uses **kind 30078** (NIP-78 Application-specific Data) to cache search results on Nostr.
 
 > **Migration note (SIP-01):** new document indexing goes to **kind 39697** (see
 > [docs/SIP-01.md](docs/SIP-01.md)). This legacy query cache
-> is frozen — it will not gain new fields — and Presearchstr no longer publishes it
+> is frozen — it will not gain new fields — and DSearch no longer publishes it
 > (its signing service is retired). It remains read so older clients keep their warm
 > cache; 0xSearchstr may still write it. Readers SHOULD merge both, by normalized URL.
 
@@ -166,7 +166,7 @@ The index is not just a bot cache — any Nostr user can curate it. Community su
     ["title", "<title>"],
     ["url", "<url>"],
     ["type", "web | torrent | onion | ipfs | video | audio | pdf | other"],
-    ["alt", "Presearchstr community index submission: <title>"]
+    ["alt", "DSearch community index submission: <title>"]
   ]
 }
 ```
@@ -284,7 +284,7 @@ search query exactly matches a staked keyword, the stake renders as the top
 
 ## Nostra Search Interop (read-only)
 
-For ecosystem compatibility, Presearchstr also reads **Nostra Search** index events:
+For ecosystem compatibility, DSearch also reads **Nostra Search** index events:
 
 - Filter: `{ kinds: [30078], '#d': ['nostra:index'] }`
 - Plaintext events are parsed from `title`/`url`/`subject`/`magnet`/`r` tags.

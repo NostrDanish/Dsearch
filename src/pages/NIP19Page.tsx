@@ -98,7 +98,7 @@ function ProfileView({ pubkey, nip19Id }: { pubkey: string; nip19Id: string }) {
   const banner = metadata?.banner ? sanitizeUrl(metadata.banner) : '';
 
   useSeoMeta({
-    title: `${name} - Presearchstr`,
+    title: `${name} - DSearch`,
     description: metadata?.about || `Nostr profile: ${npubShort(pubkey)}`,
   });
 
@@ -179,7 +179,7 @@ function EventView({ eventId, author: authorHint, nip19Id }: { eventId: string; 
   const avatar = metadata?.picture ? sanitizeUrl(metadata.picture) : '';
 
   useSeoMeta({
-    title: event ? `${displayName}: ${event.content.slice(0, 60)}... - Presearchstr` : 'Event - Presearchstr',
+    title: event ? `${displayName}: ${event.content.slice(0, 60)}... - DSearch` : 'Event - DSearch',
     description: event?.content?.slice(0, 200) || 'Nostr event',
   });
 
@@ -269,7 +269,7 @@ function AddressableView({ kind, pubkey, identifier, nip19Id }: {
   const summary = event ? getSummary(event) : undefined;
 
   useSeoMeta({
-    title: `${title} - Presearchstr`,
+    title: `${title} - DSearch`,
     description: summary || event?.content?.slice(0, 200) || 'Nostr addressable event',
   });
 

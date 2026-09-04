@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/">
-  <ShortName>Presearchstr</ShortName>
-  <Description>Community-driven Nostr-native search — the federated 0xsearchstr-protocol index, web when needed.</Description>
+  <ShortName>DSearch</ShortName>
+  <Description>DSearch — the decentralized search engine built by its users. SIP-01 federated web index on Nostr, web when needed.</Description>
   <InputEncoding>UTF-8</InputEncoding>
-  <Image width="16" height="16" type="image/svg+xml">https://presearchstr.com/favicon.svg</Image>
-  <Url type="text/html" method="get" template="https://presearchstr.com/?q={searchTerms}"/>
+  <Image width="16" height="16" type="image/svg+xml">https://dsearch.com/favicon.svg</Image>
+  <Url type="text/html" method="get" template="https://dsearch.com/?q={searchTerms}"/>
 </OpenSearchDescription>

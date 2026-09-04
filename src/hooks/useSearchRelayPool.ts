@@ -1,6 +1,6 @@
 /**
  * Relay pool hooks — React state over the app's relay pools
- * (Presearchstr defaults + user customs − hidden defaults), with
+ * (DSearch defaults + user customs − hidden defaults), with
  * Nostra-style latency testing: ping each relay with a tiny query and
  * time the round-trip.
  *
@@ -14,7 +14,6 @@
  * can be added/removed — defaults are suggestions, not mandates.
  */
 import { useCallback, useState } from 'react';
-
 import {
   SEARCH_RELAYS,
   INDEX_RELAYS,
@@ -39,17 +38,14 @@ import {
 } from '@/lib/appRelays';
 import { getSearchRelay } from '@/lib/searchRelays';
 import { getDiscoveredSearchRelays, getDiscoveredIndexRelays } from '@/lib/relayDiscovery';
-
 export type SearchRelayOrigin = 'default' | 'discovered' | 'custom';
 export type SearchRelayStatus = 'untested' | 'testing' | 'ok' | 'error';
-
 export interface SearchRelayEntry {
   url: string;
   origin: SearchRelayOrigin;
   status: SearchRelayStatus;
   latencyMs?: number;
 }
-
 interface PoolStore {
   defaults: readonly string[];
   /**
@@ -69,7 +65,6 @@ interface PoolStore {
    */
   probeKinds: number[];
 }
-
 function useRelayPool(store: PoolStore) {
   const buildPool = useCallback((): SearchRelayEntry[] => {
     const hidden = new Set(store.getHidden());
@@ -87,16 +82,13 @@ function useRelayPool(store: PoolStore) {
       .map((url): SearchRelayEntry => ({ url, origin: 'custom', status: 'untested' }));
     return [...defaults, ...discovered, ...customs];
   }, [store]);
-
   const [pool, setPool] = useState<SearchRelayEntry[]>(buildPool);
   const [testing, setTesting] = useState(false);
-
   const addRelay = useCallback((input: string): string | null => {
     const added = store.addCustom(input);
     if (added) setPool(buildPool());
     return added;
   }, [store, buildPool]);
-
   /** Remove a relay — customs are deleted, defaults AND discovered are hidden (restorable). */
   const removeRelay = useCallback((url: string) => {
     if (store.defaults.includes(url) || (store.getDiscovered?.() ?? []).includes(url)) {
@@ -106,23 +98,19 @@ function useRelayPool(store: PoolStore) {
     }
     setPool(buildPool());
   }, [store, buildPool]);
-
   /** Bring back all hidden defaults. */
   const restoreDefaults = useCallback(() => {
     store.restoreAllDefaults();
     setPool(buildPool());
   }, [store, buildPool]);
-
   /** Rebuild from localStorage (e.g. after a discovery refresh lands). */
   const reload = useCallback(() => {
     setPool(buildPool());
   }, [buildPool]);
-
   /** Ping every relay with a limit-1 query and record latency/status. */
   const testRelays = useCallback(async () => {
     setTesting(true);
     setPool((prev) => prev.map((r) => ({ ...r, status: 'testing' as const })));
-
     await Promise.allSettled(
       pool.map(async (entry) => {
         const start = performance.now();
@@ -146,15 +134,11 @@ function useRelayPool(store: PoolStore) {
         }
       }),
     );
-
     setTesting(false);
   }, [pool]);
-
   const hiddenCount = store.getHidden().length;
-
   return { pool, testing, testRelays, addRelay, removeRelay, restoreDefaults, reload, hiddenCount };
 }
-
 const SEARCH_POOL_STORE: PoolStore = {
   defaults: SEARCH_RELAYS,
   getDiscovered: getDiscoveredSearchRelays,
@@ -166,7 +150,6 @@ const SEARCH_POOL_STORE: PoolStore = {
   restoreAllDefaults: restoreAllDefaultSearchRelays,
   probeKinds: [1],
 };
-
 const INDEX_POOL_STORE: PoolStore = {
   defaults: INDEX_RELAYS,
   getDiscovered: getDiscoveredIndexRelays,
@@ -178,7 +161,6 @@ const INDEX_POOL_STORE: PoolStore = {
   restoreAllDefaults: restoreAllDefaultIndexRelays,
   probeKinds: [39697, 30078],
 };
-
 const GIT_POOL_STORE: PoolStore = {
   defaults: GIT_RELAYS,
   getCustoms: gitRelays.getCustoms,
@@ -189,7 +171,6 @@ const GIT_POOL_STORE: PoolStore = {
   restoreAllDefaults: gitRelays.restoreAllDefaults,
   probeKinds: [30617],
 };
-
 const WIKI_POOL_STORE: PoolStore = {
   defaults: WIKI_RELAYS,
   getCustoms: wikiRelays.getCustoms,
@@ -200,22 +181,18 @@ const WIKI_POOL_STORE: PoolStore = {
   restoreAllDefaults: wikiRelays.restoreAllDefaults,
   probeKinds: [30818],
 };
-
 /** Search relay pool (NIP-50 full-text reads). */
 export function useSearchRelayPool() {
   return useRelayPool(SEARCH_POOL_STORE);
 }
-
 /** Index relay pool (SIP-01 crawler/indexer reads + writes). */
 export function useIndexRelayPool() {
   return useRelayPool(INDEX_POOL_STORE);
 }
-
 /** Git relay pool (NIP-34 ngit/GRASP reads — read-only). */
 export function useGitRelayPool() {
   return useRelayPool(GIT_POOL_STORE);
 }
-
 /** Wiki relay pool (NIP-54 article reads — read-only). */
 export function useWikiRelayPool() {
   return useRelayPool(WIKI_POOL_STORE);
