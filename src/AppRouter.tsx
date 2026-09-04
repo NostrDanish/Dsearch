@@ -17,6 +17,8 @@ import ProtocolPage from "./pages/Protocol";
 import ProtocolSip01 from "./pages/ProtocolSip01";
 import ProtocolSip02 from "./pages/ProtocolSip02";
 import CommunityPage from "./pages/Community";
+import DashboardPage from "./pages/Dashboard";
+import DocsPage from "./pages/Docs";
 import { NIP19Page } from "./pages/NIP19Page";
 import NotFound from "./pages/NotFound";
 
@@ -40,6 +42,8 @@ export function AppRouter() {
         <Route path="/protocol/sip-01" element={<ProtocolSip01 />} />
         <Route path="/protocol/sip-02" element={<ProtocolSip02 />} />
         <Route path="/community" element={<CommunityPage />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/docs" element={<DocsPage />} />
         {/* Hidden owner console — not linked in any nav */}
         <Route path="/admin" element={<Admin />} />
         {/* Legacy: instance management moved into Settings */}

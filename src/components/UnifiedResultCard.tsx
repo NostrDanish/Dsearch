@@ -252,9 +252,40 @@ function NostrCard({ result, className }: { result: SearchResult; className?: st
   );
 }
 
+/**
+ * Community-tier providers — results that come from the decentralized
+ * index (SIP-01 observations, the federated legacy cache, user-curated
+ * submissions) rather than from an external search engine. These get a
+ * distinct badge so users can always tell "the network answered" apart
+ * from "a third-party engine answered" (audit P0: result transparency).
+ */
+const COMMUNITY_PROVIDERS: Record<string, { label: string; title: string }> = {
+  'web-index': {
+    label: 'Community Index',
+    title: 'From the decentralized SIP-01 index — this page was observed and signed by independent community indexers, not fetched from a search company.',
+  },
+  'cached-index': {
+    label: 'Community Cache',
+    title: 'From the federated community cache — a previous community search warmed this result.',
+  },
+  community: {
+    label: 'Community',
+    title: 'Curated by a Nostr user — a signed community submission to the shared index.',
+  },
+  'nostr-bookmark': {
+    label: 'Nostr Bookmark',
+    title: 'A web bookmark published on Nostr (NIP-B0).',
+  },
+  'nostra-index': {
+    label: 'Nostra Index',
+    title: 'From the Nostra Search community index (read interop).',
+  },
+};
+
 /* ─── External result (web, wiki, news, code) ─── */
 function ExternalResultCard({ result, className }: { result: SearchResult; className?: string }) {
   const style = SOURCE_STYLE[result.source] ?? SOURCE_STYLE.web;
+  const community = COMMUNITY_PROVIDERS[result.provider];
   const [reportOpen, setReportOpen] = useState(false);
 
   // Nostr-native providers (wiki/git pools) link to internal /nip19 routes —
@@ -279,7 +310,7 @@ function ExternalResultCard({ result, className }: { result: SearchResult; class
         {!isInternal && safeUrl && (
           <ExternalLink className="w-3 h-3 text-muted-foreground/40 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity" />
         )}
-        {(result.kind || result.engine || result.language) && (
+        {(result.kind || result.engine || result.language || community) && (
           <span className="flex items-center gap-1.5 ml-auto shrink-0">
             {result.language && (
               <Badge
@@ -295,11 +326,23 @@ function ExternalResultCard({ result, className }: { result: SearchResult; class
                 {result.kind}
               </Badge>
             )}
-            {result.engine && (
-              <Badge variant="outline" className={cn('text-[10px]', style.color)}>
+            {community ? (
+              <Badge
+                variant="outline"
+                className="text-[10px] border-primary/40 text-primary bg-primary/5"
+                title={community.title}
+              >
+                {community.label}
+              </Badge>
+            ) : result.engine ? (
+              <Badge
+                variant="outline"
+                className={cn('text-[10px]', style.color)}
+                title="From an external search provider — that provider saw this query."
+              >
                 {result.engine}
               </Badge>
-            )}
+            ) : null}
           </span>
         )}
       </div>

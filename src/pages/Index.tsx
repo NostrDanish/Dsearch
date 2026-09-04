@@ -263,6 +263,35 @@ const Index = () => {
               description="Build on SIP, the open standard"
             />
           </div>
+
+          {/* The ecosystem — every piece, what it does, and where to run it */}
+          <div className="mt-14 w-full max-w-3xl motion-safe:animate-in motion-safe:fade-in motion-safe:duration-500 motion-safe:delay-1000">
+            <p className="text-xs uppercase tracking-widest text-muted-foreground/60 text-center mb-4">
+              One ecosystem, five runnable pieces
+            </p>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-2 text-left">
+              {[
+                { name: 'DSearch', role: 'The search engine — you are here', to: '/about' },
+                { name: 'SIP', role: 'The protocol — how the index is shared', to: '/protocol' },
+                { name: 'Crawlstr', role: 'The crawler — discovers the web', to: '/build/crawlstr' },
+                { name: 'Indexstr', role: 'The indexer — builds the index', to: '/build/indexstr' },
+                { name: 'SIP Relays', role: 'The backbone — distribute the index', to: '/build/relay' },
+                { name: 'Network', role: 'The live view — relays, nodes, observations', to: '/network' },
+              ].map((item) => (
+                <Link
+                  key={item.name}
+                  to={item.to}
+                  className="group flex items-center gap-3 rounded-lg border border-border/40 px-3.5 py-2.5 transition-colors hover:border-primary/30 hover:bg-primary/5"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-primary/60 shrink-0" />
+                  <span className="min-w-0">
+                    <span className="block text-sm font-medium text-foreground">{item.name}</span>
+                    <span className="block text-xs text-muted-foreground truncate">{item.role}</span>
+                  </span>
+                </Link>
+              ))}
+            </div>
+          </div>
         </div>
       </Layout>
     );
