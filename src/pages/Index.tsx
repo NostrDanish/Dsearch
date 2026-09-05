@@ -192,9 +192,6 @@ const Index = () => {
               <span className="text-foreground">search</span>
             </h1>
             <p className="text-lg sm:text-xl text-muted-foreground max-w-lg mx-auto leading-relaxed">
-              Search the Web. Build the Index.
-            </p>
-            <p className="text-sm text-muted-foreground/80 max-w-md mx-auto leading-relaxed mt-2">
               The community-driven search engine. Powered by Nostr, owned by no one.
             </p>
           </div>
