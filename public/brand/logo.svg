@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 160" fill="none">
+  <style>
+    .wordmark { fill: #141b2e; }
+    .tagline { fill: #5b6478; }
+    @media (prefers-color-scheme: dark) {
+      .wordmark { fill: #f2f5fa; }
+      .tagline { fill: #8b94a7; }
+    }
+  </style>
+
+  <!-- Icon tile: night-navy rounded square -->
+  <rect x="16" y="16" width="128" height="128" rx="30" fill="#070b1a"/>
+  <rect x="20" y="20" width="120" height="120" rx="26" stroke="#f0b45a" stroke-opacity="0.35" stroke-width="2"/>
+
+  <!-- Magnifying glass: the search lens -->
+  <circle cx="72" cy="72" r="26" stroke="#f0b45a" stroke-width="9.5"/>
+  <!-- The index inside the lens: a tiny network graph -->
+  <path d="M72 60.8 L61.6 80 M72 60.8 L82.4 80 M61.6 80 L82.4 80" stroke="#f0b45a" stroke-opacity="0.55" stroke-width="3.5"/>
+  <circle cx="72" cy="60.8" r="4.6" fill="#f0b45a"/>
+  <circle cx="61.6" cy="80" r="4.6" fill="#f0b45a"/>
+  <circle cx="82.4" cy="80" r="4.6" fill="#f0b45a"/>
+  <!-- Handle -->
+  <line x1="91.2" y1="91.2" x2="114" y2="114" stroke="#f0b45a" stroke-width="9.5" stroke-linecap="round"/>
+
+  <!-- Wordmark -->
+  <text x="176" y="90" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="64" font-weight="700" letter-spacing="-1.5">
+    <tspan fill="#f0b45a">D</tspan><tspan class="wordmark">Search</tspan>
+  </text>
+
+  <!-- Tagline -->
+  <text x="178" y="124" class="tagline" font-family="ui-monospace, 'SF Mono', monospace" font-size="14.5" letter-spacing="3.2">SEARCH THE WEB. BUILD THE INDEX.</text>
+</svg>

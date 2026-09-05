@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="public/brand/logo.svg" alt="DSearch — Search the Web. Build the Index." width="480">
+</p>
+
 # DSearch
 
 **Search the Web. Build the Index.**
