@@ -65,8 +65,8 @@ const REPOS = [
 
 export default function CommunityPage() {
   useSeoMeta({
-    title: 'Community - DSearch',
-    description: 'DSearch is built in the open: every repository, every protocol decision, every contribution path.',
+    title: 'Community - Dsearch',
+    description: 'Dsearch is built in the open: every repository, every protocol decision, every contribution path.',
   });
 
   return (
@@ -80,7 +80,7 @@ export default function CommunityPage() {
           <h1 className="text-3xl font-bold tracking-tight">Community</h1>
         </div>
         <p className="text-muted-foreground mb-10 leading-relaxed max-w-2xl">
-          DSearch is community infrastructure: open source end to end, permissionless to run,
+          Dsearch is community infrastructure: open source end to end, permissionless to run,
           and federated by design. No company owns the crawler, the index, the relay network,
           or this interface — and that's the point.
         </p>
@@ -151,7 +151,7 @@ export default function CommunityPage() {
           <CardContent className="py-6 px-6">
             <p className="text-sm text-muted-foreground leading-relaxed">
               <strong className="text-foreground">Forks welcome — the index is the commons.</strong>{' '}
-              DSearch, 0xSearchstr, and every compatible client read and write the same SIP-01 index.
+              Dsearch, 0xSearchstr, and every compatible client read and write the same SIP-01 index.
               If you build a better search engine on this stack, your users and our users share one
               index from day one. That's not a partnership — it's the protocol. Start from{' '}
               <a href="https://github.com/NostrDanish/UNCAGED-ENGINE" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">the template</a>,

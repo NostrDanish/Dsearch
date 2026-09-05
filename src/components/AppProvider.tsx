@@ -1,7 +1,7 @@
 import { ReactNode, useEffect } from 'react';
 import { z } from 'zod';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
-import { AppContext, type AppConfig, type AppContextType, type Theme, type RelayMetadata, type BlossomServerMetadata } from '@/contexts/AppContext';
+import { AppContext, type AppConfig, type AppContextType, type Theme, type AccentColor, type RelayMetadata, type BlossomServerMetadata } from '@/contexts/AppContext';
 import { getBraveApiKey } from '@/lib/providers/brave';
 import { getParallelApiKey } from '@/lib/providers/parallel';
 
@@ -39,6 +39,7 @@ const TabConfigSchema = z.object({
 // Zod schema for AppConfig validation
 const AppConfigSchema = z.object({
   theme: z.enum(['dark', 'light', 'hacker']),
+  accentColor: z.enum(['amber', 'blue', 'red', 'green', 'violet', 'cyan']).optional(),
   relayMetadata: RelayMetadataSchema,
   blossomServerMetadata: BlossomServerMetadataSchema,
   useAppBlossomServers: z.boolean(),
@@ -112,8 +113,8 @@ export function AppProvider(props: AppProviderProps) {
     updateConfig,
   };
 
-  // Apply theme effects to document
-  useApplyTheme(config.theme);
+  // Apply theme + accent effects to document
+  useApplyTheme(config.theme, config.accentColor);
 
   return (
     <AppContext.Provider value={appContextValue}>
@@ -123,22 +124,28 @@ export function AppProvider(props: AppProviderProps) {
 }
 
 /**
- * Hook to apply theme changes to the document root.
- * Two core themes (light/dark, both Presearch-branded) + hidden hacker.
+ * Hook to apply theme + accent changes to the document root.
+ * Two core themes (light/dark) + hidden hacker; accent rides along as
+ * data-accent on <html> (absent = amber default). Hacker owns its green,
+ * so the accent attribute is suppressed while it's active.
  */
-function useApplyTheme(theme: Theme) {
+function useApplyTheme(theme: Theme, accent: AccentColor = 'amber') {
   useEffect(() => {
     const root = window.document.documentElement;
 
     root.classList.remove('light', 'dark', 'hacker', 'presearch');
 
+    if (accent === 'amber') root.removeAttribute('data-accent');
+    else root.setAttribute('data-accent', accent);
+
     // Hacker theme is dark-based, so we add both classes
     // so that dark-variant styles also apply.
     if (theme === 'hacker') {
       root.classList.add('dark', 'hacker');
+      root.removeAttribute('data-accent');
       return;
     }
 
     root.classList.add(theme);
-  }, [theme]);
+  }, [theme, accent]);
 }

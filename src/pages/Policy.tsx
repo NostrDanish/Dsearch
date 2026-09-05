@@ -13,8 +13,8 @@ import { useState } from 'react';
 
 export default function Policy() {
   useSeoMeta({
-    title: 'Content Policy - DSearch',
-    description: 'Content policy and moderation practices for the DSearch federated search engine. Modeled on the Ahmia approach to responsible dark-web indexing.',
+    title: 'Content Policy - Dsearch',
+    description: 'Content policy and moderation practices for the Dsearch federated search engine. Modeled on the Ahmia approach to responsible dark-web indexing.',
   });
 
   return (
@@ -28,7 +28,7 @@ export default function Policy() {
           <h1 className="text-3xl font-bold tracking-tight">Content Policy</h1>
         </div>
         <p className="text-muted-foreground mb-8 leading-relaxed">
-          DSearch indexes content from multiple networks. This document describes what we do
+          Dsearch indexes content from multiple networks. This document describes what we do
           and don't index, and why. Our approach mirrors the{' '}
           <a
             href="https://ahmia.fi/documentation/"
@@ -138,7 +138,7 @@ export default function Policy() {
           </CardHeader>
           <CardContent>
             <p className="text-sm text-muted-foreground mb-4">
-              DSearch exists to serve legitimate privacy, journalism, and whistleblowing use cases.
+              Dsearch exists to serve legitimate privacy, journalism, and whistleblowing use cases.
               We index:
             </p>
             <ul className="space-y-2 text-sm text-muted-foreground">
@@ -169,11 +169,11 @@ export default function Policy() {
         {/* Legal */}
         <div className="mt-8 p-4 rounded-xl bg-muted/50 border border-border/50">
           <p className="text-xs text-muted-foreground leading-relaxed">
-            <strong className="text-foreground">Threat Model Note:</strong> DSearch is a search
+            <strong className="text-foreground">Threat Model Note:</strong> Dsearch is a search
             interface and indexing system, not a proxy or gateway. We do not host, cache, or serve
             any indexed content. Search results link to their original sources. Users are responsible
             for understanding the legal implications of accessing content in their jurisdiction. The
-            content policy exists to prevent DSearch from becoming a discovery vector for the
+            content policy exists to prevent Dsearch from becoming a discovery vector for the
             worst categories of illegal content — an indiscriminate crawler is how a project like
             this gets its domain seized or its maintainer prosecuted.
           </p>

@@ -162,7 +162,7 @@ const AuthDialog: React.FC<AuthDialogProps> = ({ isOpen, onClose }) => {
     const uri = generateNostrConnectURI(params, {
       // NIP-46 client metadata — signers (Amber, nsec.app, …) display the
       // app name on the approval screen so users know who's connecting.
-      name: 'DSearch',
+      name: 'Dsearch',
       // Mobile signers deep-link back to this URL after approval. It MUST
       // be a real route (see RemoteLoginSuccess page) — otherwise the
       // redirect-back lands on the 404 page.
@@ -427,7 +427,7 @@ const AuthDialog: React.FC<AuthDialogProps> = ({ isOpen, onClose }) => {
           </DialogTitle>
           {/* Screen-reader description (Radix requires one for every dialog). */}
           <DialogDescription className="sr-only">
-            Sign up or log in to DSearch with your Nostr account.
+            Sign up or log in to Dsearch with your Nostr account.
           </DialogDescription>
         </DialogHeader>
 

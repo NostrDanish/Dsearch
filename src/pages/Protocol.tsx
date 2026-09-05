@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 
 export default function ProtocolPage() {
   useSeoMeta({
-    title: 'Protocol - DSearch',
+    title: 'Protocol - Dsearch',
     description: 'SIP — the Search Index Protocol. An open standard for publishing, distributing and discovering searchable web-index data over decentralized infrastructure (Nostr).',
   });
 
@@ -24,7 +24,7 @@ export default function ProtocolPage() {
         </div>
         <p className="text-muted-foreground mb-4 leading-relaxed max-w-2xl">
           An open protocol for publishing, distributing, and discovering searchable web-index
-          data over decentralized infrastructure. SIP is the contract that lets DSearch,
+          data over decentralized infrastructure. SIP is the contract that lets Dsearch,
           0xSearchstr, crawlers, indexers, and relays share one index without any of them
           owning it.
         </p>

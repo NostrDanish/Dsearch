@@ -57,7 +57,7 @@ export function Layout({ children, minimal = false }: LayoutProps) {
         minimal && 'border-transparent bg-transparent backdrop-blur-none',
       )}>
         <div className="container flex items-center justify-between h-14 gap-4">
-          <Link to="/" className="flex items-center gap-2.5 shrink-0 group" aria-label="DSearch home">
+          <Link to="/" className="flex items-center gap-2.5 shrink-0 group" aria-label="Dsearch home">
             <img
               src="/favicon.svg"
               alt=""
@@ -65,7 +65,7 @@ export function Layout({ children, minimal = false }: LayoutProps) {
             />
             <span className="font-semibold text-lg tracking-tight">
               <span className="text-primary">D</span>
-              <span className="text-foreground">Search</span>
+              <span className="text-foreground">search</span>
             </span>
           </Link>
 
@@ -138,7 +138,7 @@ export function Layout({ children, minimal = false }: LayoutProps) {
                 <SheetHeader>
                   <SheetTitle className="flex items-center gap-2">
                     <img src="/favicon.svg" alt="" className="w-6 h-6 rounded-md" />
-                    <span><span className="text-primary">D</span>Search</span>
+                    <span><span className="text-primary">D</span>search</span>
                   </SheetTitle>
                 </SheetHeader>
                 <nav className="flex flex-col gap-1 px-4 pb-6" aria-label="Mobile">
@@ -173,7 +173,7 @@ export function Layout({ children, minimal = false }: LayoutProps) {
       <footer className="border-t border-border/50 py-6">
         <div className="container flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
           <div className="flex items-center gap-2">
-            <span className="font-semibold"><span className="text-primary/70">D</span>Search</span>
+            <span className="font-semibold"><span className="text-primary/70">D</span>search</span>
             <span className="text-border">|</span>
             <span>Search the Web. Build the Index.</span>
           </div>

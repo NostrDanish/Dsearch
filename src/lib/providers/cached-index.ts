@@ -3,11 +3,11 @@
  *
  * Before hitting any external API, this provider checks if the query
  * has been searched before and has cached results published by ANY
- * trusted indexer (DSearch bot, 0xSearchstr bot, …).
+ * trusted indexer (Dsearch bot, 0xSearchstr bot, …).
  *
  * The index is shared across every compatible client: same kind,
  * same d-tags, same t-tags — only the signer differs per app. So a
- * search on 0xSearchstr warms the cache for DSearch users and
+ * search on 0xSearchstr warms the cache for Dsearch users and
  * vice versa.
  */
 import type { NostrEvent, NostrFilter } from '@nostrify/nostrify';

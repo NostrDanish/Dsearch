@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 
 export default function ProtocolSip02() {
   useSeoMeta({
-    title: 'SIP-02 (draft) - DSearch Protocol',
+    title: 'SIP-02 (draft) - Dsearch Protocol',
     description: 'SIP-02 — the structured search query layer for the Search Index Protocol. Status: draft, in development. One portable query syntax for every SIP-compatible engine.',
   });
 
@@ -34,11 +34,11 @@ export default function ProtocolSip02() {
             <p className="text-sm text-muted-foreground leading-relaxed">
               <strong className="text-foreground">Status: active development, nothing here is a standard yet.</strong>{' '}
               SIP-02 has no published specification. The syntax below is implemented and battle-tested
-              inside DSearch's own query engine
+              inside Dsearch's own query engine
               (<code className="text-xs bg-muted px-1 py-0.5 rounded font-mono">src/lib/queryParser.ts</code> +{' '}
               <code className="text-xs bg-muted px-1 py-0.5 rounded font-mono">queryEngine.ts</code>) — that
               working implementation is the seed of the future draft, and it already runs on every
-              DSearch search today.
+              Dsearch search today.
             </p>
           </CardContent>
         </Card>
@@ -48,14 +48,14 @@ export default function ProtocolSip02() {
             <p>
               Today, NIP-50 search is a single opaque string. A relay that misunderstands{' '}
               <code className="text-xs bg-muted px-1 py-0.5 rounded font-mono">site:</code> answers it
-              wrong; a client can't tell whether an operator was applied or silently dropped. DSearch's
+              wrong; a client can't tell whether an operator was applied or silently dropped. Dsearch's
               current answer is to re-evaluate everything locally — correct, but every client shouldn't
               have to reinvent that. SIP-02 lifts the structured query into the protocol: parse once,
               execute anywhere, and let engines advertise which operators they honor.
             </p>
           </Section>
 
-          <Section title="The working syntax (implemented in DSearch)">
+          <Section title="The working syntax (implemented in Dsearch)">
             <div className="overflow-x-auto">
               <table className="w-full text-xs">
                 <thead>
@@ -89,7 +89,7 @@ export default function ProtocolSip02() {
               </table>
             </div>
             <p className="mt-3">
-              Try it live — every DSearch search runs this parser, and the results page shows the
+              Try it live — every Dsearch search runs this parser, and the results page shows the
               parsed interpretation as "Understood as:" chips.
             </p>
           </Section>
@@ -115,7 +115,7 @@ export default function ProtocolSip02() {
             <p>
               The reference implementation lives in the{' '}
               <a href="https://github.com/NostrDanish/Dsearch" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline font-mono text-xs">
-                DSearch repo
+                Dsearch repo
               </a>{' '}
               (<code className="text-xs bg-muted px-1 py-0.5 rounded font-mono">src/lib/queryParser.ts</code>,{' '}
               <code className="text-xs bg-muted px-1 py-0.5 rounded font-mono">queryEngine.ts</code>, tests

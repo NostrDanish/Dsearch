@@ -11,7 +11,7 @@ const LEVELS = [
     level: 1,
     title: 'Search',
     tagline: 'No technical knowledge required',
-    description: 'Just use DSearch. Every search you run reads the community index first — and the pages your results surface flow back into it. Using the engine is already contributing.',
+    description: 'Just use Dsearch. Every search you run reads the community index first — and the pages your results surface flow back into it. Using the engine is already contributing.',
     to: '/',
     linkLabel: 'Start searching',
   },
@@ -51,7 +51,7 @@ const LEVELS = [
 
 export default function BuildPage() {
   useSeoMeta({
-    title: 'Build - DSearch',
+    title: 'Build - Dsearch',
     description: 'Help build the decentralized search engine: run a Crawlstr crawler, an Indexstr indexer, a SIP relay, or develop against the Search Index Protocol.',
   });
 
@@ -66,13 +66,13 @@ export default function BuildPage() {
           <h1 className="text-3xl font-bold tracking-tight">Build the Index</h1>
         </div>
         <p className="text-muted-foreground mb-4 leading-relaxed max-w-2xl">
-          DSearch has no central crawler farm and no company index. The index exists because
+          Dsearch has no central crawler farm and no company index. The index exists because
           people run pieces of it. Every level below is real, running today, and open to anyone —
           pick the one that matches how much you want to run.
         </p>
         <p className="text-sm text-muted-foreground/80 mb-10 leading-relaxed max-w-2xl">
           Everything you run publishes signed <Link to="/protocol/sip-01" className="text-primary hover:underline">SIP-01</Link> events
-          to the shared relay network — visible immediately on DSearch, 0xSearchstr, and every
+          to the shared relay network — visible immediately on Dsearch, 0xSearchstr, and every
           compatible client.
         </p>
 

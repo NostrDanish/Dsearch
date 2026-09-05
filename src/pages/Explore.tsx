@@ -37,7 +37,7 @@ export default function Explore() {
   const { data: docs, isLoading: docsLoading } = useRecentIndexedDocs();
 
   useSeoMeta({
-    title: 'Explore the Index - DSearch',
+    title: 'Explore the Index - Dsearch',
     description: 'Browse trending searches, staked keywords, and recently indexed pages from the shared Nostr web index.',
   });
 
@@ -52,7 +52,7 @@ export default function Explore() {
           <h1 className="text-3xl font-bold tracking-tight">Explore the Index</h1>
         </div>
         <p className="text-muted-foreground mb-8 leading-relaxed max-w-2xl">
-          Every search on DSearch grows a shared index on Nostr. Recently indexed pages,
+          Every search on Dsearch grows a shared index on Nostr. Recently indexed pages,
           trending searches, and staked keywords — all of it straight from relays,
           signed by the community.
         </p>

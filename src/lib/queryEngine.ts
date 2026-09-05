@@ -1,5 +1,5 @@
 /**
- * DSearch query ENGINE — evaluates parsed queries (queryParser.ts)
+ * Dsearch query ENGINE — evaluates parsed queries (queryParser.ts)
  * against documents. This is the authoritative local evaluation layer:
  * relays and engines get the raw query as an acceleration hint, but THIS
  * code decides what actually matches, so a relay misunderstanding an

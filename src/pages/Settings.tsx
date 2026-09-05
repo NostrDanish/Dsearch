@@ -51,7 +51,7 @@ import {
 } from '@/lib/indexerIdentity';
 import { COMMON_LANGUAGES, getBrowserLanguage, normalizeLangCode } from '@/lib/languageFilter';
 import type { PoolInstance, InstanceOrigin } from '@/lib/searxngInstances';
-import type { Theme } from '@/contexts/AppContext';
+import type { Theme, AccentColor } from '@/contexts/AppContext';
 import { cn } from '@/lib/utils';
 
 /* ------------------------------------------------------------------ */
@@ -59,19 +59,31 @@ import { cn } from '@/lib/utils';
 /* ------------------------------------------------------------------ */
 
 const THEMES: { value: Theme; label: string; icon: React.ReactNode; description: string }[] = [
-  { value: 'light', label: 'Light', icon: <Sun className="w-4 h-4" />, description: 'Presearch blue on white' },
-  { value: 'dark', label: 'Dark', icon: <Moon className="w-4 h-4" />, description: 'Brand navy (default)' },
+  { value: 'light', label: 'Light', icon: <Sun className="w-4 h-4" />, description: 'Warm light' },
+  { value: 'dark', label: 'Dark', icon: <Moon className="w-4 h-4" />, description: 'Night grid (default)' },
+];
+
+/** Accent presets — deep enough for AA on white in light mode, bright enough to glow in dark. */
+const ACCENTS: { value: AccentColor; label: string; swatch: string }[] = [
+  { value: 'amber', label: 'Amber (brand)', swatch: 'hsl(38 92% 55%)' },
+  { value: 'blue', label: 'Blue', swatch: 'hsl(212 100% 59%)' },
+  { value: 'red', label: 'Red', swatch: 'hsl(4 90% 58%)' },
+  { value: 'green', label: 'Green', swatch: 'hsl(152 70% 45%)' },
+  { value: 'violet', label: 'Violet', swatch: 'hsl(263 85% 66%)' },
+  { value: 'cyan', label: 'Cyan', swatch: 'hsl(187 85% 48%)' },
 ];
 
 function AppearanceSection() {
   const { theme, setTheme } = useTheme();
+  const { config, updateConfig } = useAppContext();
+  const accent = config.accentColor ?? 'amber';
   // Hacker theme is hidden behind a mini-toggle — it's a joke/retro theme.
   const [showHacker, setShowHacker] = useState(false);
 
   return (
     <section className="mb-10">
       <h2 className="text-sm font-semibold mb-1">Appearance</h2>
-      <p className="text-xs text-muted-foreground mb-4">Choose how DSearch looks.</p>
+      <p className="text-xs text-muted-foreground mb-4">Choose how Dsearch looks.</p>
       <div className="grid grid-cols-2 gap-2">
         {THEMES.map((t) => {
           const active = theme === t.value;
@@ -96,6 +108,44 @@ function AppearanceSection() {
             </button>
           );
         })}
+      </div>
+
+      {/* Accent color — recolors primary actions, links, focus rings, glows */}
+      <div className="mt-4">
+        <h3 className="text-xs font-medium mb-2">Accent color</h3>
+        <div className="flex flex-wrap items-center gap-2" role="radiogroup" aria-label="Accent color">
+          {ACCENTS.map((a) => {
+            const active = accent === a.value;
+            const hackerActive = theme === 'hacker';
+            return (
+              <button
+                key={a.value}
+                type="button"
+                role="radio"
+                aria-checked={active}
+                aria-label={`${a.label} accent`}
+                title={hackerActive ? `${a.label} — hacker mode overrides accents` : a.label}
+                disabled={hackerActive}
+                onClick={() => updateConfig((c) => ({ ...c, accentColor: a.value }))}
+                className={cn(
+                  'w-9 h-9 rounded-full border-2 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring',
+                  active
+                    ? 'border-foreground/70 scale-110'
+                    : 'border-transparent hover:scale-105 opacity-80 hover:opacity-100',
+                  hackerActive && 'opacity-30 cursor-not-allowed',
+                )}
+                style={{ backgroundColor: a.swatch }}
+              >
+                {active && <Check className="w-4 h-4 mx-auto text-white drop-shadow-[0_1px_1px_rgba(0,0,0,0.5)]" />}
+              </button>
+            );
+          })}
+        </div>
+        <p className="text-[11px] text-muted-foreground/60 mt-2">
+          {theme === 'hacker'
+            ? 'Hacker mode owns its green — accents wait politely.'
+            : 'Recolors primary actions, links, focus rings and the horizon glow. Amber is the brand default.'}
+        </p>
       </div>
 
       {/* Hacker theme — hidden behind a small toggle (it's the joke one) */}
@@ -428,7 +478,7 @@ function PrivacySection() {
       </div>
 
       <p className="text-[11px] text-muted-foreground/70 mt-3 leading-relaxed">
-        DSearch itself never logs, stores, or transmits your searches to its own servers — there are no
+        Dsearch itself never logs, stores, or transmits your searches to its own servers — there are no
         servers. Contributed index entries are published to public Nostr relays under this device's dedicated
         indexing identity (see the Auto Indexer tab), never under your personal Nostr account, and never contain
         your query. For the full picture, read the <a href="/about" className="text-primary hover:underline">threat model</a>.
@@ -637,7 +687,7 @@ function YourRelaysSection() {
       <h2 className="text-sm font-semibold mb-1">Your Relays</h2>
       <p className="text-xs text-muted-foreground mb-4">
         Your NIP-65 relay list — where your profile, submissions, and other events are
-        published and read. Defaults to the DSearch app relays for new users;
+        published and read. Defaults to the Dsearch app relays for new users;
         changes sync to Nostr (kind 10002) when you're logged in.
       </p>
       <Card className="border-border/60">
@@ -2079,8 +2129,8 @@ function InstanceRow({ inst, onRemove, onToggle }: {
 
 export default function Settings() {
   useSeoMeta({
-    title: 'Settings - DSearch',
-    description: 'Configure appearance, search engines, relays and indexing for DSearch.',
+    title: 'Settings - Dsearch',
+    description: 'Configure appearance, search engines, relays and indexing for Dsearch.',
   });
 
   return (
@@ -2157,7 +2207,7 @@ export default function Settings() {
             <Separator className="mb-10" />
             <RelayPoolSection
               title="Search Relays"
-              description="NIP-50 relays queried in parallel for every full-text Nostr search — including the UNCAGED SIP cluster (web-index operators over the SIP-01 document index) plus auto-discovered NIP-11-verified relays. DSearch's defaults are suggestions — hide any of them or add your own."
+              description="NIP-50 relays queried in parallel for every full-text Nostr search — including the UNCAGED SIP cluster (web-index operators over the SIP-01 document index) plus auto-discovered NIP-11-verified relays. Dsearch's defaults are suggestions — hide any of them or add your own."
               addLabel="Custom search relay URL"
               kind="search"
             />

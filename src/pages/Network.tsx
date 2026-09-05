@@ -19,8 +19,8 @@ function timeAgo(unix: number): string {
 
 export default function NetworkPage() {
   useSeoMeta({
-    title: 'Network - DSearch',
-    description: 'Live view of the decentralized DSearch / SIP-01 network: index relays, crawler and indexer nodes, and the shared web index they build.',
+    title: 'Network - Dsearch',
+    description: 'Live view of the decentralized Dsearch / SIP-01 network: index relays, crawler and indexer nodes, and the shared web index they build.',
   });
 
   const relays = useIndexRelayStatus();
@@ -46,10 +46,10 @@ export default function NetworkPage() {
           <h1 className="text-3xl font-bold tracking-tight">Network</h1>
         </div>
         <p className="text-muted-foreground mb-8 leading-relaxed max-w-2xl">
-          The DSearch index is not a company asset — it's a live network of independent
+          The Dsearch index is not a company asset — it's a live network of independent
           crawlers, indexers, and relays speaking{' '}
           <Link to="/protocol/sip-01" className="text-primary hover:underline">SIP-01</Link>.
-          This page reads that network directly: nothing here comes from a DSearch server.
+          This page reads that network directly: nothing here comes from a Dsearch server.
         </p>
 
         {/* Stats */}

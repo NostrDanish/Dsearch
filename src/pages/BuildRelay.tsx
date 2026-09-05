@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 
 export default function BuildRelay() {
   useSeoMeta({
-    title: 'Run a SIP Relay - DSearch',
+    title: 'Run a SIP Relay - Dsearch',
     description: 'Become search infrastructure: deploy a validating, searchable, federating SIP-01 index relay — one click on Cloudflare, self-hosted on a VPS with Docker, or on Android.',
   });
 
@@ -134,7 +134,7 @@ export default function BuildRelay() {
             <CardContent className="py-6 px-6">
               <p className="text-sm text-muted-foreground leading-relaxed">
                 <strong className="text-foreground">Once your relay is up:</strong> advertise the SIP-01
-                capability block in its NIP-11 document and DSearch's relay auto-discovery will find it —
+                capability block in its NIP-11 document and Dsearch's relay auto-discovery will find it —
                 verified relays join the index pool automatically. Your relay will appear on the{' '}
                 <a href="/network" className="text-primary hover:underline">Network page</a> for every user
                 whose client discovers it.

@@ -7,8 +7,8 @@ import { Card, CardContent } from '@/components/ui/card';
 
 export default function DocsPage() {
   useSeoMeta({
-    title: 'Docs - DSearch',
-    description: 'Understand DSearch in minutes: search it, contribute a crawler or indexer, run a relay, or build on the SIP protocol.',
+    title: 'Docs - Dsearch',
+    description: 'Understand Dsearch in minutes: search it, contribute a crawler or indexer, run a relay, or build on the SIP protocol.',
   });
 
   return (
@@ -32,8 +32,8 @@ export default function DocsPage() {
             to="/"
             icon={<Search className="w-6 h-6 text-primary" />}
             title="I just want to search"
-            description="No setup, no account. DSearch is a working search engine right now — the community index first, privacy-respecting web results alongside."
-            cta="Open DSearch"
+            description="No setup, no account. Dsearch is a working search engine right now — the community index first, privacy-respecting web results alongside."
+            cta="Open Dsearch"
           />
           <PathCard
             to="/build"
@@ -59,7 +59,7 @@ export default function DocsPage() {
         <p className="text-sm text-muted-foreground mb-4">Plain-language answers, no protocol knowledge required.</p>
         <div className="grid gap-2 mb-12">
           {[
-            { q: 'What is DSearch?', a: 'A decentralized search engine: the index lives on Nostr relays and is built by its users, not by a company crawler.', to: '/about' },
+            { q: 'What is Dsearch?', a: 'A decentralized search engine: the index lives on Nostr relays and is built by its users, not by a company crawler.', to: '/about' },
             { q: 'What is SIP?', a: 'The Search Index Protocol — the open standard (kind 39697 events) that lets every crawler, indexer, relay, and search engine share one index.', to: '/protocol' },
             { q: 'How do I help without technical skills?', a: 'Search. Seriously — with auto-indexing on, every search anonymously contributes surfaced pages back to the index.', to: '/dashboard' },
             { q: 'How do I run a crawler?', a: 'Open Crawlstr, add a seed URL, press start. It respects robots.txt and publishes observations under a throwaway device key.', to: '/build/crawlstr' },
@@ -89,10 +89,10 @@ export default function DocsPage() {
         <div className="grid sm:grid-cols-2 gap-3">
           {[
             { name: 'SIP-01 — Web Index Observations', desc: 'The canonical spec: event format, URL normalization, content hashing, validation, test vectors.', href: 'https://github.com/NostrDanish/SIP-01', internal: '/protocol/sip-01' },
-            { name: 'SIP-02 — Query layer (draft)', desc: 'The structured query language being grown from DSearch\u2019s working parser. Not finalized.', internal: '/protocol/sip-02' },
+            { name: 'SIP-02 — Query layer (draft)', desc: 'The structured query language being grown from Dsearch\u2019s working parser. Not finalized.', internal: '/protocol/sip-02' },
             { name: 'Structured search syntax', desc: 'Every operator the engine executes locally: boolean, phrases, site:, lang:, before:/after: …', href: 'https://github.com/NostrDanish/Dsearch/blob/main/docs/SEARCH-QUERIES.md' },
             { name: 'SIP-01 implementation guide', desc: 'How to build a compatible publisher, relay, or search node.', href: 'https://github.com/NostrDanish/Dsearch/blob/main/docs/IMPLEMENTATION-GUIDE.md' },
-            { name: 'Custom event schemas (NIP.md)', desc: 'Everything DSearch writes to Nostr: stakes, term signals, submissions, legacy cache.', href: 'https://github.com/NostrDanish/Dsearch/blob/main/NIP.md' },
+            { name: 'Custom event schemas (NIP.md)', desc: 'Everything Dsearch writes to Nostr: stakes, term signals, submissions, legacy cache.', href: 'https://github.com/NostrDanish/Dsearch/blob/main/NIP.md' },
             { name: 'Provider architecture', desc: 'Add a search source in ~50 lines: one SearchProvider interface, no core changes.', href: 'https://github.com/NostrDanish/Dsearch/tree/main/src/lib/providers' },
           ].map((doc) => (
             <div key={doc.name} className="rounded-xl border border-border/60 bg-card/50 p-4">

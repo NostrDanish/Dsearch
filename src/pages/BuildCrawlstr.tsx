@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function BuildCrawlstr() {
   useSeoMeta({
-    title: 'Run Crawlstr - DSearch',
+    title: 'Run Crawlstr - Dsearch',
     description: 'Turn your browser into a voluntary crawl node that feeds the shared SIP-01 index. No backend, no account, robots.txt-aware.',
   });
 
@@ -21,7 +21,7 @@ export default function BuildCrawlstr() {
           <h1 className="text-3xl font-bold tracking-tight">Run Crawlstr</h1>
         </div>
         <p className="text-muted-foreground mb-8 leading-relaxed max-w-2xl">
-          Crawlstr is the lightweight, browser-based crawler of the DSearch ecosystem — the easiest
+          Crawlstr is the lightweight, browser-based crawler of the Dsearch ecosystem — the easiest
           way to help build the index. Open it, give it a seed, and your browser becomes a voluntary
           crawl node feeding the shared SIP-01 index on Nostr.
         </p>
@@ -33,7 +33,7 @@ export default function BuildCrawlstr() {
                 'Fetches web pages politely — robots.txt, per-domain rate limits, sitemap and RSS discovery',
                 'Extracts title, description, text, links and language; SHA-256 hashes content for network-wide dedup',
                 'Signs each page as a SIP-01 kind 39697 observation with a per-device anonymous keypair',
-                'Publishes to the SIP relay network — instantly searchable by DSearch, 0xSearchstr, and every compatible client',
+                'Publishes to the SIP relay network — instantly searchable by Dsearch, 0xSearchstr, and every compatible client',
                 'Runs battery/WiFi/bandwidth-aware with a persistent IndexedDB queue that survives restarts',
               ].map((item) => (
                 <li key={item} className="flex items-start gap-2">
@@ -82,10 +82,10 @@ export default function BuildCrawlstr() {
             </p>
           </Section>
 
-          <Section title="How it contributes to DSearch">
+          <Section title="How it contributes to Dsearch">
             <p>
               Every page Crawlstr observes becomes a SIP-01 event on the shared relay network.
-              DSearch's Web Index provider reads exactly those events: a page you crawl today is a
+              Dsearch's Web Index provider reads exactly those events: a page you crawl today is a
               search result for everyone tomorrow. Your node also emits a coarse, privacy-minimal
               heartbeat (kind 16919) so the <a href="/network" className="text-primary hover:underline">Network page</a> can
               show the world that the swarm is alive.

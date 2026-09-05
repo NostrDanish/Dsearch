@@ -2,7 +2,7 @@
  * Legacy cached-query listing — ADMIN STATS ONLY.
  *
  * Reads the most recent kind 30078 cache events published by trusted
- * indexers (DSearch + 0xSearchstr bots). These events carry plaintext
+ * indexers (Dsearch + 0xSearchstr bots). These events carry plaintext
  * queries, which is exactly why user-facing surfaces no longer read them:
  * trending now comes from hashed k-anonymity term signals (see
  * src/lib/termSignals.ts + useTrendingTerms). This hook survives only to

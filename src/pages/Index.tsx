@@ -151,7 +151,7 @@ const Index = () => {
   const ai = useAIAnswer(activeQuery, organicResults, hasSearched && source !== 'i2p');
 
   useSeoMeta({
-    title: hasSearched ? `${activeQuery} - DSearch` : 'DSearch — Search the Web. Build the Index.',
+    title: hasSearched ? `${activeQuery} - Dsearch` : 'Dsearch — Search the Web. Build the Index.',
     description: 'The decentralized search engine built by its users. Nostr-first, SIP-01 federated web index, enriched with privacy-respecting web results. No backend, no tracking.',
   });
 
@@ -192,13 +192,13 @@ const Index = () => {
             </div>
             <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold tracking-tight mb-4">
               <span className="text-primary">D</span>
-              <span className="text-foreground">Search</span>
+              <span className="text-foreground">search</span>
             </h1>
             <p className="text-lg sm:text-xl text-muted-foreground max-w-lg mx-auto leading-relaxed">
               Search the Web. Build the Index.
             </p>
             <p className="text-sm text-muted-foreground/80 max-w-md mx-auto leading-relaxed mt-2">
-              An open, community-built decentralized search ecosystem — powered by Nostr, owned by no one.
+              The community-driven search engine. Powered by Nostr, owned by no one.
             </p>
           </div>
 
@@ -236,7 +236,7 @@ const Index = () => {
             className="mt-8 motion-safe:animate-in motion-safe:fade-in motion-safe:duration-500 motion-safe:delay-700"
           />
 
-          {/* The four pillars — what you can do inside the DSearch ecosystem */}
+          {/* The four pillars — what you can do inside the Dsearch ecosystem */}
           <div className="mt-12 grid grid-cols-2 lg:grid-cols-4 gap-3 w-full max-w-3xl motion-safe:animate-in motion-safe:fade-in motion-safe:duration-500 motion-safe:delay-1000">
             <HomePillar
               to="/explore"
@@ -271,7 +271,7 @@ const Index = () => {
             </p>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-2 text-left">
               {[
-                { name: 'DSearch', role: 'The search engine — you are here', to: '/about' },
+                { name: 'Dsearch', role: 'The search engine — you are here', to: '/about' },
                 { name: 'SIP', role: 'The protocol — how the index is shared', to: '/protocol' },
                 { name: 'Crawlstr', role: 'The crawler — discovers the web', to: '/build/crawlstr' },
                 { name: 'Indexstr', role: 'The indexer — builds the index', to: '/build/indexstr' },

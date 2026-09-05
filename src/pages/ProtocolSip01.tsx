@@ -7,7 +7,7 @@ import { Badge } from '@/components/ui/badge';
 
 export default function ProtocolSip01() {
   useSeoMeta({
-    title: 'SIP-01 - DSearch Protocol',
+    title: 'SIP-01 - Dsearch Protocol',
     description: 'SIP-01 Web Index Observations: how a web page becomes a signed, verifiable Nostr event (kind 39697) that any search engine can index.',
   });
 
@@ -123,7 +123,7 @@ export default function ProtocolSip01() {
           <Section title="Who implements it today">
             <div className="grid sm:grid-cols-2 gap-2 text-sm">
               {[
-                ['DSearch (this app)', 'reads + auto-indexes'],
+                ['Dsearch (this app)', 'reads + auto-indexes'],
                 ['0xSearchstr', 'reads + auto-indexes'],
                 ['Crawlstr', 'publishes (crawler)'],
                 ['Indexstr', 'publishes (indexer)'],

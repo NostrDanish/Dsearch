@@ -90,7 +90,7 @@ export default function Admin() {
   const { role, isMod, isLoading } = useAdminAccess();
 
   useSeoMeta({
-    title: 'Admin - DSearch',
+    title: 'Admin - Dsearch',
     description: 'Team console.',
   });
 

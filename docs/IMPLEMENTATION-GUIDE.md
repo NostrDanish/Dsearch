@@ -1,17 +1,17 @@
 # SIP-01 Implementation Guide
-  autosigners,            any stock Nostr relay)   DSearch,
+  autosigners,            any stock Nostr relay)   Dsearch,
 How to publish to, consume, or relay the shared search index. Everything here is
 normative where it restates [the specification](../public/spec/SIP-01.md) — when in
 doubt, the spec wins. Section numbers (`§n`) refer to the spec.
-  autosigners,            any stock Nostr relay)   DSearch,
+  autosigners,            any stock Nostr relay)   Dsearch,
 > **Rule zero:** byte-compatibility. If your URL normalization or hashing drifts by
 > a single character, your observations stop deduplicating against everyone else's.
 > Run your implementation against the §13 test vectors before anything else.
-  autosigners,            any stock Nostr relay)   DSearch,
+  autosigners,            any stock Nostr relay)   Dsearch,
 ---
-  autosigners,            any stock Nostr relay)   DSearch,
+  autosigners,            any stock Nostr relay)   Dsearch,
 ## 0. The 60-second architecture
-  autosigners,            any stock Nostr relay)   DSearch,
+  autosigners,            any stock Nostr relay)   Dsearch,
 ```
  CRAWLERS                RELAYS                   ENGINES
  (Crwalstr,              (UNCAGED Index Relay,    (0xSearchstr,
@@ -25,47 +25,47 @@ doubt, the spec wins. Section numbers (`§n`) refer to the spec.
      │  NIP-77 negentropy     │                        │  count distinct pubkeys
      │        relay ◀──────▶ relay                    │  rank locally
 ```
-  autosigners,            any stock Nostr relay)   DSearch,
+  autosigners,            any stock Nostr relay)   Dsearch,
 - **Publishers** only publish signed events. They never talk to a search backend.
 - **Relays** store and (optionally) validate + index + answer search operators.
 - **Engines** read, validate, group, and rank however they want.
-  autosigners,            any stock Nostr relay)   DSearch,
+  autosigners,            any stock Nostr relay)   Dsearch,
 Trust model: signatures prove authorship, not accuracy. Agreement between
 *independent* indexers (same `d`, many pubkeys, same `x`) is the signal.
-  autosigners,            any stock Nostr relay)   DSearch,
+  autosigners,            any stock Nostr relay)   Dsearch,
 ---
-  autosigners,            any stock Nostr relay)   DSearch,
+  autosigners,            any stock Nostr relay)   Dsearch,
 ## 1. Publishing (crawlers)
-  autosigners,            any stock Nostr relay)   DSearch,
+  autosigners,            any stock Nostr relay)   Dsearch,
 ### 1.1 Indexer identity (§14)
-  autosigners,            any stock Nostr relay)   DSearch,
+  autosigners,            any stock Nostr relay)   Dsearch,
 - Generate a keypair **locally** (e.g. `generateSecretKey()` from nostr-tools),
   persist it locally (`localStorage`, a secrets manager, an env var). Never upload it.
 - **Never** sign observations with a user's personal key. Per-device pseudonymous
   keys are the point: the `pubkey` is the indexer identity.
 - Rotating the key starts a new indexer. Old observations stay valid under the old key.
-  autosigners,            any stock Nostr relay)   DSearch,
+  autosigners,            any stock Nostr relay)   Dsearch,
 ### 1.2 Build the event
-  autosigners,            any stock Nostr relay)   DSearch,
+  autosigners,            any stock Nostr relay)   Dsearch,
 The whole algorithm (lift `src/lib/sip01-utils.ts` from this repo — it's the
 byte-compatible browser port of every shipping implementation):
-  autosigners,            any stock Nostr relay)   DSearch,
+  autosigners,            any stock Nostr relay)   Dsearch,
 ```ts
 import {
   normalizeIndexUrl, documentId, contentHash,
   SIP01_KIND, SIP01_SCHEMA_VERSION,
 } from './sip01-utils';
-  autosigners,            any stock Nostr relay)   DSearch,
+  autosigners,            any stock Nostr relay)   Dsearch,
 const normalized = normalizeIndexUrl(rawUrl);       // §7 — null if not http(s)
 if (!normalized) return;
-  autosigners,            any stock Nostr relay)   DSearch,
+  autosigners,            any stock Nostr relay)   Dsearch,
 const title = pageTitle.trim().slice(0, 300);       // §5 hard cap
 if (!title) return;
-  autosigners,            any stock Nostr relay)   DSearch,
+  autosigners,            any stock Nostr relay)   Dsearch,
 const description = (pageDescription ?? '').trim().slice(0, 1000);
 const d = await documentId(normalized);             // §3
 const x = await contentHash(title, description);    // §8
-  autosigners,            any stock Nostr relay)   DSearch,
+  autosigners,            any stock Nostr relay)   Dsearch,
 const event = await signer.signEvent({
   kind: SIP01_KIND,                                 // 39697
   content: JSON.stringify({ title, ...(description && { description }) }),
@@ -81,15 +81,15 @@ const event = await signer.signEvent({
   created_at: Math.floor(Date.now() / 1000),
 });
 ```
-  autosigners,            any stock Nostr relay)   DSearch,
+  autosigners,            any stock Nostr relay)   Dsearch,
 ### 1.3 Publish
-  autosigners,            any stock Nostr relay)   DSearch,
+  autosigners,            any stock Nostr relay)   Dsearch,
 - Publish to **2+ relays**, including at least one SIP-01-aware index relay.
 - Re-crawling the same URL? Publish again with the same `d` — the addressable slot
   replaces your previous observation (§2). Don't delete first.
-  autosigners,            any stock Nostr relay)   DSearch,
+  autosigners,            any stock Nostr relay)   Dsearch,
 ### 1.4 Publisher checklist
-  autosigners,            any stock Nostr relay)   DSearch,
+  autosigners,            any stock Nostr relay)   Dsearch,
 | Check | Why |
 |---|---|
 | `normalizeIndexUrl` passes all §13.1 vectors | dedup breaks otherwise |
@@ -98,42 +98,42 @@ const event = await signer.signEvent({
 | topics lowercase, `^[a-z0-9][a-z0-9-]{0,99}$`, ≤ 8 | relays reject otherwise |
 | `image` https-only | relays reject http images |
 | SSRF protections on any server-side fetch (§11) | no RFC-1918/loopback/metadata targets |
-  autosigners,            any stock Nostr relay)   DSearch,
+  autosigners,            any stock Nostr relay)   Dsearch,
 ---
-  autosigners,            any stock Nostr relay)   DSearch,
+  autosigners,            any stock Nostr relay)   Dsearch,
 ## 2. Consuming (search nodes & engines)
-  autosigners,            any stock Nostr relay)   DSearch,
+  autosigners,            any stock Nostr relay)   Dsearch,
 ### 2.1 Read
-  autosigners,            any stock Nostr relay)   DSearch,
+  autosigners,            any stock Nostr relay)   Dsearch,
 ```ts
 // Baseline — works on every stock NIP-01 relay:
 const events = await nostr.query([
   { kinds: [39697], '#t': ['privacy'], limit: 100 },
 ]);
-  autosigners,            any stock Nostr relay)   DSearch,
+  autosigners,            any stock Nostr relay)   Dsearch,
 // SIP-01-aware relays additionally understand NIP-50 operators:
 // { kinds: [39697], search: 'bitcoin site:github.com lang:en after:2026-01-01' }
 ```
-  autosigners,            any stock Nostr relay)   DSearch,
+  autosigners,            any stock Nostr relay)   Dsearch,
 Query 2+ relays and merge by event `id`. Baseline filterable tags: `#d`, `#t`,
 `#u`, `#x`, `#v`, `#l` (single-letter = relay-indexed per NIP-01), plus `authors`,
 `since`/`until` on observation time. Where a relay supports NIP-45, a `COUNT`
 request gives cheap totals (e.g. observations per `#d`) — but distinct-pubkey
 counting stays client-side unless the relay advertises an extension for it.
-  autosigners,            any stock Nostr relay)   DSearch,
+  autosigners,            any stock Nostr relay)   Dsearch,
 ### 2.2 Validate (§18)
-  autosigners,            any stock Nostr relay)   DSearch,
+  autosigners,            any stock Nostr relay)   Dsearch,
 Drop anything that fails — or use `validateSip01Event()` from
 `src/lib/sip01-utils.ts`, which mirrors the UNCAGED relay's ingestion rules:
-  autosigners,            any stock Nostr relay)   DSearch,
+  autosigners,            any stock Nostr relay)   Dsearch,
 1. exactly one `d`, `u`, `v`, `alt`; `v === '1'`;
 2. `u` is http(s) and ≤ 2048 chars;
 3. `d === 'widx:' + sha256(normalize(u))[0:32]` — **verify this**;
 4. content JSON has a `title` (1–300 trimmed), `description` ≤ 1000;
 5. when `x` is present, it equals `sha256(title + '\n' + description)`.
-  autosigners,            any stock Nostr relay)   DSearch,
+  autosigners,            any stock Nostr relay)   Dsearch,
 ### 2.3 Group and rank
-  autosigners,            any stock Nostr relay)   DSearch,
+  autosigners,            any stock Nostr relay)   Dsearch,
 ```ts
 const byDoc = new Map<string, NostrEvent[]>();
 for (const e of events) {
@@ -141,7 +141,7 @@ for (const e of events) {
   if (!d) continue;
   byDoc.set(d, [...(byDoc.get(d) ?? []), e]);
 }
-  autosigners,            any stock Nostr relay)   DSearch,
+  autosigners,            any stock Nostr relay)   Dsearch,
 for (const [d, observations] of byDoc) {
   const indexers = new Set(observations.map((o) => o.pubkey));
   const agree = new Set(observations.map((o) => o.tags.find(([n]) => n === 'x')?.[1]));
@@ -150,18 +150,18 @@ for (const [d, observations] of byDoc) {
   // newest created_at → last-observed time
 }
 ```
-  autosigners,            any stock Nostr relay)   DSearch,
+  autosigners,            any stock Nostr relay)   Dsearch,
 Ranking is deliberately out of scope (§1). Combine indexer count, agreement,
 freshness, your own trust graph of indexer pubkeys, domain reputation — anything.
 The protocol carries facts; engines decide.
-  autosigners,            any stock Nostr relay)   DSearch,
+  autosigners,            any stock Nostr relay)   Dsearch,
 ---
-  autosigners,            any stock Nostr relay)   DSearch,
+  autosigners,            any stock Nostr relay)   Dsearch,
 ## 3. Relaying
-  autosigners,            any stock Nostr relay)   DSearch,
+  autosigners,            any stock Nostr relay)   Dsearch,
 Any stock relay can carry kind 39697 (it's a normal addressable event). To be a
 SIP-01 **index relay**, add:
-  autosigners,            any stock Nostr relay)   DSearch,
+  autosigners,            any stock Nostr relay)   Dsearch,
 1. **Ingestion validation** — the rule table in §2.2 above, rejected with
    `OK false invalid: <reason>`. Unknown *tags* are ignored (§9.1.3); unknown
    *versions* are rejected (§10).
@@ -185,31 +185,31 @@ SIP-01 **index relay**, add:
    clients to ignore fields they don't understand, so the block is always safe.
 5. **Federation** — NIP-77 negentropy on `{ "kinds": [39697] }` against peer
    relays. There is no master; sync is how the index replicates.
-  autosigners,            any stock Nostr relay)   DSearch,
+  autosigners,            any stock Nostr relay)   Dsearch,
 Reference: [UNCAGED-Index-Relay](https://github.com/NostrDanish/UNCAGED-Index-Relay)
 (`src/web-document.ts` is the validator to match).
-  autosigners,            any stock Nostr relay)   DSearch,
+  autosigners,            any stock Nostr relay)   Dsearch,
 ---
-  autosigners,            any stock Nostr relay)   DSearch,
+  autosigners,            any stock Nostr relay)   Dsearch,
 ## 4. Extending the protocol
-  autosigners,            any stock Nostr relay)   DSearch,
+  autosigners,            any stock Nostr relay)   Dsearch,
 New facet? Don't fork the kind — register a tag:
-  autosigners,            any stock Nostr relay)   DSearch,
+  autosigners,            any stock Nostr relay)   Dsearch,
 1. Experiment with `["x-your-facet", "value"]` — everyone ignores it safely.
 2. Get one crawler publishing it and one engine consuming it.
 3. PR a row into spec §9.2: tag name, value shape, case rule, meaning,
    introducing implementation.
-  autosigners,            any stock Nostr relay)   DSearch,
+  autosigners,            any stock Nostr relay)   Dsearch,
 Reserved: single-letter names (relay-filterable; need broad relay awareness) and
 the core field semantics (change those only with a `v` bump). Content-body hashes
 (simhash, full-HTML SHA-256, …) belong in the hash registry, §9.3.
-  autosigners,            any stock Nostr relay)   DSearch,
+  autosigners,            any stock Nostr relay)   Dsearch,
 ---
-  autosigners,            any stock Nostr relay)   DSearch,
+  autosigners,            any stock Nostr relay)   Dsearch,
 ## 5. Test vectors (run these first)
-  autosigners,            any stock Nostr relay)   DSearch,
+  autosigners,            any stock Nostr relay)   Dsearch,
 From spec §13 — every value independently reproducible:
-  autosigners,            any stock Nostr relay)   DSearch,
+  autosigners,            any stock Nostr relay)   Dsearch,
 | Input | Expected |
 |---|---|
 | `https://example.com/` | `widx:0f115db062b7c0dd030b16878c99dea5` |
@@ -218,6 +218,6 @@ From spec §13 — every value independently reproducible:
 | `https://github.com/NostrDanish/Crwalstr` | `widx:cdfd4df8c01d609fc9cdf943afa80197` (paths stay case-sensitive) |
 | `sha256("Example\n")` | `e1762f14d9924e37b32f1c81dfd256410af462f5136415c96877efa8c80345d0` |
 | `sha256("Example Page\nA page about examples.")` | `2a5cbdf44513f552fb571d6c6de2ddf16c5452b235cc887980b52898fb38e7c1` |
-  autosigners,            any stock Nostr relay)   DSearch,
+  autosigners,            any stock Nostr relay)   Dsearch,
 If your implementation reproduces all six, you're wire-compatible with every
 crawler, relay, and engine in the ecosystem.

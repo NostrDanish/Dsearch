@@ -1,5 +1,5 @@
 /**
- * DSearch Legacy Query Cache (kind 30078) — READ-ONLY
+ * Dsearch Legacy Query Cache (kind 30078) — READ-ONLY
  * (federated with the 0xSearchstr indexer — same protocol, shared index)
  *
  * Historical write path: each unique search query became an addressable
@@ -16,11 +16,11 @@
  * fork. Each app signs (or signed) cache events with its own indexer key:
  *
  *   - 0xSearchstr bot:                12ad55ad…77d199
- *   - DSearch legacy signer:          be7cad9a…c4289  (retired)
+ *   - Dsearch legacy signer:          be7cad9a…c4289  (retired)
  *
  * Readers trust ALL known indexer pubkeys (INDEXER_PUBKEYS), so a
  * cache write from any compatible client is a cache hit for every
- * other client. 0xSearchstr makes DSearch better; DSearch
+ * other client. 0xSearchstr makes Dsearch better; Dsearch
  * makes 0xSearchstr better. Running your own fork? Add your own
  * indexer pubkey to the list and you join the same index.
  *
@@ -47,7 +47,7 @@ import type { SearchResult } from '@/lib/providers/types';
 export const SEARCHSTR_INDEX_PUBKEY = '12ad55ad1fdb918f5314c9e9a5cd135be9b746e6eee15fd871df131a5677d199';
 
 /**
- * DSearch legacy cache signer pubkey (hex) — RETIRED.
+ * Dsearch legacy cache signer pubkey (hex) — RETIRED.
  * This app no longer publishes kind 30078 cache events; the key stays in
  * the trust list so historical cache entries it signed remain readable
  * until they age out.

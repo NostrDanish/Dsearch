@@ -99,7 +99,7 @@ export function buildRoleListEvent(dTag: string, pubkeys: string[]): {
     tags: [
       ['d', dTag],
       ['t', ROLES_T_TAG],
-      ['alt', `DSearch ${label} list`],
+      ['alt', `Dsearch ${label} list`],
     ],
   };
 }
@@ -156,7 +156,7 @@ export function buildHideLabel(target: { url?: string; eventId?: string }): {
       ['L', MODERATION_NS],
       ['l', 'hidden', MODERATION_NS],
       targetTag,
-      ['alt', `DSearch moderation: hidden ${targetTag[0] === 'u' ? targetTag[1] : 'event'}`],
+      ['alt', `Dsearch moderation: hidden ${targetTag[0] === 'u' ? targetTag[1] : 'event'}`],
     ],
   };
 }

@@ -12,8 +12,8 @@ import { Badge } from '@/components/ui/badge';
 
 export default function About() {
   useSeoMeta({
-    title: 'About - DSearch',
-    description: 'Learn about DSearch — the decentralized search engine built by its users. A community web index on Nostr (SIP-01), keyword staking, and privacy-first results across Nostr, the clearnet, and dark web services.',
+    title: 'About - Dsearch',
+    description: 'Learn about Dsearch — the decentralized search engine built by its users. A community web index on Nostr (SIP-01), keyword staking, and privacy-first results across Nostr, the clearnet, and dark web services.',
   });
 
   return (
@@ -22,11 +22,11 @@ export default function About() {
         {/* Header */}
         <div className="flex items-center gap-3 mb-2">
           <img src="/favicon.svg" alt="" className="w-10 h-10 rounded-xl border border-primary/20" />
-          <h1 className="text-3xl font-bold tracking-tight">About DSearch</h1>
+          <h1 className="text-3xl font-bold tracking-tight">About Dsearch</h1>
         </div>
         <p className="text-muted-foreground mb-8 leading-relaxed max-w-2xl">
           <strong className="text-foreground">Search the Web. Build the Index.</strong>{' '}
-          DSearch is the decentralized search engine built by its users — a search engine and the
+          Dsearch is the decentralized search engine built by its users — a search engine and the
           home of an open search-infrastructure ecosystem. Every search source is a standalone provider
           returning a universal <code className="text-xs bg-muted px-1.5 py-0.5 rounded font-mono">SearchResult[]</code>.
           The UI merges, deduplicates, and ranks results from all providers — no backend, no tracking.
@@ -39,7 +39,7 @@ export default function About() {
         <Card className="mb-8 border-primary/20">
           <CardContent className="py-6">
             <p className="text-sm text-muted-foreground leading-relaxed mb-4">
-              DSearch is the independent continuation of several iterations of community
+              Dsearch is the independent continuation of several iterations of community
               decentralized-search work. Each generation added a layer of the stack we run today:
             </p>
             <div className="space-y-3">
@@ -47,7 +47,7 @@ export default function About() {
                 { name: '0xSearchstr', role: 'The original Nostr-native search aggregator — provider architecture, federated query cache, keyword stakes, term signals.' },
                 { name: 'UNCAGED Engine', role: 'The minimal template distillation — the pure search core others can build engines on.' },
                 { name: 'Presearchstr', role: 'The community fork — Presearch-style keyword staking rebuilt on Nostr keys, language-aware engine pools, structured queries, AI answers.' },
-                { name: 'DSearch', role: 'The independent ecosystem — the search engine plus the protocol, crawlers, indexers, and relays under one open roof.', current: true },
+                { name: 'Dsearch', role: 'The independent ecosystem — the search engine plus the protocol, crawlers, indexers, and relays under one open roof.', current: true },
               ].map((item) => (
                 <div key={item.name} className={`flex items-start gap-3 p-3 rounded-lg border ${item.current ? 'bg-primary/5 border-primary/30' : 'bg-muted/40 border-border/50'}`}>
                   <span className={`mt-0.5 shrink-0 font-mono text-sm ${item.current ? 'text-primary' : 'text-muted-foreground/60'}`}>{item.current ? '▸' : '·'}</span>
@@ -69,7 +69,7 @@ export default function About() {
             <div className="flex items-start gap-3 mb-4">
               <Users className="w-5 h-5 text-primary shrink-0 mt-0.5" />
               <p className="text-sm text-muted-foreground leading-relaxed">
-                DSearch and 0xSearchstr share <strong className="text-foreground">one federated search index</strong>.
+                Dsearch and 0xSearchstr share <strong className="text-foreground">one federated search index</strong>.
                 Both publish the SIP-01 web document index
                 (<code className="text-xs bg-muted px-1 py-0.5 rounded font-mono">kind 39697</code>, signed by per-device indexing
                 identities), and both read the legacy query cache
@@ -84,7 +84,7 @@ export default function About() {
                 <p className="text-xs text-muted-foreground font-mono break-all">12ad55ad…77d199</p>
               </div>
               <div className="p-3 rounded-lg bg-primary/5 border border-primary/20">
-                <p className="font-medium text-foreground mb-1">DSearch legacy signer (retired)</p>
+                <p className="font-medium text-foreground mb-1">Dsearch legacy signer (retired)</p>
                 <p className="text-xs text-muted-foreground font-mono break-all">be7cad9a…c4289</p>
                 <p className="text-[11px] text-muted-foreground/70 mt-1">Signed the legacy query cache before SIP-01 — reads still trust its history</p>
               </div>
@@ -102,7 +102,7 @@ export default function About() {
         <Card className="mb-8">
           <CardContent className="py-6">
             <p className="text-sm text-muted-foreground leading-relaxed mb-4">
-              DSearch is the flagship search engine of a modular stack. Every layer is open,
+              Dsearch is the flagship search engine of a modular stack. Every layer is open,
               separable, and runnable by anyone:
             </p>
             <div className="space-y-3 text-sm">
@@ -164,7 +164,7 @@ export default function About() {
                 <span>All providers run <strong className="text-foreground">in parallel</strong> — results stream in as each provider completes</span>
               </div>
               <Step number={1} icon={<FileText className="w-4 h-4 text-primary" />} title="Web Index Provider (SIP-01)" description="Searches the shared kind 39697 document index — pages observed by independent per-device indexers, ranked by observation count and recency." active />
-              <Step number={2} icon={<Database className="w-4 h-4 text-primary" />} title="Cached Index Provider" description="Reads the legacy federated query cache — hits from both DSearch and 0xSearchstr indexers are instant." active />
+              <Step number={2} icon={<Database className="w-4 h-4 text-primary" />} title="Cached Index Provider" description="Reads the legacy federated query cache — hits from both Dsearch and 0xSearchstr indexers are instant." active />
               <Step number={3} icon={<Zap className="w-4 h-4 text-nostr" />} title="Nostr Provider" description="NIP-50 search across NIP-50-capable relays. Profiles, notes, articles, wiki pages, and files — all with rich rendering." active />
               <Step number={4} icon={<Gem className="w-4 h-4 text-primary" />} title="Keyword Stakes Provider" description="Community-staked keywords — Nostr-native top placements, signed by the staker's own key." active />
               <Step number={5} icon={<Globe className="w-4 h-4 text-clearnet" />} title="SearXNG Provider" description="Meta-search across DuckDuckGo, Brave, Wikipedia, and dozens more via public instances with automatic failover." active />
@@ -371,7 +371,7 @@ export default function About() {
           </CardHeader>
           <CardContent className="space-y-4">
             <p className="text-sm text-muted-foreground leading-relaxed">
-              "No backend" means <strong className="text-foreground">DSearch itself</strong> has no servers
+              "No backend" means <strong className="text-foreground">Dsearch itself</strong> has no servers
               logging you — the app is static files in your browser. It does <em>not</em> mean your queries
               travel nowhere. Here is exactly who sees what:
             </p>
@@ -433,7 +433,7 @@ export default function About() {
             </div>
 
             <div>
-              <h4 className="text-sm font-medium text-foreground mb-2">What DSearch itself never does:</h4>
+              <h4 className="text-sm font-medium text-foreground mb-2">What Dsearch itself never does:</h4>
               <ul className="space-y-1.5 text-sm text-muted-foreground">
                 {[
                   'Log, store, or transmit your searches to its own servers (there are none)',

@@ -6,7 +6,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 export default function BuildIndexstr() {
   useSeoMeta({
-    title: 'Run Indexstr - DSearch',
+    title: 'Run Indexstr - Dsearch',
     description: 'Join the distributed indexing network: curated collections, deterministic sharding, enrichment classification, and freshness scheduling — no central server.',
   });
 
@@ -21,7 +21,7 @@ export default function BuildIndexstr() {
           <h1 className="text-3xl font-bold tracking-tight">Run Indexstr</h1>
         </div>
         <p className="text-muted-foreground mb-8 leading-relaxed max-w-2xl">
-          Indexstr is the heavyweight indexer of the DSearch ecosystem. Where Crawlstr is a scout,
+          Indexstr is the heavyweight indexer of the Dsearch ecosystem. Where Crawlstr is a scout,
           Indexstr is the network: curated URL collections, deterministic sharding, page enrichment,
           and freshness scheduling — coordinated across nodes <em>without any central server</em>.
         </p>
@@ -89,10 +89,10 @@ export default function BuildIndexstr() {
             </p>
           </Section>
 
-          <Section title="How it contributes to DSearch">
+          <Section title="How it contributes to Dsearch">
             <p>
               Indexstr nodes publish the same SIP-01 kind 39697 observations as every other indexer —
-              enriched with topic and type metadata that make DSearch's <code className="text-xs bg-muted px-1 py-0.5 rounded font-mono">tag:</code> and{' '}
+              enriched with topic and type metadata that make Dsearch's <code className="text-xs bg-muted px-1 py-0.5 rounded font-mono">tag:</code> and{' '}
               <code className="text-xs bg-muted px-1 py-0.5 rounded font-mono">type:</code> operators useful.
               Node heartbeats (kind 16919) power the <a href="/network" className="text-primary hover:underline">Network page</a>,
               and freshness recrawls keep the index from rotting.

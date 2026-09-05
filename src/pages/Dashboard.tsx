@@ -26,8 +26,8 @@ function timeAgo(unix: number): string {
 
 export default function DashboardPage() {
   useSeoMeta({
-    title: 'Dashboard - DSearch',
-    description: 'Your DSearch node: network health, your device indexing identity, and your contribution to the shared SIP-01 index.',
+    title: 'Dashboard - Dsearch',
+    description: 'Your Dsearch node: network health, your device indexing identity, and your contribution to the shared SIP-01 index.',
   });
 
   const { config, updateConfig } = useAppContext();
@@ -53,7 +53,7 @@ export default function DashboardPage() {
         <p className="text-muted-foreground mb-8 leading-relaxed max-w-2xl">
           One view of the network and your place in it. Everything here is either read live from
           relays or stored only on this device — <strong className="text-foreground">no account, no
-          tracking, no DSearch server</strong>. Search activity is never measured: that silence is a
+          tracking, no Dsearch server</strong>. Search activity is never measured: that silence is a
           feature, not a missing chart.
         </p>
 

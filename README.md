@@ -1,12 +1,12 @@
 <p align="center">
-  <img src="public/brand/logo.svg" alt="DSearch — Search the Web. Build the Index." width="480">
+  <img src="public/brand/logo.svg" alt="Dsearch — Search the Web. Build the Index." width="480">
 </p>
 
-# DSearch
+# Dsearch
 
 **Search the Web. Build the Index.**
 
-DSearch is the **decentralized search engine built by its users** — and the home of an open
+Dsearch is the **decentralized search engine built by its users** — and the home of an open
 search-infrastructure ecosystem. One shared index on Nostr, built by everyone who searches,
 crawls, indexes, or runs a relay. No company owns the crawler, the index, the relay network,
 or this interface.
@@ -19,7 +19,7 @@ or this interface.
 
 ## The Ecosystem
 
-DSearch is the flagship engine of a modular stack. Every layer is open, separable, and
+Dsearch is the flagship engine of a modular stack. Every layer is open, separable, and
 runnable by anyone:
 
 ```
@@ -50,7 +50,7 @@ runnable by anyone:
 
 | Component | Role | Repo | Live |
 |-----------|------|------|------|
-| **DSearch** | Search engine + ecosystem hub | this repo | [dsearch.com](https://dsearch.com) |
+| **Dsearch** | Search engine + ecosystem hub | this repo | [dsearch.com](https://dsearch.com) |
 | **SIP-01** | The protocol spec + test vectors | [SIP-01](https://github.com/NostrDanish/SIP-01) | [spec site](https://sip.shakespeare.wtf) |
 | **Crawlstr** | Lightweight browser crawler | [Crawlstr](https://github.com/NostrDanish/Crawlstr) | [crawlstr.vercel.app](https://crawlstr.vercel.app) |
 | **Indexstr** | Heavyweight distributed indexer | [indexstr](https://github.com/NostrDanish/indexstr) | [indexstr.vercel.app](https://indexstr.vercel.app) |
@@ -58,12 +58,12 @@ runnable by anyone:
 | **UNCAGED Index Relay** | Self-hosted index relay (OpenSearch) | [UNCAGED-Index-Relay](https://github.com/NostrDanish/UNCAGED-Index-Relay) | — |
 | **Crawlstr SIP Relay** | Android index relay | [Crawlstr-SIP-Relay](https://github.com/NostrDanish/Crawlstr-SIP-Relay) | — |
 
-**Lineage:** DSearch consolidates several iterations of community search work —
+**Lineage:** Dsearch consolidates several iterations of community search work —
 **0xSearchstr** (the original aggregator) → **UNCAGED Engine** (the minimal template) →
-**Presearchstr** (the community fork) → **DSearch** (the independent ecosystem).
+**Presearchstr** (the community fork) → **Dsearch** (the independent ecosystem).
 It is not a rebrand of any single predecessor: it's where the stack becomes one coherent project.
 
-**Federation:** DSearch and [0xSearchstr](https://github.com/NostrDanish/0xSearchstr) share one
+**Federation:** Dsearch and [0xSearchstr](https://github.com/NostrDanish/0xSearchstr) share one
 index. Same kinds, same tags, different signers. A search on either app warms the index for both.
 
 ---

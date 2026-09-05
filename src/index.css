@@ -98,7 +98,7 @@
   }
 }
 
-/* ─── Light theme (DSearch-branded) ─── */
+/* ─── Light theme (Dsearch-branded) ─── */
 :root {
   --radius: 0.75rem;
 
@@ -111,7 +111,7 @@
   --popover: hsl(0 0% 100%);
   --popover-foreground: hsl(222 47% 11%);
 
-  /* DSearch signal amber, deepened for AA contrast on white */
+  /* Dsearch signal amber, deepened for AA contrast on white */
   --primary: hsl(28 92% 36%);
   --primary-foreground: hsl(0 0% 100%);
 
@@ -157,7 +157,7 @@
   --i2p-foreground: hsl(0 0% 100%);
 }
 
-/* ─── Dark theme (DSearch night grid — the brand dark) ─── */
+/* ─── Dark theme (Dsearch night grid — the brand dark) ─── */
 .dark {
   --background: hsl(222 47% 6%);
   --foreground: hsl(214 40% 96%);
@@ -213,16 +213,17 @@
   --i2p-foreground: hsl(0 0% 100%);
 }
 
-/* ─── Dark theme extras (the DSearch brand layer) ─── */
-/* The dark theme IS the DSearch theme: night-grid palette + amber horizon glow. */
+/* ─── Dark theme extras (the Dsearch brand layer) ─── */
+/* The dark theme IS the Dsearch theme: night-grid palette + accent horizon glow.
+   All glows derive from --primary via color-mix so the accent picker flows through. */
 .dark body {
   background-image:
-    radial-gradient(ellipse 90% 55% at 50% -15%, hsl(38 92% 60% / 0.12), transparent),
+    radial-gradient(ellipse 90% 55% at 50% -15%, color-mix(in srgb, var(--primary) 12%, transparent), transparent),
     radial-gradient(ellipse 60% 40% at 85% 110%, hsl(263 70% 55% / 0.06), transparent);
   background-attachment: fixed;
 }
 
-/* Hacker theme keeps its own scrollbar (green), so scope the amber one out. */
+/* Hacker theme keeps its own scrollbar (green), so scope the accent one out. */
 .dark:not(.hacker) ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -238,16 +239,102 @@
 }
 
 .dark:not(.hacker) ::-webkit-scrollbar-thumb:hover {
-  background: hsl(38 80% 42%);
+  background: color-mix(in srgb, var(--primary) 75%, transparent);
 }
 
-/* Dark theme: brand amber halo */
+/* Dark theme: accent halo */
 .dark .glow-primary {
-  box-shadow: 0 0 20px hsl(38 92% 60% / 0.25), 0 0 50px hsl(38 92% 60% / 0.08);
+  box-shadow: 0 0 20px color-mix(in srgb, var(--primary) 25%, transparent), 0 0 50px color-mix(in srgb, var(--primary) 8%, transparent);
 }
 
 .dark .glow-primary-lg {
-  box-shadow: 0 0 30px hsl(38 92% 60% / 0.3), 0 0 80px hsl(38 92% 60% / 0.12);
+  box-shadow: 0 0 30px color-mix(in srgb, var(--primary) 30%, transparent), 0 0 80px color-mix(in srgb, var(--primary) 12%, transparent);
+}
+
+/* ─── Accent colors (Settings → Appearance) ─────────────────────────── */
+/* Amber is the brand default and lives in :root/.dark above — no
+   data-accent attribute needed for it. Each accent ships a deep variant
+   for light (white text stays AA) and a bright variant for dark (which
+   inherits the dark --primary-foreground). Hacker keeps its own green. */
+
+:root:not(.hacker)[data-accent='blue'] {
+  --primary: hsl(212 90% 44%);
+  --ring: hsl(212 90% 44%);
+  --accent: hsl(212 50% 93%);
+  --chart-1: hsl(212 90% 44%);
+  --sidebar-primary: hsl(212 90% 44%);
+  --sidebar-ring: hsl(212 90% 44%);
+}
+.dark:not(.hacker)[data-accent='blue'] {
+  --primary: hsl(212 100% 59%);
+  --ring: hsl(212 100% 59%);
+  --chart-1: hsl(212 100% 59%);
+  --sidebar-primary: hsl(212 100% 59%);
+  --sidebar-ring: hsl(212 100% 59%);
+}
+
+:root:not(.hacker)[data-accent='red'] {
+  --primary: hsl(0 72% 42%);
+  --ring: hsl(0 72% 42%);
+  --accent: hsl(0 60% 94%);
+  --chart-1: hsl(0 72% 42%);
+  --sidebar-primary: hsl(0 72% 42%);
+  --sidebar-ring: hsl(0 72% 42%);
+}
+.dark:not(.hacker)[data-accent='red'] {
+  --primary: hsl(4 90% 62%);
+  --ring: hsl(4 90% 62%);
+  --chart-1: hsl(4 90% 62%);
+  --sidebar-primary: hsl(4 90% 62%);
+  --sidebar-ring: hsl(4 90% 62%);
+}
+
+:root:not(.hacker)[data-accent='green'] {
+  --primary: hsl(152 68% 30%);
+  --ring: hsl(152 68% 30%);
+  --accent: hsl(152 40% 93%);
+  --chart-1: hsl(152 68% 30%);
+  --sidebar-primary: hsl(152 68% 30%);
+  --sidebar-ring: hsl(152 68% 30%);
+}
+.dark:not(.hacker)[data-accent='green'] {
+  --primary: hsl(152 70% 50%);
+  --ring: hsl(152 70% 50%);
+  --chart-1: hsl(152 70% 50%);
+  --sidebar-primary: hsl(152 70% 50%);
+  --sidebar-ring: hsl(152 70% 50%);
+}
+
+:root:not(.hacker)[data-accent='violet'] {
+  --primary: hsl(263 65% 42%);
+  --ring: hsl(263 65% 42%);
+  --accent: hsl(263 45% 94%);
+  --chart-1: hsl(263 65% 42%);
+  --sidebar-primary: hsl(263 65% 42%);
+  --sidebar-ring: hsl(263 65% 42%);
+}
+.dark:not(.hacker)[data-accent='violet'] {
+  --primary: hsl(263 85% 68%);
+  --ring: hsl(263 85% 68%);
+  --chart-1: hsl(263 85% 68%);
+  --sidebar-primary: hsl(263 85% 68%);
+  --sidebar-ring: hsl(263 85% 68%);
+}
+
+:root:not(.hacker)[data-accent='cyan'] {
+  --primary: hsl(190 90% 30%);
+  --ring: hsl(190 90% 30%);
+  --accent: hsl(190 55% 92%);
+  --chart-1: hsl(190 90% 30%);
+  --sidebar-primary: hsl(190 90% 30%);
+  --sidebar-ring: hsl(190 90% 30%);
+}
+.dark:not(.hacker)[data-accent='cyan'] {
+  --primary: hsl(187 85% 52%);
+  --ring: hsl(187 85% 52%);
+  --chart-1: hsl(187 85% 52%);
+  --sidebar-primary: hsl(187 85% 52%);
+  --sidebar-ring: hsl(187 85% 52%);
 }
 
 /* ─── Hacker theme (green-on-black terminal) ─── */

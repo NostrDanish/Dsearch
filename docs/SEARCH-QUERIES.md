@@ -1,6 +1,6 @@
-# DSearch search queries
+# Dsearch search queries
 
-DSearch understands real search syntax. Type naturally — plain words
+Dsearch understands real search syntax. Type naturally — plain words
 work exactly like before — and reach for operators when you want precision.
 
 Everything is parsed into a structured form (text vs. filters) and executed
@@ -71,4 +71,4 @@ nostr type:pdf after:2026-01-01
 
 Under the hood: `src/lib/queryParser.ts` (structured parse) +
 `src/lib/queryEngine.ts` (authoritative local evaluation). Both are
-internal to DSearch — no protocol changes, nothing to federate.
+internal to Dsearch — no protocol changes, nothing to federate.
