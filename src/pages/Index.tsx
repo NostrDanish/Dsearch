@@ -4,6 +4,7 @@ import { useSeoMeta } from '@unhead/react';
 import { Search, Network, ExternalLink, Gem, ChevronLeft, ChevronRight } from 'lucide-react';
 
 import { Layout } from '@/components/Layout';
+import { LogoMark } from '@/components/LogoMark';
 import { SearchBar } from '@/components/SearchBar';
 import { SourceTabs, type SourceTabValue } from '@/components/SourceTabs';
 import { UnifiedResultCard } from '@/components/UnifiedResultCard';
@@ -182,11 +183,7 @@ const Index = () => {
           <div className="text-center mb-10 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-4 motion-safe:duration-700">
             <div className="flex items-center justify-center mb-6">
               <div className="relative">
-                <img
-                  src="/favicon.svg"
-                  alt=""
-                  className="w-16 h-16 rounded-2xl border border-primary/20 glow-primary-lg"
-                />
+                <LogoMark className="w-16 h-16 rounded-2xl glow-primary-lg" />
                 <div className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-primary animate-search-pulse" />
               </div>
             </div>

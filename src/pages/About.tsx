@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 
 import { Layout } from '@/components/Layout';
+import { LogoMark } from '@/components/LogoMark';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
 import { Badge } from '@/components/ui/badge';
@@ -21,7 +22,7 @@ export default function About() {
       <div className="container max-w-3xl py-10">
         {/* Header */}
         <div className="flex items-center gap-3 mb-2">
-          <img src="/favicon.svg" alt="" className="w-10 h-10 rounded-xl border border-primary/20" />
+          <LogoMark className="w-10 h-10 rounded-xl" />
           <h1 className="text-3xl font-bold tracking-tight">About Dsearch</h1>
         </div>
         <p className="text-muted-foreground mb-8 leading-relaxed max-w-2xl">

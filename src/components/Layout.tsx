@@ -4,6 +4,7 @@ import { Search, Settings, PlusCircle, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { LoginArea } from '@/components/auth/LoginArea';
+import { LogoMark } from '@/components/LogoMark';
 import { SubmitToIndex } from '@/components/SubmitToIndex';
 import { cn } from '@/lib/utils';
 
@@ -58,11 +59,7 @@ export function Layout({ children, minimal = false }: LayoutProps) {
       )}>
         <div className="container flex items-center justify-between h-14 gap-4">
           <Link to="/" className="flex items-center gap-2.5 shrink-0 group" aria-label="Dsearch home">
-            <img
-              src="/favicon.svg"
-              alt=""
-              className="w-8 h-8 rounded-lg border border-primary/20 group-hover:border-primary/40 transition-colors"
-            />
+            <LogoMark className="w-8 h-8 rounded-lg group-hover:drop-shadow-[0_0_6px_currentColor] transition-all" />
             <span className="font-semibold text-lg tracking-tight">
               <span className="text-primary">D</span>
               <span className="text-foreground">search</span>
@@ -137,7 +134,7 @@ export function Layout({ children, minimal = false }: LayoutProps) {
               <SheetContent side="right" className="w-72">
                 <SheetHeader>
                   <SheetTitle className="flex items-center gap-2">
-                    <img src="/favicon.svg" alt="" className="w-6 h-6 rounded-md" />
+                    <LogoMark className="w-6 h-6 rounded-md" />
                     <span><span className="text-primary">D</span>search</span>
                   </SheetTitle>
                 </SheetHeader>
