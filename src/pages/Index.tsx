@@ -152,8 +152,8 @@ const Index = () => {
   const ai = useAIAnswer(activeQuery, organicResults, hasSearched && source !== 'i2p');
 
   useSeoMeta({
-    title: hasSearched ? `${activeQuery} - Dsearch` : 'Dsearch — Search the Web. Build the Index.',
-    description: 'The decentralized search engine built by its users. Nostr-first, SIP-01 federated web index, enriched with privacy-respecting web results. No backend, no tracking.',
+    title: hasSearched ? `${activeQuery} - Dsearch` : 'Dsearch — The community-driven search engine',
+    description: 'The community-driven search engine. Powered by Nostr, owned by no one. SIP-01 federated web index, privacy-respecting web results. No backend, no tracking.',
   });
 
   const handleSubmit = useCallback((value: string) => {

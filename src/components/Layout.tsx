@@ -172,7 +172,7 @@ export function Layout({ children, minimal = false }: LayoutProps) {
           <div className="flex items-center gap-2">
             <span className="font-semibold"><span className="text-primary/70">D</span>search</span>
             <span className="text-border">|</span>
-            <span>Search the Web. Build the Index.</span>
+            <span>The community-driven search engine. Powered by Nostr, owned by no one.</span>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-x-4 gap-y-2">
             {HUB_LINKS.map((link) => (

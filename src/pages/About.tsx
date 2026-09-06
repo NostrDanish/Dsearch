@@ -26,7 +26,7 @@ export default function About() {
           <h1 className="text-3xl font-bold tracking-tight">About Dsearch</h1>
         </div>
         <p className="text-muted-foreground mb-8 leading-relaxed max-w-2xl">
-          <strong className="text-foreground">Search the Web. Build the Index.</strong>{' '}
+          <strong className="text-foreground">The community-driven search engine. Powered by Nostr, owned by no one.</strong>{' '}
           Dsearch is the decentralized search engine built by its users — a search engine and the
           home of an open search-infrastructure ecosystem. Every search source is a standalone provider
           returning a universal <code className="text-xs bg-muted px-1.5 py-0.5 rounded font-mono">SearchResult[]</code>.

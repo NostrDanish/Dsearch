@@ -1,10 +1,10 @@
 <p align="center">
-  <img src="public/brand/logo.svg" alt="Dsearch — Search the Web. Build the Index." width="480">
+  <img src="public/brand/logo.svg" alt="Dsearch — The community-driven search engine. Powered by Nostr, owned by no one." width="480">
 </p>
 
 # Dsearch
 
-**Search the Web. Build the Index.**
+**The community-driven search engine. Powered by Nostr, owned by no one.**
 
 Dsearch is the **decentralized search engine built by its users** — and the home of an open
 search-infrastructure ecosystem. One shared index on Nostr, built by everyone who searches,

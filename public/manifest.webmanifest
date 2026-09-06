@@ -1,7 +1,7 @@
 {
   "name": "Dsearch",
   "short_name": "Dsearch",
-  "description": "Search the Web. Build the Index. The decentralized search engine built by its users — Nostr-native, federated via SIP-01, owned by no one.",
+  "description": "The community-driven search engine. Powered by Nostr, owned by no one.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#070b1a",
