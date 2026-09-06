@@ -1,23 +1,73 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 200" fill="none">
-  <!-- Dsearch lockup — the approved app icon + wordmark + tagline.
-       The icon IS the install image (embedded reference). -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 880 260" fill="none">
+  <!-- Dsearch lockup — the mark + wordmark + tagline.
+       Static master: hardcoded brand colors (CSS vars don't apply in <img>). -->
   <style>
     .wordmark { fill: #16356b; }
-    .tagline { fill: #3c4557; }
+    .tagline { fill: #5b6478; }
     @media (prefers-color-scheme: dark) {
       .wordmark { fill: #dbe4f5; }
       .tagline { fill: #8b94a7; }
     }
   </style>
 
-  <!-- The mark: the approved app install icon -->
-  <image href="/brand/icon-1024.png" x="20" y="28" width="144" height="144"/>
+  <!-- The mark (scaled from the 1024 master) -->
+  <g transform="translate(14 22) scale(0.205)">
+    <path d="M205 135 Q212 173 243 180 Q212 187 205 225 Q198 187 167 180 Q198 173 205 135 Z" fill="#1d4e9e"/>
+    <path d="M732 160 Q737 189 762 195 Q737 201 732 230 Q727 201 702 195 Q727 189 732 160 Z" fill="#14b8a6"/>
+    <path d="M330 670 Q335 699 360 705 Q335 711 330 740 Q325 711 300 705 Q325 699 330 670 Z" fill="#14b8a6"/>
+    <circle cx="160" cy="285" r="11" fill="#14b8a6"/>
+    <circle cx="742" cy="540" r="11" fill="#14b8a6"/>
+    <g transform="rotate(45 460 400)">
+      <line x1="722" y1="368" x2="776" y2="368" stroke="#14b8a6" stroke-width="19" stroke-linecap="round"/>
+      <line x1="722" y1="432" x2="776" y2="432" stroke="#14b8a6" stroke-width="19" stroke-linecap="round"/>
+      <rect x="776" y="366" width="232" height="68" rx="34" stroke="#14b8a6" stroke-width="19"/>
+      <circle cx="974" cy="400" r="34" fill="#14b8a6"/>
+    </g>
+    <circle cx="460" cy="400" r="262" stroke="#14b8a6" stroke-width="21"/>
+    <circle cx="460" cy="400" r="203" stroke="#1d4e9e" stroke-width="30"/>
+    <g stroke="#14b8a6" stroke-width="7" stroke-linecap="round">
+      <line x1="450" y1="268" x2="352" y2="322"/>
+      <line x1="450" y1="268" x2="562" y2="298"/>
+      <line x1="450" y1="268" x2="488" y2="355"/>
+      <line x1="352" y1="322" x2="318" y2="410"/>
+      <line x1="352" y1="322" x2="412" y2="402"/>
+      <line x1="562" y1="298" x2="488" y2="355"/>
+      <line x1="562" y1="298" x2="592" y2="428"/>
+      <line x1="488" y1="355" x2="412" y2="402"/>
+      <line x1="488" y1="355" x2="488" y2="455"/>
+      <line x1="318" y1="410" x2="412" y2="402"/>
+      <line x1="318" y1="410" x2="352" y2="490"/>
+      <line x1="412" y1="402" x2="352" y2="490"/>
+      <line x1="592" y1="428" x2="488" y2="455"/>
+      <line x1="592" y1="428" x2="542" y2="522"/>
+      <line x1="488" y1="455" x2="432" y2="528"/>
+      <line x1="488" y1="455" x2="542" y2="522"/>
+      <line x1="352" y1="490" x2="432" y2="528"/>
+      <line x1="432" y1="528" x2="542" y2="522"/>
+    </g>
+    <circle cx="450" cy="268" r="26" fill="#14b8a6"/>
+    <circle cx="352" cy="322" r="33" fill="#14b8a6"/>
+    <circle cx="562" cy="298" r="29" fill="#14b8a6"/>
+    <circle cx="488" cy="355" r="23" fill="#14b8a6"/>
+    <circle cx="318" cy="410" r="23" fill="#14b8a6"/>
+    <circle cx="412" cy="402" r="26" fill="#14b8a6"/>
+    <circle cx="592" cy="428" r="31" fill="#14b8a6"/>
+    <circle cx="488" cy="455" r="28" fill="#14b8a6"/>
+    <circle cx="352" cy="490" r="26" fill="#14b8a6"/>
+    <circle cx="432" cy="528" r="28" fill="#14b8a6"/>
+    <circle cx="542" cy="522" r="19" fill="#14b8a6"/>
+    <circle cx="422" cy="325" r="9" fill="#1d4e9e"/>
+    <circle cx="367" cy="408" r="8" fill="#1d4e9e"/>
+    <circle cx="527" cy="418" r="9" fill="#1d4e9e"/>
+    <circle cx="417" cy="468" r="9" fill="#1d4e9e"/>
+  </g>
 
   <!-- Wordmark -->
-  <text x="190" y="118" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="72" font-weight="800" letter-spacing="-2">
-    <tspan fill="#10d48e">D</tspan><tspan class="wordmark">search</tspan>
+  <text x="248" y="132" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="88" font-weight="800" letter-spacing="-2.5">
+    <tspan fill="#14b8a6">D</tspan><tspan class="wordmark">search</tspan>
   </text>
 
   <!-- Tagline -->
-  <text x="192" y="150" class="tagline" font-family="ui-sans-serif, system-ui, sans-serif" font-size="16.5">The community-driven search engine. Powered by Nostr, owned by no one.</text>
+  <text x="252" y="170" class="tagline" font-family="ui-sans-serif, system-ui, sans-serif" font-size="19">The community-driven search engine.</text>
+  <text x="252" y="198" class="tagline" font-family="ui-sans-serif, system-ui, sans-serif" font-size="19">Powered by Nostr, owned by no one.</text>
 </svg>
