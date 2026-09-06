@@ -1,9 +1,29 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
-  <!-- Night navy background tile -->
+  <!-- 
+    Dsearch Icon — The Theme-Reactive Master.
+    This SVG uses CSS variables (--primary for the accent, --card for the background)
+    so it perfectly matches the active theme (Light, Dark, Hacker, Blue, Red, etc.).
+  -->
+  <defs>
+    <radialGradient id="lensglow" cx="0.42" cy="0.38" r="0.5">
+      <stop offset="0" stop-color="var(--primary)" stop-opacity="0.14"/>
+      <stop offset="1" stop-color="var(--primary)" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background Tile -->
   <rect width="100" height="100" rx="24" fill="#070b1a"/>
-  
-  <!-- The Constellation Mesh (Inside & Overlapping Lens) -->
-  <g stroke="#10d48e" stroke-opacity="0.6" stroke-width="0.8">
+  <rect x="2" y="2" width="96" height="96" rx="22" stroke="var(--primary)" stroke-opacity="0.25" stroke-width="1.5"/>
+
+  <!-- Lens Glow -->
+  <circle cx="42" cy="40" r="24" fill="url(#lensglow)"/>
+
+  <!-- Orbit Rings: Outer (Accent), Inner (Navy) -->
+  <circle cx="42" cy="40" r="24" stroke="var(--primary)" stroke-width="3"/>
+  <circle cx="42" cy="40" r="19" stroke="#1d4e9e" stroke-opacity="0.8" stroke-width="2" stroke-dasharray="80 30" transform="rotate(-30 42 40)"/>
+
+  <!-- The Constellation Mesh (Inside the Lens) -->
+  <g stroke="var(--primary)" stroke-opacity="0.6" stroke-width="0.8">
     <line x1="42" y1="40" x2="30" y2="32"/>
     <line x1="42" y1="40" x2="55" y2="28"/>
     <line x1="42" y1="40" x2="60" y2="45"/>
@@ -13,49 +33,39 @@
     <line x1="60" y1="45" x2="50" y2="58"/>
     <line x1="32" y1="55" x2="50" y2="58"/>
     <line x1="30" y1="32" x2="32" y2="55"/>
-    <!-- Navy accents -->
-    <line x1="42" y1="40" x2="42" y2="25" stroke="#3f7bdc"/>
-    <line x1="60" y1="45" x2="68" y2="35" stroke="#3f7bdc"/>
   </g>
 
-  <!-- Nodes (Varying Sizes) -->
-  <circle cx="42" cy="40" r="3.5" fill="#10d48e"/> <!-- Center -->
-  <circle cx="30" cy="32" r="4.2" fill="#10d48e"/>
-  <circle cx="55" cy="28" r="4.5" fill="#10d48e"/>
-  <circle cx="60" cy="45" r="5.2" fill="#10d48e"/>
-  <circle cx="32" cy="55" r="4.8" fill="#10d48e"/>
-  <circle cx="50" cy="58" r="5.5" fill="#10d48e"/>
+  <!-- Nodes: Emerald (Accent) & Navy (Accent) -->
+  <circle cx="42" cy="40" r="3.5" fill="var(--primary)"/>
+  <circle cx="30" cy="32" r="4.2" fill="var(--primary)"/>
+  <circle cx="55" cy="28" r="4.5" fill="var(--primary)"/>
+  <circle cx="60" cy="45" r="5.2" fill="var(--primary)"/>
+  <circle cx="32" cy="55" r="4.8" fill="var(--primary)"/>
+  <circle cx="50" cy="58" r="5.5" fill="var(--primary)"/>
   
-  <!-- Navy Deep Nodes -->
-  <circle cx="42" cy="25" r="2.2" fill="#0b3d91"/>
-  <circle cx="68" cy="35" r="1.8" fill="#0b3d91"/>
-  <circle cx="35" cy="45" r="2.5" fill="#0b3d91"/>
+  <circle cx="42" cy="25" r="2.2" fill="#1d4e9e"/>
+  <circle cx="68" cy="35" r="1.8" fill="#1d4e9e"/>
+  <circle cx="35" cy="45" r="2.5" fill="#1d4e9e"/>
 
   <!-- Outriders (Floating) -->
-  <circle cx="22" cy="25" r="2.8" fill="#10d48e"/>
-  <circle cx="75" cy="40" r="2.5" fill="#10d48e"/>
-  <circle cx="45" cy="70" r="3.2" fill="#10d48e"/>
+  <circle cx="22" cy="25" r="2.8" fill="var(--primary)"/>
+  <circle cx="75" cy="40" r="2.5" fill="var(--primary)"/>
+  <circle cx="45" cy="70" r="3.2" fill="var(--primary)"/>
 
-  <!-- Magnifying Glass Housing -->
-  <!-- Main Ring -->
-  <circle cx="42" cy="40" r="24" stroke="#10d48e" stroke-width="2.5"/>
-  <!-- Inner Ring (Dashed/Orbit) -->
-  <circle cx="42" cy="40" r="20" stroke="#3f7bdc" stroke-opacity="0.4" stroke-width="1.2" stroke-dasharray="80 30" transform="rotate(-30 42 40)"/>
-  
-  <!-- Handle Connector (The Stub) -->
-  <rect x="58" y="58" width="6" height="4" transform="rotate(45 61 60)" fill="#10d48e"/>
+  <!-- Handle Stub -->
+  <rect x="58" y="58" width="6" height="4" transform="rotate(45 61 60)" fill="var(--primary)"/>
 
-  <!-- The Handle (Hollow Tube) -->
+  <!-- Handle (Hollow Tube) -->
   <g transform="rotate(45 42 40)">
-     <line x1="42" y1="64" x2="42" y2="78" stroke="#10d48e" stroke-width="2.2" stroke-linecap="round"/>
-     <line x1="48" y1="64" x2="48" y2="78" stroke="#10d48e" stroke-width="2.2" stroke-linecap="round"/>
-     <path d="M42 64 Q45 61 48 64" stroke="#10d48e" stroke-width="2.2" fill="none"/>
+     <line x1="42" y1="64" x2="42" y2="82" stroke="var(--primary)" stroke-width="3" stroke-linecap="round"/>
+     <line x1="50" y1="64" x2="50" y2="82" stroke="var(--primary)" stroke-width="3" stroke-linecap="round"/>
+     <path d="M42 64 Q46 60 50 64" stroke="var(--primary)" stroke-width="3" fill="none"/>
   </g>
   
   <!-- Large Tip Node -->
-  <circle cx="78" cy="78" r="4.5" fill="#10d48e"/>
+  <circle cx="78" cy="78" r="6" fill="var(--primary)"/>
 
   <!-- Sparkles -->
-  <path d="M85 15 l1 3 3 1 -3 1 -1 3 -1 -3 -3 -1 3 -1 z" fill="#3f7bdc"/>
-  <path d="M15 75 l0.8 2.2 2.2 0.8 -2.2 0.8 -0.8 2.2 -0.8 -2.2 -2.2 -0.8 2.2 -0.8 z" fill="#10d48e"/>
+  <path d="M85 15 l1.5 4 4 1.5 -4 1.5 -1.5 4 -1.5 -4 -4 -1.5 4 -1.5 z" fill="#3f7bdc"/>
+  <path d="M15 75 l1 2.5 2.5 1 -2.5 1 -1 2.5 -1 -2.5 -2.5 -1 2.5 -1 z" fill="var(--primary)"/>
 </svg>
