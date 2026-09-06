@@ -183,7 +183,7 @@ const Index = () => {
           <div className="text-center mb-10 motion-safe:animate-in motion-safe:fade-in motion-safe:slide-in-from-bottom-4 motion-safe:duration-700">
             <div className="flex items-center justify-center mb-6">
               <div className="relative">
-                <LogoMark className="w-16 h-16 rounded-2xl glow-primary-lg" />
+                <LogoMark className="w-16 h-16 rounded-2xl shadow-lg" />
                 <div className="absolute -top-1 -right-1 w-3 h-3 rounded-full bg-primary animate-search-pulse" />
               </div>
             </div>

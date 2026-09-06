@@ -59,7 +59,7 @@ export function Layout({ children, minimal = false }: LayoutProps) {
       )}>
         <div className="container flex items-center justify-between h-14 gap-4">
           <Link to="/" className="flex items-center gap-2.5 shrink-0 group" aria-label="Dsearch home">
-            <LogoMark className="w-8 h-8 rounded-lg group-hover:drop-shadow-[0_0_6px_currentColor] transition-all" />
+            <LogoMark className="w-8 h-8 rounded-lg group-hover:scale-105 transition-transform" />
             <span className="font-semibold text-lg tracking-tight">
               <span className="text-primary">D</span>
               <span className="text-foreground">search</span>

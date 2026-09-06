@@ -23,16 +23,16 @@ All brand assets live in [`public/brand/`](public/brand/):
 
 | File | What |
 |------|------|
-| [`logo.svg`](public/brand/logo.svg) | Horizontal lockup — icon + wordmark + tagline (auto light/dark) |
-| [`icon.svg`](public/brand/icon.svg) | The mark on its night-navy tile — the master SVG |
-| [`icon-1024.png`](public/brand/icon-1024.png) | Raster icon 1024×1024 (app stores, avatars, PWA install) |
-| [`favicon.svg`](public/favicon.svg) | 32px-optimized favicon |
+| [`icon-1024.png`](public/brand/icon-1024.png) | **The master icon** (AI-generated, 1024×1024) — the approved design used everywhere |
+| [`logo.svg`](public/brand/logo.svg) | Horizontal lockup — icon + wordmark + tagline (references the master PNG) |
+| [`icon.svg`](public/brand/icon.svg) | SVG wrapper referencing the master PNG |
+| [`favicon.svg`](public/favicon.svg) | Browser tab icon (points to the PNG) |
 | [`og.jpg`](public/og.jpg) | Social link preview card |
 
 The mark: a double-ring magnifying glass whose lens holds an organic node
 constellation — search, with the index inside. Emerald `#10d48e` and deep navy
-`#0b3d91`/`#3f7bdc` on night navy `#070b1a`; the in-app logo follows the user's
-accent color and theme (inline SVG, `src/components/LogoMark.tsx`).
+`#0b3d91`/`#3f7bdc` on night navy `#070b1a`. The in-app logo is the same
+raster (theme-reactive via its transparent background).
 
 ---
 
