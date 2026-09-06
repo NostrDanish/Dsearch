@@ -1,70 +1,74 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
   <defs>
-    <radialGradient id="lensshine" cx="0.45" cy="0.4" r="0.55">
-      <stop offset="0" stop-color="#10d48e" stop-opacity="0.10"/>
+    <radialGradient id="lensglow" cx="0.42" cy="0.38" r="0.5">
+      <stop offset="0" stop-color="#10d48e" stop-opacity="0.14"/>
       <stop offset="1" stop-color="#10d48e" stop-opacity="0"/>
     </radialGradient>
   </defs>
 
   <!-- Icon tile: night-navy rounded square -->
   <rect width="64" height="64" rx="16" fill="#070b1a"/>
-  <rect x="2" y="2" width="60" height="60" rx="14" stroke="#f0b45a" stroke-opacity="0.25" stroke-width="1"/>
+  <rect x="2" y="2" width="60" height="60" rx="14" stroke="#10d48e" stroke-opacity="0.22" stroke-width="1"/>
 
   <!-- Lens glow -->
-  <circle cx="25" cy="25" r="19" fill="url(#lensshine)"/>
+  <circle cx="26" cy="26" r="19" fill="url(#lensglow)"/>
 
-  <!-- The index inside the lens: an organic node mesh -->
-  <g stroke-opacity="0.55" stroke-width="0.9">
-    <!-- mesh edges -->
-    <g stroke="#10d48e">
-      <line x1="25" y1="25" x2="16" y2="19"/>
-      <line x1="25" y1="25" x2="33" y2="17.5"/>
-      <line x1="25" y1="25" x2="34.5" y2="30"/>
-      <line x1="25" y1="25" x2="17.5" y2="32.5"/>
-      <line x1="25" y1="25" x2="25" y2="13.5"/>
-      <line x1="16" y1="19" x2="25" y2="13.5"/>
-      <line x1="25" y1="13.5" x2="33" y2="17.5"/>
-      <line x1="33" y1="17.5" x2="37" y2="26"/>
-      <line x1="34.5" y1="30" x2="37" y2="26"/>
-      <line x1="17.5" y1="32.5" x2="16" y2="19"/>
-      <line x1="17.5" y1="32.5" x2="29" y2="35.5"/>
-      <line x1="34.5" y1="30" x2="29" y2="35.5"/>
-    </g>
-    <!-- navy-accent edges -->
-    <g stroke="#3f7bdc">
-      <line x1="25" y1="13.5" x2="13" y2="11"/>
-      <line x1="29" y1="35.5" x2="20" y2="38.5"/>
-      <line x1="37" y1="26" x2="42" y2="20"/>
-    </g>
+  <!-- Orbit rings: outer green, inner navy (with a rotation gap) -->
+  <circle cx="26" cy="26" r="16" stroke="#10d48e" stroke-opacity="0.85" stroke-width="1.5"/>
+  <circle cx="26" cy="26" r="13" stroke="#3f7bdc" stroke-opacity="0.7" stroke-width="1.2" stroke-dasharray="58 24" stroke-linecap="round" transform="rotate(110 26 26)"/>
+
+  <!-- Outrider stems (extended spokes) -->
+  <g stroke="#10d48e" stroke-opacity="0.5" stroke-width="0.9">
+    <line x1="20.5" y1="19.5" x2="14" y2="13"/>
+    <line x1="31.5" y1="19.5" x2="38" y2="13"/>
+    <line x1="18.5" y1="33" x2="13" y2="38.5"/>
+    <line x1="34.5" y1="32" x2="41" y2="35.5"/>
   </g>
 
-  <!-- nodes: green family (filled) + navy family (deep) -->
-  <circle cx="25" cy="25" r="2.3" fill="#0b3d91"/>
-  <circle cx="16" cy="19" r="2.6" fill="#10d48e"/>
-  <circle cx="25" cy="13.5" r="2.9" fill="#10d48e"/>
-  <circle cx="33" cy="17.5" r="1.9" fill="#10d48e"/>
-  <circle cx="37" cy="26" r="2.2" fill="#10d48e"/>
-  <circle cx="34.5" cy="30" r="1.6" fill="#0b3d91"/>
-  <circle cx="29" cy="35.5" r="2.7" fill="#10d48e"/>
-  <circle cx="17.5" cy="32.5" r="1.5" fill="#0b3d91"/>
-  <!-- outriders -->
-  <circle cx="13" cy="11" r="1.7" fill="#10d48e"/>
-  <circle cx="42" cy="20" r="1.5" fill="#3f7bdc"/>
-  <circle cx="20" cy="38.5" r="1.9" fill="#10d48e"/>
-  <circle cx="41.5" cy="34" r="1.1" fill="#3f7bdc"/>
+  <!-- Inner constellation mesh -->
+  <g stroke="#10d48e" stroke-opacity="0.6" stroke-width="0.85">
+    <line x1="26" y1="26" x2="20.5" y2="19.5"/>
+    <line x1="26" y1="26" x2="31.5" y2="19.5"/>
+    <line x1="26" y1="26" x2="21" y2="32.5"/>
+    <line x1="26" y1="26" x2="31.5" y2="32"/>
+    <line x1="20.5" y1="19.5" x2="31.5" y2="19.5"/>
+    <line x1="21" y1="32.5" x2="31.5" y2="32"/>
+    <line x1="20.5" y1="19.5" x2="21" y2="32.5"/>
+    <line x1="31.5" y1="19.5" x2="31.5" y2="32"/>
+  </g>
+  <!-- a couple of navy mesh accents -->
+  <g stroke="#3f7bdc" stroke-opacity="0.55" stroke-width="0.85">
+    <line x1="26" y1="26" x2="26" y2="18.5"/>
+    <line x1="21" y1="32.5" x2="26" y2="26"/>
+  </g>
 
-  <!-- sparkles -->
-  <path d="M47 8 l0.9 2.4 2.4 0.9 -2.4 0.9 -0.9 2.4 -0.9 -2.4 -2.4 -0.9 2.4 -0.9 z" fill="#3f7bdc"/>
-  <path d="M9 28 l0.6 1.6 1.6 0.6 -1.6 0.6 -0.6 1.6 -0.6 -1.6 -1.6 -0.6 1.6 -0.6 z" fill="#3f7bdc"/>
-  <circle cx="53" cy="30" r="0.9" fill="#10d48e"/>
-  <circle cx="8" cy="20" r="0.7" fill="#3f7bdc"/>
+  <!-- Inner nodes (small) -->
+  <circle cx="26" cy="26" r="2" fill="#10d48e"/>
+  <circle cx="20.5" cy="19.5" r="1.5" fill="#10d48e"/>
+  <circle cx="31.5" cy="19.5" r="1.4" fill="#0b3d91"/>
+  <circle cx="21" cy="32.5" r="1.4" fill="#10d48e"/>
+  <circle cx="31.5" cy="32" r="1.6" fill="#0b3d91"/>
+  <circle cx="26" cy="18.5" r="1.1" fill="#10d48e"/>
 
-  <!-- Magnifying glass: double-orbit lens + outlined hollow handle with tip node -->
-  <circle cx="25" cy="25" r="13.4" stroke="#10d48e" stroke-opacity="0.9" stroke-width="1.9"/>
-  <circle cx="25" cy="25" r="11.1" stroke="#10d48e" stroke-opacity="0.35" stroke-width="0.8"/>
-  <path d="M 35.8 34.2 A 13.4 13.4 0 0 0 34.2 35.8" stroke="#10d48e" stroke-width="2.4" stroke-linecap="round"/>
-  <!-- handle: stub + hollow capsule -->
-  <line x1="36" y1="36" x2="38.6" y2="38.6" stroke="#10d48e" stroke-width="3" stroke-linecap="round"/>
-  <rect x="37.4" y="43" width="5" height="13.4" rx="2.5" transform="rotate(-45 39.9 49.7)" stroke="#10d48e" stroke-width="2"/>
-  <circle cx="46.4" cy="46.4" r="2.7" fill="#10d48e"/>
+  <!-- Outrider nodes (big, on stems) -->
+  <circle cx="14" cy="13" r="2.7" fill="#10d48e"/>
+  <circle cx="38" cy="13" r="2.7" fill="#10d48e"/>
+  <circle cx="13" cy="38.5" r="2.7" fill="#10d48e"/>
+  <circle cx="41" cy="35.5" r="2.4" fill="#10d48e"/>
+  <circle cx="45" cy="24" r="1.6" fill="#10d48e"/>
+  <circle cx="9" cy="26" r="1.4" fill="#3f7bdc"/>
+  <circle cx="33" cy="7" r="1.5" fill="#10d48e"/>
+
+  <!-- Sparkles + dust -->
+  <path d="M50 6 l1 2.6 2.6 1 -2.6 1 -1 2.6 -1 -2.6 -2.6 -1 2.6 -1 z" fill="#3f7bdc"/>
+  <path d="M55 16 l0.6 1.5 1.5 0.6 -1.5 0.6 -0.6 1.5 -0.6 -1.5 -1.5 -0.6 1.5 -0.6 z" fill="#10d48e"/>
+  <circle cx="8" cy="10" r="0.8" fill="#3f7bdc"/>
+  <circle cx="54" cy="40" r="0.9" fill="#10d48e"/>
+  <circle cx="12" cy="47" r="0.7" fill="#3f7bdc"/>
+  <circle cx="47" cy="48" r="0.6" fill="#3f7bdc"/>
+
+  <!-- Handle: stub + hollow outlined capsule + big tip node -->
+  <line x1="37.2" y1="37.2" x2="39.8" y2="39.8" stroke="#10d48e" stroke-width="2.8" stroke-linecap="round"/>
+  <rect x="38.5" y="44.6" width="4.8" height="13" rx="2.4" transform="rotate(-45 40.9 51.1)" stroke="#10d48e" stroke-width="1.8"/>
+  <circle cx="47.6" cy="47.6" r="2.9" fill="#10d48e"/>
 </svg>
