@@ -1,80 +1,45 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 200" fill="none">
-  <defs>
-    <radialGradient id="lensglow" cx="0.42" cy="0.38" r="0.5">
-      <stop offset="0" stop-color="#10d48e" stop-opacity="0.14"/>
-      <stop offset="1" stop-color="#10d48e" stop-opacity="0"/>
-    </radialGradient>
-  </defs>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 240" fill="none">
   <style>
-    .wordmark { fill: #1d4e9e; }
+    .wordmark { fill: #16356b; }
     .tagline { fill: #3c4557; }
-    .rule { stroke: #c3cad6; }
-    .ruledot { fill: #1d4e9e; }
     @media (prefers-color-scheme: dark) {
       .wordmark { fill: #dbe4f5; }
       .tagline { fill: #8b94a7; }
-      .rule { stroke: #2e3a55; }
-      .ruledot { fill: #5b8ff0; }
     }
   </style>
 
-  <!-- Icon: the constellation magnifier (no tile in the lockup) -->
-  <g transform="translate(6,14) scale(1.05)">
-    <circle cx="26" cy="26" r="19" fill="url(#lensglow)"/>
-    <circle cx="26" cy="26" r="16" stroke="#10d48e" stroke-opacity="0.85" stroke-width="1.5"/>
-    <circle cx="26" cy="26" r="13" stroke="#3f7bdc" stroke-opacity="0.7" stroke-width="1.2" stroke-dasharray="58 24" stroke-linecap="round" transform="rotate(110 26 26)"/>
-    <g stroke="#10d48e" stroke-opacity="0.5" stroke-width="0.9">
-      <line x1="20.5" y1="19.5" x2="14" y2="13"/>
-      <line x1="31.5" y1="19.5" x2="38" y2="13"/>
-      <line x1="18.5" y1="33" x2="13" y2="38.5"/>
-      <line x1="34.5" y1="32" x2="41" y2="35.5"/>
+  <!-- The Icon (Positioned to the left) -->
+  <g transform="translate(20, 20) scale(2)">
+    <circle cx="42" cy="40" r="24" stroke="#10d48e" stroke-width="2.5"/>
+    <g stroke="#10d48e" stroke-opacity="0.6" stroke-width="0.8">
+      <line x1="42" y1="40" x2="30" y2="32"/><line x1="42" y1="40" x2="55" y2="28"/>
+      <line x1="42" y1="40" x2="60" y2="45"/><line x1="42" y1="40" x2="32" y2="55"/>
     </g>
-    <g stroke="#10d48e" stroke-opacity="0.6" stroke-width="0.85">
-      <line x1="26" y1="26" x2="20.5" y2="19.5"/>
-      <line x1="26" y1="26" x2="31.5" y2="19.5"/>
-      <line x1="26" y1="26" x2="21" y2="32.5"/>
-      <line x1="26" y1="26" x2="31.5" y2="32"/>
-      <line x1="20.5" y1="19.5" x2="31.5" y2="19.5"/>
-      <line x1="21" y1="32.5" x2="31.5" y2="32"/>
-      <line x1="20.5" y1="19.5" x2="21" y2="32.5"/>
-      <line x1="31.5" y1="19.5" x2="31.5" y2="32"/>
+    <circle cx="42" cy="40" r="3.5" fill="#10d48e"/>
+    <circle cx="30" cy="32" r="4.2" fill="#10d48e"/>
+    <circle cx="55" cy="28" r="4.5" fill="#10d48e"/>
+    <circle cx="60" cy="45" r="5.2" fill="#10d48e"/>
+    <circle cx="32" cy="55" r="4.8" fill="#10d48e"/>
+    <circle cx="50" cy="58" r="5.5" fill="#10d48e"/>
+    <rect x="58" y="58" width="6" height="4" transform="rotate(45 61 60)" fill="#10d48e"/>
+    <g transform="rotate(45 42 40)">
+       <line x1="42" y1="64" x2="42" y2="78" stroke="#10d48e" stroke-width="2.2" stroke-linecap="round"/>
+       <line x1="48" y1="64" x2="48" y2="78" stroke="#10d48e" stroke-width="2.2" stroke-linecap="round"/>
+       <path d="M42 64 Q45 61 48 64" stroke="#10d48e" stroke-width="2.2" fill="none"/>
     </g>
-    <g stroke="#3f7bdc" stroke-opacity="0.55" stroke-width="0.85">
-      <line x1="26" y1="26" x2="26" y2="18.5"/>
-    </g>
-    <circle cx="26" cy="26" r="2" fill="#10d48e"/>
-    <circle cx="20.5" cy="19.5" r="1.5" fill="#10d48e"/>
-    <circle cx="31.5" cy="19.5" r="1.4" fill="#0b3d91"/>
-    <circle cx="21" cy="32.5" r="1.4" fill="#10d48e"/>
-    <circle cx="31.5" cy="32" r="1.6" fill="#0b3d91"/>
-    <circle cx="26" cy="18.5" r="1.1" fill="#10d48e"/>
-    <circle cx="14" cy="13" r="2.7" fill="#10d48e"/>
-    <circle cx="38" cy="13" r="2.7" fill="#10d48e"/>
-    <circle cx="13" cy="38.5" r="2.7" fill="#10d48e"/>
-    <circle cx="41" cy="35.5" r="2.4" fill="#10d48e"/>
-    <circle cx="45" cy="24" r="1.6" fill="#10d48e"/>
-    <circle cx="9" cy="26" r="1.4" fill="#3f7bdc"/>
-    <circle cx="33" cy="7" r="1.5" fill="#10d48e"/>
-    <path d="M50 6 l1 2.6 2.6 1 -2.6 1 -1 2.6 -1 -2.6 -2.6 -1 2.6 -1 z" fill="#3f7bdc"/>
-    <path d="M55 16 l0.6 1.5 1.5 0.6 -1.5 0.6 -0.6 1.5 -0.6 -1.5 -1.5 -0.6 1.5 -0.6 z" fill="#10d48e"/>
-    <circle cx="8" cy="10" r="0.8" fill="#3f7bdc"/>
-    <circle cx="54" cy="40" r="0.9" fill="#10d48e"/>
-    <line x1="37.3" y1="37.3" x2="39.5" y2="39.5" stroke="#10d48e" stroke-width="3.4" stroke-linecap="round"/>
-    <rect x="41.2" y="35.83" width="4.6" height="15.35" rx="2.3" transform="rotate(-45 43.5 43.5)" stroke="#10d48e" stroke-width="1.9" fill="none"/>
-    <circle cx="49.6" cy="49.6" r="2.9" fill="#10d48e"/>
+    <circle cx="78" cy="78" r="4.5" fill="#10d48e"/>
   </g>
 
   <!-- Wordmark -->
-  <text x="88" y="102" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="72" font-weight="800" letter-spacing="-2">
+  <text x="240" y="120" font-family="ui-sans-serif, system-ui, sans-serif" font-size="120" font-weight="800" letter-spacing="-4">
     <tspan fill="#10d48e">D</tspan><tspan class="wordmark">search</tspan>
   </text>
 
-  <!-- Rule with center dot -->
-  <line x1="90" y1="128" x2="306" y2="128" class="rule" stroke-width="1"/>
-  <circle cx="314" cy="128" r="3.2" class="ruledot"/>
-  <line x1="322" y1="128" x2="538" y2="128" class="rule" stroke-width="1"/>
-
   <!-- Tagline -->
-  <text x="90" y="152" class="tagline" font-family="ui-sans-serif, system-ui, sans-serif" font-size="16.5">The community-driven search engine.</text>
-  <text x="90" y="176" class="tagline" font-family="ui-sans-serif, system-ui, sans-serif" font-size="16.5">Powered by Nostr, owned by no one.</text>
+  <text x="245" y="170" class="tagline" font-family="ui-sans-serif, system-ui, sans-serif" font-size="22" font-weight="500">
+    The community-driven search engine.
+  </text>
+  <text x="245" y="200" class="tagline" font-family="ui-sans-serif, system-ui, sans-serif" font-size="22" font-weight="500">
+    Powered by Nostr, owned by no one.
+  </text>
 </svg>
