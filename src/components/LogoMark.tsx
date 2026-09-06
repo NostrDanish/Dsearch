@@ -52,8 +52,9 @@ export function LogoMark({ className }: { className?: string }) {
       {/* Handle Stub */}
       <rect x="58" y="58" width="6" height="4" transform="rotate(45 61 60)" fill="currentColor" />
 
-      {/* Handle (Hollow Tube) */}
-      <g transform="rotate(45 42 40)">
+      {/* Handle (Hollow Tube) — rotate(-45) swings the 6-o'clock tube to the
+          down-right 4:30 position, meeting the tip node at (78,78). */}
+      <g transform="rotate(-45 42 40)">
          <line x1="42" y1="64" x2="42" y2="82" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
          <line x1="50" y1="64" x2="50" y2="82" stroke="currentColor" strokeWidth="3" strokeLinecap="round" />
          <path d="M42 64 Q46 60 50 64" stroke="currentColor" strokeWidth="3" fill="none" />
