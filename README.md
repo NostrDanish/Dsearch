@@ -23,16 +23,18 @@ All brand assets live in [`public/brand/`](public/brand/):
 
 | File | What |
 |------|------|
-| [`icon-1024.png`](public/brand/icon-1024.png) | **The master icon** (AI-generated, 1024×1024) — the approved design used everywhere |
-| [`logo.svg`](public/brand/logo.svg) | Horizontal lockup — icon + wordmark + tagline (references the master PNG) |
-| [`icon.svg`](public/brand/icon.svg) | SVG wrapper referencing the master PNG |
-| [`favicon.svg`](public/favicon.svg) | Browser tab icon (points to the PNG) |
+| [`icon.svg`](public/brand/icon.svg) | **The master mark** — vector, scales to any size |
+| [`logo.svg`](public/brand/logo.svg) | Horizontal lockup — mark + wordmark + tagline (auto light/dark) |
+| [`icon-1024.png`](public/brand/icon-1024.png) | Raster icon 1024×1024 (PWA install, app stores, avatars) |
+| [`logo-1024.png`](public/brand/logo-1024.png) | Raster lockup 1024×1024 |
+| [`favicon.svg`](public/favicon.svg) | Browser tab icon (simplified for 16–32px) |
 | [`og.jpg`](public/og.jpg) | Social link preview card |
 
-The mark: a double-ring magnifying glass whose lens holds an organic node
-constellation — search, with the index inside. Emerald `#10d48e` and deep navy
-`#0b3d91`/`#3f7bdc` on night navy `#070b1a`. The in-app logo is the same
-raster (theme-reactive via its transparent background).
+The mark: a magnifying glass revealing a node network shaped like the letter
+**D** — search (the glass) over the decentralized index (the constellation).
+Teal `#17a398` with deep navy `#1b3a7a` accent nodes. In the app, every teal
+element renders in `currentColor`, so the logo follows the active theme and
+the user's accent color (`src/components/LogoMark.tsx`).
 
 ---
 

@@ -1,34 +1,31 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024" fill="none">
-  <!-- Dsearch favicon — the mark, simplified + heavier strokes for 16-32px -->
-  <g transform="translate(512 512) scale(1.55) translate(-460 -400)">
-    <!-- Handle -->
-    <g transform="rotate(45 460 400)">
-      <line x1="722" y1="368" x2="776" y2="368" stroke="#14b8a6" stroke-width="26" stroke-linecap="round"/>
-      <line x1="722" y1="432" x2="776" y2="432" stroke="#14b8a6" stroke-width="26" stroke-linecap="round"/>
-      <rect x="776" y="366" width="200" height="68" rx="34" stroke="#14b8a6" stroke-width="26"/>
-      <circle cx="960" cy="400" r="38" fill="#14b8a6"/>
+  <!-- Dsearch favicon — the D-network mark, simplified + heavier strokes for 16-32px -->
+  <g transform="translate(512 512) scale(1.5) translate(-470 -420)">
+    <!-- handle -->
+    <line x1="596" y1="556" x2="678" y2="638" stroke="#17a398" stroke-width="26" stroke-linecap="round"/>
+    <line x1="614" y1="538" x2="696" y2="620" stroke="#17a398" stroke-width="26" stroke-linecap="round"/>
+    <circle cx="706" cy="650" r="24" stroke="#17a398" stroke-width="24"/>
+    <!-- lens -->
+    <circle cx="470" cy="420" r="185" stroke="#17a398" stroke-width="30"/>
+    <!-- the D, reduced to its skeleton -->
+    <g stroke="#17a398" stroke-width="16" stroke-linecap="round">
+      <line x1="404" y1="330" x2="404" y2="510"/>
+      <line x1="404" y1="330" x2="470" y2="318"/>
+      <line x1="470" y1="318" x2="530" y2="368"/>
+      <line x1="530" y1="368" x2="538" y2="428"/>
+      <line x1="538" y1="428" x2="500" y2="492"/>
+      <line x1="500" y1="492" x2="404" y2="510"/>
     </g>
-    <!-- Lens -->
-    <circle cx="460" cy="400" r="262" stroke="#14b8a6" stroke-width="30"/>
-    <circle cx="460" cy="400" r="203" stroke="#1d4e9e" stroke-width="38"/>
-    <!-- Mesh (reduced for legibility) -->
-    <g stroke="#14b8a6" stroke-width="12" stroke-linecap="round">
-      <line x1="450" y1="290" x2="352" y2="360"/>
-      <line x1="450" y1="290" x2="560" y2="345"/>
-      <line x1="352" y1="360" x2="400" y2="470"/>
-      <line x1="560" y1="345" x2="565" y2="465"/>
-      <line x1="400" y1="470" x2="500" y2="510"/>
-      <line x1="565" y1="465" x2="500" y2="510"/>
-      <line x1="450" y1="290" x2="470" y2="400"/>
-      <line x1="470" y1="400" x2="400" y2="470"/>
-      <line x1="470" y1="400" x2="565" y2="465"/>
-    </g>
-    <circle cx="450" cy="290" r="42" fill="#14b8a6"/>
-    <circle cx="352" cy="360" r="46" fill="#14b8a6"/>
-    <circle cx="560" cy="345" r="42" fill="#14b8a6"/>
-    <circle cx="470" cy="400" r="34" fill="#14b8a6"/>
-    <circle cx="400" cy="470" r="40" fill="#14b8a6"/>
-    <circle cx="565" cy="465" r="44" fill="#14b8a6"/>
-    <circle cx="500" cy="510" r="38" fill="#14b8a6"/>
+    <circle cx="404" cy="330" r="26" fill="#17a398"/>
+    <circle cx="404" cy="510" r="26" fill="#17a398"/>
+    <circle cx="470" cy="318" r="24" fill="#17a398"/>
+    <circle cx="530" cy="368" r="24" fill="#17a398"/>
+    <circle cx="538" cy="428" r="26" fill="#17a398"/>
+    <circle cx="500" cy="492" r="24" fill="#17a398"/>
+    <circle cx="404" cy="420" r="20" fill="#1b3a7a"/>
+    <!-- a few outriders -->
+    <circle cx="340" cy="300" r="20" fill="#1b3a7a"/>
+    <circle cx="596" cy="440" r="20" fill="#17a398"/>
+    <circle cx="440" cy="580" r="20" fill="#1b3a7a"/>
   </g>
 </svg>

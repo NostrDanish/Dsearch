@@ -1,12 +1,14 @@
 import { cn } from '@/lib/utils';
 
 /**
- * Dsearch logo mark — a magnifying glass with a node network inside its lens.
+ * Dsearch logo mark — a magnifying glass revealing a node network shaped
+ * like the letter "D": search (the glass) over the decentralized index
+ * (the constellation).
  *
- * Geometry is identical to the static master (public/brand/icon.svg). The
- * teal parts render in `currentColor` (= --primary via the `text-primary`
- * class), so the mark follows the theme and the accent picker; the navy ring
- * and micro-dots stay the brand constant that gives the lens its depth.
+ * Geometry is identical to the static master (public/brand/icon.svg). Every
+ * teal element renders in `currentColor` (= --primary via `text-primary`),
+ * so the mark follows the theme and the accent picker; the navy outrider
+ * nodes stay constant for depth.
  */
 export function LogoMark({ className }: { className?: string }) {
   return (
@@ -16,71 +18,82 @@ export function LogoMark({ className }: { className?: string }) {
       aria-hidden="true"
       className={cn('text-primary', className)}
     >
-      {/* Sparkles + dust */}
-      <path d="M205 135 Q212 173 243 180 Q212 187 205 225 Q198 187 167 180 Q198 173 205 135 Z" fill="#1d4e9e" />
-      <path d="M732 160 Q737 189 762 195 Q737 201 732 230 Q727 201 702 195 Q727 189 732 160 Z" fill="currentColor" />
-      <path d="M330 670 Q335 699 360 705 Q335 711 330 740 Q325 711 300 705 Q325 699 330 670 Z" fill="currentColor" />
-      <circle cx="160" cy="285" r="11" fill="currentColor" />
-      <circle cx="742" cy="540" r="11" fill="currentColor" />
-      <circle cx="548" cy="728" r="11" fill="currentColor" />
+      {/* Handle: hollow tube + open ring tip */}
+      <line x1="593" y1="559" x2="682" y2="648" stroke="currentColor" strokeWidth="15" strokeLinecap="round" />
+      <line x1="609" y1="543" x2="698" y2="632" stroke="currentColor" strokeWidth="15" strokeLinecap="round" />
+      <circle cx="706" cy="656" r="22" stroke="currentColor" strokeWidth="15" />
 
-      {/* Handle: neck + hollow capsule + solid tip cap */}
-      <g transform="rotate(45 460 400)">
-        <line x1="722" y1="368" x2="776" y2="368" stroke="currentColor" strokeWidth="19" strokeLinecap="round" />
-        <line x1="722" y1="432" x2="776" y2="432" stroke="currentColor" strokeWidth="19" strokeLinecap="round" />
-        <rect x="776" y="366" width="232" height="68" rx="34" stroke="currentColor" strokeWidth="19" />
-        <circle cx="974" cy="400" r="34" fill="currentColor" />
+      {/* Lens ring */}
+      <circle cx="470" cy="420" r="185" stroke="currentColor" strokeWidth="17" />
+
+      {/* Outrider stems */}
+      <g stroke="currentColor" strokeWidth="4.5" strokeOpacity="0.85">
+        <line x1="400" y1="330" x2="356" y2="296" />
+        <line x1="398" y1="392" x2="336" y2="378" />
+        <line x1="400" y1="452" x2="342" y2="462" />
+        <line x1="404" y1="508" x2="366" y2="548" />
+        <line x1="452" y1="516" x2="436" y2="566" />
+        <line x1="512" y1="484" x2="530" y2="540" />
+        <line x1="538" y1="428" x2="590" y2="452" />
+        <line x1="530" y1="368" x2="584" y2="344" />
+        <line x1="470" y1="318" x2="486" y2="272" />
+        <line x1="436" y1="320" x2="410" y2="272" />
       </g>
 
-      {/* Lens: outer accent ring + inner navy ring */}
-      <circle cx="460" cy="400" r="262" stroke="currentColor" strokeWidth="21" />
-      <circle cx="460" cy="400" r="203" stroke="#1d4e9e" strokeWidth="30" />
-
-      {/* Node mesh edges */}
-      <g stroke="currentColor" strokeWidth="7" strokeLinecap="round">
-        <line x1="450" y1="268" x2="352" y2="322" />
-        <line x1="450" y1="268" x2="562" y2="298" />
-        <line x1="450" y1="268" x2="488" y2="355" />
-        <line x1="352" y1="322" x2="318" y2="410" />
-        <line x1="352" y1="322" x2="412" y2="402" />
-        <line x1="562" y1="298" x2="488" y2="355" />
-        <line x1="562" y1="298" x2="592" y2="428" />
-        <line x1="488" y1="355" x2="412" y2="402" />
-        <line x1="488" y1="355" x2="488" y2="455" />
-        <line x1="318" y1="410" x2="412" y2="402" />
-        <line x1="318" y1="410" x2="352" y2="490" />
-        <line x1="412" y1="402" x2="352" y2="490" />
-        <line x1="592" y1="428" x2="488" y2="455" />
-        <line x1="592" y1="428" x2="542" y2="522" />
-        <line x1="488" y1="455" x2="432" y2="528" />
-        <line x1="488" y1="455" x2="542" y2="522" />
-        <line x1="352" y1="490" x2="432" y2="528" />
-        <line x1="432" y1="528" x2="542" y2="522" />
+      {/* The "D": stem + bowl, wired as a node graph */}
+      <g stroke="currentColor" strokeWidth="5.5" strokeLinecap="round">
+        <line x1="400" y1="330" x2="398" y2="392" />
+        <line x1="398" y1="392" x2="400" y2="452" />
+        <line x1="400" y1="452" x2="404" y2="508" />
+        <line x1="400" y1="330" x2="436" y2="320" />
+        <line x1="436" y1="320" x2="470" y2="318" />
+        <line x1="470" y1="318" x2="504" y2="334" />
+        <line x1="504" y1="334" x2="530" y2="368" />
+        <line x1="530" y1="368" x2="538" y2="428" />
+        <line x1="538" y1="428" x2="512" y2="484" />
+        <line x1="512" y1="484" x2="452" y2="516" />
+        <line x1="452" y1="516" x2="404" y2="508" />
+        <line x1="398" y1="392" x2="470" y2="318" />
+        <line x1="398" y1="392" x2="466" y2="404" />
+        <line x1="466" y1="404" x2="530" y2="368" />
+        <line x1="466" y1="404" x2="538" y2="428" />
+        <line x1="466" y1="404" x2="452" y2="516" />
+        <line x1="400" y1="452" x2="466" y2="404" />
+        <line x1="400" y1="452" x2="452" y2="516" />
+        <line x1="504" y1="334" x2="466" y2="404" />
+        <line x1="512" y1="484" x2="466" y2="404" />
       </g>
 
-      {/* Mesh nodes (varying sizes) */}
-      <circle cx="450" cy="268" r="26" fill="currentColor" />
-      <circle cx="352" cy="322" r="33" fill="currentColor" />
-      <circle cx="562" cy="298" r="29" fill="currentColor" />
-      <circle cx="488" cy="355" r="23" fill="currentColor" />
-      <circle cx="318" cy="410" r="23" fill="currentColor" />
-      <circle cx="412" cy="402" r="26" fill="currentColor" />
-      <circle cx="592" cy="428" r="31" fill="currentColor" />
-      <circle cx="488" cy="455" r="28" fill="currentColor" />
-      <circle cx="352" cy="490" r="26" fill="currentColor" />
-      <circle cx="432" cy="528" r="28" fill="currentColor" />
-      <circle cx="542" cy="522" r="19" fill="currentColor" />
+      {/* D-path nodes */}
+      <circle cx="400" cy="330" r="13" fill="currentColor" />
+      <circle cx="398" cy="392" r="11" fill="currentColor" />
+      <circle cx="400" cy="452" r="13" fill="currentColor" />
+      <circle cx="404" cy="508" r="11" fill="currentColor" />
+      <circle cx="436" cy="320" r="10" fill="currentColor" />
+      <circle cx="470" cy="318" r="12" fill="currentColor" />
+      <circle cx="504" cy="334" r="10" fill="currentColor" />
+      <circle cx="530" cy="368" r="12" fill="currentColor" />
+      <circle cx="538" cy="428" r="13" fill="currentColor" />
+      <circle cx="512" cy="484" r="12" fill="currentColor" />
+      <circle cx="452" cy="516" r="11" fill="currentColor" />
+      <circle cx="466" cy="404" r="12" fill="currentColor" />
 
-      {/* Navy micro-dots inside the mesh */}
-      <circle cx="422" cy="325" r="9" fill="#1d4e9e" />
-      <circle cx="367" cy="408" r="8" fill="#1d4e9e" />
-      <circle cx="527" cy="418" r="9" fill="#1d4e9e" />
-      <circle cx="417" cy="468" r="9" fill="#1d4e9e" />
+      {/* Outrider nodes (navy + accent alternating) */}
+      <circle cx="356" cy="296" r="12" fill="#1b3a7a" />
+      <circle cx="336" cy="378" r="11" fill="currentColor" />
+      <circle cx="342" cy="462" r="12" fill="#1b3a7a" />
+      <circle cx="366" cy="548" r="12" fill="#1b3a7a" />
+      <circle cx="436" cy="566" r="12" fill="#1b3a7a" />
+      <circle cx="530" cy="540" r="11" fill="currentColor" />
+      <circle cx="590" cy="452" r="12" fill="currentColor" />
+      <circle cx="584" cy="344" r="12" fill="#1b3a7a" />
+      <circle cx="486" cy="272" r="11" fill="currentColor" />
+      <circle cx="410" cy="272" r="12" fill="#1b3a7a" />
 
-      {/* Accent micro-dots */}
-      <circle cx="507" cy="256" r="8" fill="currentColor" />
-      <circle cx="602" cy="358" r="8" fill="currentColor" />
-      <circle cx="487" cy="560" r="8" fill="currentColor" />
+      {/* Navy micro-dots */}
+      <circle cx="432" cy="366" r="7" fill="#1b3a7a" />
+      <circle cx="500" cy="440" r="7" fill="#1b3a7a" />
+      <circle cx="430" cy="470" r="6" fill="#1b3a7a" />
     </svg>
   );
 }
