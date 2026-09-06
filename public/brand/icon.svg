@@ -67,8 +67,10 @@
   <circle cx="12" cy="47" r="0.7" fill="#3f7bdc"/>
   <circle cx="47" cy="48" r="0.6" fill="#3f7bdc"/>
 
-  <!-- Handle: stub + hollow outlined capsule + big tip node -->
-  <line x1="37.2" y1="37.2" x2="39.8" y2="39.8" stroke="#10d48e" stroke-width="2.8" stroke-linecap="round"/>
-  <rect x="38.5" y="44.6" width="4.8" height="13" rx="2.4" transform="rotate(-45 40.9 51.1)" stroke="#10d48e" stroke-width="1.8"/>
-  <circle cx="47.6" cy="47.6" r="2.9" fill="#10d48e"/>
+  <!-- Handle: stub neck + hollow outlined capsule + big tip node.
+       The capsule is a rounded rect rotated -45° about its own center
+       (43.5,43.5): centerline (39.7,39.7)→(47.3,47.3), thickness 4.6. -->
+  <line x1="37.3" y1="37.3" x2="39.5" y2="39.5" stroke="#10d48e" stroke-width="3.4" stroke-linecap="round"/>
+  <rect x="41.2" y="35.83" width="4.6" height="15.35" rx="2.3" transform="rotate(-45 43.5 43.5)" stroke="#10d48e" stroke-width="1.9" fill="none"/>
+  <circle cx="49.6" cy="49.6" r="2.9" fill="#10d48e"/>
 </svg>

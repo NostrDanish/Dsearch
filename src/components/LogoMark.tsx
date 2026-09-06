@@ -65,10 +65,11 @@ export function LogoMark({ className }: { className?: string }) {
       <path d="M25.2 3.4 l0.55 1.3 1.3 0.55 -1.3 0.55 -0.55 1.3 -0.55 -1.3 -1.3 -0.55 1.3 -0.55 z" fill="currentColor" fillOpacity="0.65" />
       <circle cx="27" cy="15" r="0.5" fill="currentColor" fillOpacity="0.5" />
 
-      {/* Handle: stub + hollow capsule + tip node */}
-      <line x1="18.7" y1="18.7" x2="19.9" y2="19.9" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
-      <rect x="19.2" y="22.3" width="2.3" height="6.2" rx="1.15" transform="rotate(-45 20.35 25.4)" stroke="currentColor" strokeWidth="1.1" />
-      <circle cx="23.9" cy="23.9" r="1.5" fill="currentColor" />
+      {/* Handle: stub neck + hollow capsule + tip node
+          (capsule centerline (19.4,19.4)→(23.2,23.2), thickness 2.4) */}
+      <line x1="17.9" y1="17.9" x2="19.2" y2="19.2" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+      <rect x="20.1" y="17.42" width="2.4" height="7.77" rx="1.2" transform="rotate(-45 21.3 21.3)" stroke="currentColor" strokeWidth="1.15" fill="none" />
+      <circle cx="24.6" cy="24.6" r="1.5" fill="currentColor" />
     </svg>
   );
 }
