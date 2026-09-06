@@ -1,4 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 160" fill="none">
+  <defs>
+    <linearGradient id="amber" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f7cd85"/>
+      <stop offset="1" stop-color="#eda93f"/>
+    </linearGradient>
+    <radialGradient id="lensshine" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#f0b45a" stop-opacity="0.14"/>
+      <stop offset="1" stop-color="#f0b45a" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
   <style>
     .wordmark { fill: #141b2e; }
     .tagline { fill: #5b6478; }
@@ -8,19 +18,24 @@
     }
   </style>
 
-  <!-- Icon tile: night-navy rounded square -->
-  <rect x="16" y="16" width="128" height="128" rx="30" fill="#070b1a"/>
-  <rect x="20" y="20" width="120" height="120" rx="26" stroke="#f0b45a" stroke-opacity="0.35" stroke-width="2"/>
-
-  <!-- Magnifying glass: the search lens -->
-  <circle cx="72" cy="72" r="26" stroke="#f0b45a" stroke-width="9.5"/>
-  <!-- The index inside the lens: a tiny network graph -->
-  <path d="M72 60.8 L61.6 80 M72 60.8 L82.4 80 M61.6 80 L82.4 80" stroke="#f0b45a" stroke-opacity="0.55" stroke-width="3.5"/>
-  <circle cx="72" cy="60.8" r="4.6" fill="#f0b45a"/>
-  <circle cx="61.6" cy="80" r="4.6" fill="#f0b45a"/>
-  <circle cx="82.4" cy="80" r="4.6" fill="#f0b45a"/>
-  <!-- Handle -->
-  <line x1="91.2" y1="91.2" x2="114" y2="114" stroke="#f0b45a" stroke-width="9.5" stroke-linecap="round"/>
+  <!-- Icon tile: night-navy rounded square (the 64-grid master at 2x) -->
+  <g transform="translate(16,16) scale(2)">
+    <rect width="64" height="64" rx="16" fill="#070b1a"/>
+    <rect x="2" y="2" width="60" height="60" rx="14" stroke="#f0b45a" stroke-opacity="0.35" stroke-width="1"/>
+    <circle cx="27" cy="27" r="20" fill="url(#lensshine)"/>
+    <circle cx="27" cy="27" r="14" stroke="url(#amber)" stroke-width="3.6"/>
+    <g stroke="#f0b45a" stroke-opacity="0.55" stroke-width="1.4">
+      <line x1="27" y1="27" x2="27" y2="18.5"/>
+      <line x1="27" y1="27" x2="19.6" y2="31.3"/>
+      <line x1="27" y1="27" x2="34.4" y2="31.3"/>
+    </g>
+    <line x1="19.6" y1="31.3" x2="34.4" y2="31.3" stroke="#f0b45a" stroke-opacity="0.35" stroke-width="1.1"/>
+    <circle cx="27" cy="27" r="2.4" fill="url(#amber)"/>
+    <circle cx="27" cy="18.5" r="1.9" fill="#f0b45a"/>
+    <circle cx="19.6" cy="31.3" r="1.9" fill="#f0b45a"/>
+    <circle cx="34.4" cy="31.3" r="1.9" fill="#f0b45a"/>
+    <line x1="37.3" y1="37.3" x2="48.5" y2="48.5" stroke="url(#amber)" stroke-width="4.6" stroke-linecap="round"/>
+  </g>
 
   <!-- Wordmark -->
   <text x="176" y="90" font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif" font-size="64" font-weight="700" letter-spacing="-1.5">

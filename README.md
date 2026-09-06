@@ -17,6 +17,24 @@ or this interface.
 
 ---
 
+## Brand
+
+All brand assets live in [`public/brand/`](public/brand/):
+
+| File | What |
+|------|------|
+| [`logo.svg`](public/brand/logo.svg) | Horizontal lockup — icon + wordmark + tagline (auto light/dark) |
+| [`icon.svg`](public/brand/icon.svg) | The mark on its night-navy tile — the master SVG |
+| [`icon-1024.png`](public/brand/icon-1024.png) | Raster icon 1024×1024 (app stores, avatars, PWA install) |
+| [`favicon.svg`](public/favicon.svg) | 32px-optimized favicon |
+| [`og.jpg`](public/og.jpg) | Social link preview card |
+
+The mark: a magnifying glass whose lens holds a node constellation — search, with the
+index inside. Brand amber `#f0b45a` on night navy `#070b1a`. In-app, the logo follows
+the user's accent color and theme (inline SVG, `src/components/LogoMark.tsx`).
+
+---
+
 ## The Ecosystem
 
 Dsearch is the flagship engine of a modular stack. Every layer is open, separable, and

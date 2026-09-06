@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <defs>
+    <linearGradient id="amber" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f7cd85"/>
+      <stop offset="1" stop-color="#eda93f"/>
+    </linearGradient>
+    <radialGradient id="lensshine" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#f0b45a" stop-opacity="0.14"/>
+      <stop offset="1" stop-color="#f0b45a" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Icon tile: night-navy rounded square -->
+  <rect width="64" height="64" rx="16" fill="#070b1a"/>
+  <rect x="2" y="2" width="60" height="60" rx="14" stroke="#f0b45a" stroke-opacity="0.35" stroke-width="1"/>
+
+  <!-- Lens glow -->
+  <circle cx="27" cy="27" r="20" fill="url(#lensshine)"/>
+
+  <!-- Magnifying glass: the search lens -->
+  <circle cx="27" cy="27" r="14" stroke="url(#amber)" stroke-width="3.6"/>
+
+  <!-- The index inside the lens: a node constellation -->
+  <g stroke="#f0b45a" stroke-opacity="0.55" stroke-width="1.4">
+    <line x1="27" y1="27" x2="27" y2="18.5"/>
+    <line x1="27" y1="27" x2="19.6" y2="31.3"/>
+    <line x1="27" y1="27" x2="34.4" y2="31.3"/>
+  </g>
+  <line x1="19.6" y1="31.3" x2="34.4" y2="31.3" stroke="#f0b45a" stroke-opacity="0.35" stroke-width="1.1"/>
+  <circle cx="27" cy="27" r="2.4" fill="url(#amber)"/>
+  <circle cx="27" cy="18.5" r="1.9" fill="#f0b45a"/>
+  <circle cx="19.6" cy="31.3" r="1.9" fill="#f0b45a"/>
+  <circle cx="34.4" cy="31.3" r="1.9" fill="#f0b45a"/>
+
+  <!-- Handle -->
+  <line x1="37.3" y1="37.3" x2="48.5" y2="48.5" stroke="url(#amber)" stroke-width="4.6" stroke-linecap="round"/>
+</svg>
