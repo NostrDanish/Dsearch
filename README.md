@@ -29,9 +29,10 @@ All brand assets live in [`public/brand/`](public/brand/):
 | [`favicon.svg`](public/favicon.svg) | 32px-optimized favicon |
 | [`og.jpg`](public/og.jpg) | Social link preview card |
 
-The mark: a magnifying glass whose lens holds a node constellation — search, with the
-index inside. Brand amber `#f0b45a` on night navy `#070b1a`. In-app, the logo follows
-the user's accent color and theme (inline SVG, `src/components/LogoMark.tsx`).
+The mark: a double-ring magnifying glass whose lens holds an organic node
+constellation — search, with the index inside. Emerald `#10d48e` and deep navy
+`#0b3d91`/`#3f7bdc` on night navy `#070b1a`; the in-app logo follows the user's
+accent color and theme (inline SVG, `src/components/LogoMark.tsx`).
 
 ---
 
