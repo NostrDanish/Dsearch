@@ -25,11 +25,10 @@ All brand assets live in [`public/brand/`](public/brand/):
 |------|------|
 | [`icon.svg`](public/brand/icon.svg) | **The master mark** — vector, scales to any size |
 | [`logo.svg`](public/brand/logo.svg) | Horizontal lockup — mark + wordmark + tagline (auto light/dark) |
-| [`icon-1024.png`](public/brand/icon-1024.png) | Raster icon 1024×1024 (PWA install, app stores, avatars) |
-| [`icon-512.png`](public/brand/icon-512.png) | Raster icon 512×512 (PWA, browser PNG fallback) |
-| [`icon-192.png`](public/brand/icon-192.png) | Raster icon 192×192 (PWA home screen) |
-| [`apple-touch-icon.png`](public/brand/apple-touch-icon.png) | Raster icon 180×180 (iOS home screen) |
+| [`pwa-icon.png`](public/brand/pwa-icon.png) | **PWA / app icon** — 1024×1024 dark-tile mark (install, home screen, apple-touch) |
+| [`icon-1024.png`](public/brand/icon-1024.png) | Raster icon 1024×1024 (same mark, avatars / app stores) |
 | [`logo-1024.png`](public/brand/logo-1024.png) | Raster lockup 1024×1024 |
+| [`logo-lockup.jpg`](public/brand/logo-lockup.jpg) | Dark-tile lockup (JPEG) |
 | [`favicon.svg`](public/favicon.svg) | Browser tab icon (simplified for 16–32px) |
 | [`og.jpg`](public/og.jpg) | Social link preview card |
 
