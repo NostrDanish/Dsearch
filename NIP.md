@@ -12,8 +12,8 @@ formats. Current support:
 | NIP-23 | Long-form articles | 30023 | ✅ read (Nostr tab + All) |
 | NIP-24 | Extra metadata (`display_name`, `website`, `banner`, `bot`) | 0 | ✅ read (profile pages) |
 | NIP-25 | Reactions (votes) | 7 | ✅ read + write — 👍/👎 on results; anonymous via the device indexing identity by default, or the user's npub when toggled |
-| NIP-09 | Deletion | 5 | ✅ write (owner retracts moderation labels) |
-| NIP-32 | Labeling (`L`/`l`) | —, 1985 | ✅ write (abuse reports self-label with `0xsearchstr.abuse`; owner moderation labels under `0xsearchstr.moderation`) + ✅ read (owner-signed `hidden` labels filter all users' results) |
+| NIP-09 | Deletion | 5 | ✅ write (team retracts moderation labels) |
+| NIP-32 | Labeling (`L`/`l`) | —, 1985 | ✅ write (abuse reports self-label with `dsearch.abuse`; team moderation labels under `dsearch.moderation`) + ✅ read (team-signed `hidden` labels filter all users' results; legacy `0xsearchstr.*` labels still read) |
 | NIP-34 | Git collaboration | 30617, 1621, 1618, 1617 | ✅ read — Code tab: repos (link `web`/`clone`), issues, PRs, patches from the read-only ngit/GRASP pool (`GIT_RELAYS`) |
 | NIP-35 | Torrents | 2003 | ✅ read — results link the constructed magnet URI |
 | NIP-36 | Content warnings | any | ✅ `content-warning` events render collapsed until tapped |
@@ -22,7 +22,7 @@ formats. Current support:
 | NIP-56 | Reporting | 1984 | ✅ write (Policy page abuse reports, with NIP-32 labels) |
 | NIP-65 | Relay list metadata | 10002 | ✅ read + write (Settings → Your Relays) |
 | NIP-77 | Negentropy sync | — | 📖 documented in SIP-01 §15 (relay-to-relay, nothing client-side) |
-| NIP-78 | App-specific data | 30078 | ✅ submissions / stakes / term signals (read + write) · legacy cache (read-only, see below) |
+| NIP-78 | App-specific data | 30078 | ✅ submissions / stakes / term signals (read + write) · role lists / affiliate rules / referral config (control plane, see below) · legacy cache (read-only, see below) |
 | NIP-92 | Media attachments (`imeta`) | 1 | ✅ read (inline thumbnails in results) |
 | NIP-94 | File metadata | 1063 | ✅ read (file results) |
 | NIP-B0 | Web bookmarks | 39701 | ✅ read (Community provider — user-curated links) |
@@ -279,6 +279,63 @@ search query exactly matches a staked keyword, the stake renders as the top
 ```json
 { "kinds": [30078], "#d": ["0xsearchstr:stake:<normalized-query>"], "limit": 25 }
 ```
+
+---
+
+## Dsearch Control Plane (`dsearch:*` namespaces)
+
+Application-specific control data is **not** protocol data. SIP-01 observations and the
+shared `0xsearchstr` federation schemas (above) stay shared; everything that configures
+*this app* lives under canonical `dsearch:*` namespaces, rooted at the owner pubkey
+(`OWNER_PUBKEY` in `src/lib/dsearchProtocol.ts` — the single trust root; its nsec never
+touches this codebase).
+
+**Migration policy:** writes are canonical `dsearch:*` only. Legacy `presearchstr:*` role
+lists and `0xsearchstr.*` moderation/abuse labels are still *read* (owner/team-signed
+only) until the owner re-publishes them canonically (Admin → Roles re-save = migration).
+
+| Data | Kind | d-tag / namespace | Trust |
+|------|------|-------------------|-------|
+| Admin role list | 30078 | `dsearch:admin-roles` (t: `dsearch-roles`) | owner-signed only |
+| Moderator role list | 30078 | `dsearch:mod-roles` (t: `dsearch-roles`) | owner-signed only |
+| Affiliate link rules | 30078 | `dsearch:affiliate-rules` (t: `dsearch-affiliate-rules`) | owner + admins |
+| Invite Friends config | 30078 | `dsearch:referral-config` (t: `dsearch-referral`) | owner + admins |
+| Hidden-result labels | 1985 | NIP-32 ns `dsearch.moderation` (legacy read: `0xsearchstr.moderation`) | owner + admins + mods |
+| Abuse reports | 1984 | NIP-32 self-label ns `dsearch.abuse` (legacy read: `0xsearchstr.abuse`) | anyone (public inbox) |
+
+Role-list resolution: only owner-signed events count; per list, the canonical d-tag
+supersedes the legacy one once it exists (removals stick after migration); latest event
+per d-tag wins. Permission matrix: owner > admin > moderator > user — see
+`PERMISSIONS` in `src/lib/dsearchProtocol.ts`.
+
+### Affiliate link rules (kind 30078, `dsearch:affiliate-rules`)
+
+Owner-managed domain → affiliate-code map. Content:
+
+```json
+{ "version": 1, "rules": [
+    { "host": "amazon.ca", "mode": "param", "params": { "tag": "dsearch-21" } },
+    { "host": "ebay.com", "mode": "param", "params": { "mkcid": "1", "mkrid": "…", "campid": "…" } },
+    { "host": "ppq.ai", "mode": "redirect", "target": "https://ppq.ai/invite/<code>" }
+] }
+```
+
+- `param` mode sets/replaces query params on matching result URLs (subdomains match).
+- `redirect` mode replaces the URL with the referral link; `{url}` in the target is
+  substituted with the encoded original.
+- Public by design — affiliate codes are visible in tagged URLs regardless. Every client
+  reads the latest owner/admin-signed event and tags outbound result links.
+
+### Referral pings (kind 34967) + affiliate clicks (kind 6079)
+
+`?ref=<npub>` invite links: first visit stores the referrer (first-touch, per-device,
+localStorage) and publishes ONE addressable ping (kind 34967, `d` = partner pubkey,
+`p` = partner, `t` = `dsearch-referral`). Affiliate-link clicks from a referred device
+publish one kind 6079 event (`p` = partner, `host` = merchant host, same t-tag).
+
+Both kinds are signed by a dedicated **per-device analytics key** — never the user's
+account key, never the SIP-01 indexer identity — so votes and indexing history stay
+unlinkable to a referrer. Counts are indicative engagement metrics, not settlement data.
 
 ---
 

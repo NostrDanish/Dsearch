@@ -1,17 +1,20 @@
 /**
- * DSearch AI proxy — Cloudflare Worker.
+ * Dsearch engine proxy — Cloudflare Worker.
  *
- * ONE job: let the engine operator offer AI answers to all users without
- * the API key ever touching a browser, the repo, or a public response.
+ * Serves the static app AND injects operator secrets server-side:
  *
  * Routes (same origin as the static app):
  *   GET  /api/ai/status            → public config status (masked, no secrets)
  *   POST /api/ai/chat/completions  → OpenAI-compatible proxy, key injected here
  *   GET  /api/ai/models            → provider model list (admin UI helper)
  *   POST /api/ai/admin             → NIP-98-signed config writes (owner key only, KV)
+ *   GET  /api/search/brave/status  → whether engine Brave is configured
+ *   POST /api/search/brave         → Brave Search proxy, key injected here
  *
  * Operator configuration (nothing secret in the repo):
- *   wrangler secret put AI_API_KEY            ← the actual key (env-only mode)
+ *   wrangler secret put OPENAI_API_KEY        ← OpenAI (or compatible) key
+ *     (legacy alias: AI_API_KEY is also accepted)
+ *   wrangler secret put BRAVE_API_KEY         ← Brave Search subscription token
  *   AI_PROVIDER_ENDPOINT / AI_MODEL / AI_PROVIDER_NAME / AI_ENGINE_ENABLED (vars)
  *   OWNER_PUBKEY (var, hex)                   ← enables the Admin → AI tab
  *   AI_CONFIG_KV (KV binding, optional)       ← enables admin-UI-managed config
@@ -34,18 +37,64 @@ import {
   applyAdminAction,
   type EngineAIEnv,
 } from './src/lib/ai/engineProxy';
+import {
+  braveConfigured,
+  validateBravePayload,
+  buildBraveSearchUrl,
+  type BraveProxyEnv,
+} from './src/lib/providers/braveProxy';
 
-interface Env extends EngineAIEnv {
+interface Env extends EngineAIEnv, BraveProxyEnv {
   ASSETS?: { fetch: (request: Request) => Promise<Response> };
 }
 
-function json(data: unknown, status = 200): Response {
-  return new Response(JSON.stringify(data), {
-    status,
+/**
+ * Origins allowed to call the API cross-origin (CORS). The worker reflects
+ * the request Origin only when it is allowlisted — never `*` — and API
+ * responses carry no cookies, so cross-origin calls are bearer-less by
+ * design. The engine keys stay server-side regardless; CORS here only
+ * governs which sites may embed the public API, not access to secrets.
+ */
+const ALLOWED_ORIGINS = new Set([
+  'https://dsearch.com',
+  'https://www.dsearch.com',
+  'http://localhost:8080',
+  'http://localhost:5173',
+  'http://127.0.0.1:8080',
+]);
+
+function corsOrigin(request: Request): string | null {
+  const origin = request.headers.get('Origin');
+  if (!origin) return null; // same-origin / non-browser request — no CORS needed
+  return ALLOWED_ORIGINS.has(origin) ? origin : null;
+}
+
+function json(data: unknown, status = 200, request?: Request): Response {
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    // Never cache a response derived from server-side config.
+    'Cache-Control': 'no-store',
+  };
+  const origin = request ? corsOrigin(request) : null;
+  if (origin) {
+    headers['Access-Control-Allow-Origin'] = origin;
+    headers['Vary'] = 'Origin';
+  }
+  return new Response(JSON.stringify(data), { status, headers });
+}
+
+/** Answer CORS preflights for the API routes (allowlisted origins only). */
+function handleOptions(request: Request): Response {
+  const origin = corsOrigin(request);
+  if (!origin) return new Response(null, { status: 403 });
+  return new Response(null, {
+    status: 204,
     headers: {
-      'Content-Type': 'application/json',
-      // Never cache a response derived from server-side config.
-      'Cache-Control': 'no-store',
+      'Access-Control-Allow-Origin': origin,
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      'Access-Control-Max-Age': '86400',
+      Vary: 'Origin',
     },
   });
 }
@@ -70,12 +119,23 @@ function rateLimited(ip: string): boolean {
 async function proxyChat(request: Request, env: Env): Promise<Response> {
   const config = await readEngineConfig(env);
   if (!config || !config.enabled) {
-    return json({ error: { message: 'Engine AI is not configured on this deployment', type: 'unavailable' } }, 503);
-  }
+    return json({ error: { message: 'Engine AI is not configured on this deployment', type: 'unavailable' } }, 503, request);
 
   const ip = request.headers.get('CF-Connecting-IP') ?? 'anonymous';
   if (rateLimited(ip)) {
-    return json({ error: { message: 'Rate limit exceeded — slow down', type: 'rate_limited' } }, 429);
+    return json({ error: { message: 'Rate limit exceeded — slow down', type: 'rate_limited' } }, 429, request);
+  }
+
+  let body: unknown;
+  try {
+    body = await request.json();
+  } catch {
+    return json({ error: { message: 'Body must be JSON', type: 'invalid_request' } }, 400, request);
+  }
+
+  const payload = validateChatPayload(body);
+  if (typeof payload === 'string') {
+    return json({ error: { message: payload, type: 'invalid_request' } }, 400, request);
   }
 
   let body: unknown;
@@ -101,7 +161,7 @@ async function proxyChat(request: Request, env: Env): Promise<Response> {
   }).catch(() => null);
 
   if (!upstream) {
-    return json({ error: { message: 'AI provider unreachable', type: 'upstream_unavailable' } }, 502);
+    return json({ error: { message: 'AI provider unreachable', type: 'upstream_unavailable' } }, 502, request);
   }
 
   if (!upstream.ok) {
@@ -111,11 +171,12 @@ async function proxyChat(request: Request, env: Env): Promise<Response> {
     return json(
       { error: { message: sanitizeProviderError(upstream.status), type: 'provider_error' } },
       upstream.status === 429 ? 429 : 502,
+      request,
     );
   }
 
   const data = await upstream.json();
-  return json(data);
+  return json(data, 200, request);
 }
 
 /** Proxied model list for the admin "Load models" helper. */
@@ -141,7 +202,7 @@ async function proxyModels(env: Env): Promise<Response> {
 /** Owner-authenticated config write (NIP-98-style signed event, KV-backed). */
 async function handleAdmin(request: Request, env: Env): Promise<Response> {
   const auth = await verifyAdminAuth(request.headers.get('Authorization'), request.url, env);
-  if (!auth.ok) return json({ error: { message: auth.error, type: 'unauthorized' } }, auth.error === 'Admin is not configured on this deployment' ? 501 : 403);
+  if (!auth.ok) return json({ error: { message: auth.error, type: 'unauthorized' } }, auth.error === 'Admin is not configured on this deployment' ? 501 : 403, request);
 
   if (!env.AI_CONFIG_KV) {
     return json({
@@ -173,7 +234,51 @@ async function handleAdmin(request: Request, env: Env): Promise<Response> {
   }
 
   await writeEngineConfig(env.AI_CONFIG_KV, next);
-  return json({ ok: true, status: buildPublicStatus(next) });
+  return json({ ok: true, status: buildPublicStatus(next) }, 200, request);
+}
+
+/** Proxied Brave Search — the subscription token is injected server-side. */
+async function proxyBrave(request: Request, env: Env): Promise<Response> {
+  if (!braveConfigured(env)) {
+    return json({ error: { message: 'Brave Search is not configured on this deployment', type: 'unavailable' } }, 503, request);
+  }
+
+  const ip = request.headers.get('CF-Connecting-IP') ?? 'anonymous';
+  if (rateLimited(ip)) {
+    return json({ error: { message: 'Rate limit exceeded — slow down', type: 'rate_limited' } }, 429, request);
+  }
+
+  let body: unknown;
+  try {
+    body = await request.json();
+  } catch {
+    return json({ error: { message: 'Body must be JSON', type: 'invalid_request' } }, 400, request);
+  }
+
+  const payload = validateBravePayload(body);
+  if (typeof payload === 'string') {
+    return json({ error: { message: payload, type: 'invalid_request' } }, 400, request);
+  }
+
+  const upstream = await fetch(buildBraveSearchUrl(payload), {
+    method: 'GET',
+    headers: {
+      Accept: 'application/json',
+      'X-Subscription-Token': env.BRAVE_API_KEY!.trim(),
+    },
+    signal: AbortSignal.timeout(15_000),
+  }).catch(() => null);
+
+  if (!upstream) {
+    return json({ error: { message: 'Brave Search unreachable', type: 'upstream_unavailable' } }, 502, request);
+  }
+
+  if (!upstream.ok) {
+    await upstream.body?.cancel().catch(() => undefined);
+    return json({ error: { message: 'Brave Search rejected the request', type: 'provider_error' } }, upstream.status === 429 ? 429 : 502, request);
+  }
+
+  return json(await upstream.json(), 200, request);
 }
 
 export default {
@@ -181,8 +286,11 @@ export default {
     const url = new URL(request.url);
 
     try {
+      if (url.pathname.startsWith('/api/') && request.method === 'OPTIONS') {
+        return handleOptions(request);
+      }
       if (url.pathname === '/api/ai/status' && request.method === 'GET') {
-        return json(buildPublicStatus(await readEngineConfig(env)));
+        return json(buildPublicStatus(await readEngineConfig(env)), 200, request);
       }
       if (url.pathname === '/api/ai/models' && request.method === 'GET') {
         return proxyModels(env);
@@ -193,13 +301,19 @@ export default {
       if (url.pathname === '/api/ai/admin' && request.method === 'POST') {
         return handleAdmin(request, env);
       }
+      if (url.pathname === '/api/search/brave/status' && request.method === 'GET') {
+        return json({ configured: braveConfigured(env) }, 200, request);
+      }
+      if (url.pathname === '/api/search/brave' && request.method === 'POST') {
+        return proxyBrave(request, env);
+      }
 
       // Everything else → static assets.
       if (env.ASSETS) return env.ASSETS.fetch(request);
       return new Response('Not found', { status: 404 });
     } catch {
       // Deliberately opaque: internal errors must not leak config details.
-      return json({ error: { message: 'Internal error', type: 'internal' } }, 500);
+      return json({ error: { message: 'Internal error', type: 'internal' } }, 500, request);
     }
   },
 };

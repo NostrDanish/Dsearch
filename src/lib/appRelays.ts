@@ -1,5 +1,6 @@
 import type { RelayMetadata } from '@/contexts/AppContext';
 import { getDiscoveredSearchRelays, getDiscoveredIndexRelays } from '@/lib/relayDiscovery';
+import { readStoredWithLegacy, writeStoredCanonical } from '@/lib/dsearchProtocol';
 
 /**
  * App default relays. Used as the initial `relayMetadata` for new users and as
@@ -112,14 +113,31 @@ export const SEARCH_RELAYS = [
 /* Pool customization (user-managed, localStorage)                     */
 /* ------------------------------------------------------------------ */
 
-const LS_CUSTOM_SEARCH_RELAYS = '0xsearchstr:search-relays:custom';
-const LS_HIDDEN_SEARCH_RELAYS = '0xsearchstr:search-relays:hidden';
-const LS_CUSTOM_INDEX_RELAYS = '0xsearchstr:index-relays:custom';
-const LS_HIDDEN_INDEX_RELAYS = '0xsearchstr:index-relays:hidden';
+const LS_CUSTOM_SEARCH_RELAYS = 'dsearch:search-relays:custom';
+const LS_HIDDEN_SEARCH_RELAYS = 'dsearch:search-relays:hidden';
+const LS_CUSTOM_INDEX_RELAYS = 'dsearch:index-relays:custom';
+const LS_HIDDEN_INDEX_RELAYS = 'dsearch:index-relays:hidden';
+
+/**
+ * Device-local relay customizations migrated to dsearch:* keys. Reads fall
+ * back to the legacy 0xsearchstr:* key (and forward-migrate on first read);
+ * writes go to the canonical key only. See src/lib/dsearchProtocol.ts.
+ */
+const LEGACY_LS_KEYS: Record<string, string> = {
+  [LS_CUSTOM_SEARCH_RELAYS]: '0xsearchstr:search-relays:custom',
+  [LS_HIDDEN_SEARCH_RELAYS]: '0xsearchstr:search-relays:hidden',
+  [LS_CUSTOM_INDEX_RELAYS]: '0xsearchstr:index-relays:custom',
+  [LS_HIDDEN_INDEX_RELAYS]: '0xsearchstr:index-relays:hidden',
+  'dsearch:git-relays:custom': '0xsearchstr:git-relays:custom',
+  'dsearch:git-relays:hidden': '0xsearchstr:git-relays:hidden',
+  'dsearch:wiki-relays:custom': '0xsearchstr:wiki-relays:custom',
+  'dsearch:wiki-relays:hidden': '0xsearchstr:wiki-relays:hidden',
+};
 
 function readList(key: string): string[] {
   try {
-    const raw = localStorage.getItem(key);
+    const legacy = LEGACY_LS_KEYS[key];
+    const raw = legacy ? readStoredWithLegacy(key, legacy) : localStorage.getItem(key);
     const parsed = raw ? JSON.parse(raw) : null;
     return Array.isArray(parsed) ? parsed.filter((u): u is string => typeof u === 'string') : [];
   } catch {
@@ -129,7 +147,9 @@ function readList(key: string): string[] {
 
 function writeList(key: string, urls: string[]): void {
   try {
-    localStorage.setItem(key, JSON.stringify(urls));
+    const legacy = LEGACY_LS_KEYS[key];
+    if (legacy) writeStoredCanonical(key, legacy, JSON.stringify(urls));
+    else localStorage.setItem(key, JSON.stringify(urls));
   } catch {
     // Storage unavailable — non-fatal.
   }
@@ -348,14 +368,14 @@ function makePool(defaults: readonly string[], customKey: string, hiddenKey: str
 
 const gitPool = makePool(
   GIT_RELAYS,
-  '0xsearchstr:git-relays:custom',
-  '0xsearchstr:git-relays:hidden',
+  'dsearch:git-relays:custom',
+  'dsearch:git-relays:hidden',
 );
 
 const wikiPool = makePool(
   WIKI_RELAYS,
-  '0xsearchstr:wiki-relays:custom',
-  '0xsearchstr:wiki-relays:hidden',
+  'dsearch:wiki-relays:custom',
+  'dsearch:wiki-relays:hidden',
 );
 
 /** Git relay pool (NIP-34 reads for the Code tab). Read-only. */

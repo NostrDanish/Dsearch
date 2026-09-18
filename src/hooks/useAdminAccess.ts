@@ -2,32 +2,44 @@
  * Access control hook — resolves the current user's team role.
  *
  *   1. pubkey === OWNER_PUBKEY           → 'owner'
- *  2. in owner-signed admin role list   → 'admin'
- *   3. in owner-signed mod role list    → 'moderator'
- *   4. otherwise                        → 'user'
+ *   2. in owner-signed admin role list   → 'admin'
+ *   3. in owner-signed mod role list     → 'moderator'
+ *   4. otherwise                         → 'user'
  *
  * Role lists are kind 30078 addressable events published by the owner
- * (see src/lib/moderation.ts). Adapted from 0xNostr-Relay-Finder's
- * useAdminAccess.
+ * (see src/lib/dsearchProtocol.ts). Readers query the canonical
+ * `dsearch:*` d-tags plus the legacy `presearchstr:*` ones; the central
+ * resolver applies "canonical supersedes legacy, owner-signed only".
+ * Adapted from 0xNostr-Relay-Finder's useAdminAccess.
  */
 import { useQuery } from '@tanstack/react-query';
 
 import { queryRelayPool } from '@/lib/searchRelays';
+import { getModerationRelayUrls } from '@/lib/moderation';
 import {
   OWNER_PUBKEY,
   ROLES_KIND,
-  ADMIN_ROLES_D_TAG,
-  MOD_ROLES_D_TAG,
-  getModerationRelayUrls,
-  parseRoleList,
+  ROLE_LIST_D_TAGS,
+  PERMISSIONS,
+  resolveRoleEvents,
   type AppRole,
-} from '@/lib/moderation';
+} from '@/lib/dsearchProtocol';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 
-/** Fetch the owner-signed role lists. Cached — they change rarely.
- *  Only runs when someone is logged in (roles are meaningless logged out,
- *  and the query would hit ~15 relays for every visitor). */
-export function useRoleLists(): { admins: string[]; mods: string[]; isLoading: boolean } {
+/** Fetch the owner-signed role lists (canonical + legacy). Cached — they
+ *  change rarely. Only runs when someone is logged in (roles are
+ *  meaningless logged out, and the query would hit ~15 relays for every
+ *  visitor). */
+export function useRoleLists(): {
+  admins: string[];
+  mods: string[];
+  isLoading: boolean;
+  /** True when canonical dsearch:* role events exist for each list. */
+  hasCanonicalAdmins: boolean;
+  hasCanonicalMods: boolean;
+  /** True when pre-migration (legacy namespace) role events exist. */
+  hasLegacyRoles: boolean;
+} {
   const { user } = useCurrentUser();
 
   const { data, isLoading } = useQuery({
@@ -39,35 +51,27 @@ export function useRoleLists(): { admins: string[]; mods: string[]; isLoading: b
         [{
           kinds: [ROLES_KIND],
           authors: [OWNER_PUBKEY], // trust boundary: owner-signed only
-          '#d': [ADMIN_ROLES_D_TAG, MOD_ROLES_D_TAG],
-          limit: 2,
+          '#d': [...ROLE_LIST_D_TAGS],
+          limit: ROLE_LIST_D_TAGS.length,
         }],
         { signal },
       );
 
-      let admins: string[] = [];
-      let mods: string[] = [];
-
-      for (const value of settled) {
-        for (const ev of value) {
-          const d = ev.tags.find(([n]) => n === 'd')?.[1];
-          if (d === ADMIN_ROLES_D_TAG) {
-            const list = parseRoleList(ev);
-            if (list.length > 0 || admins.length === 0) admins = list;
-          } else if (d === MOD_ROLES_D_TAG) {
-            const list = parseRoleList(ev);
-            if (list.length > 0 || mods.length === 0) mods = list;
-          }
-        }
-      }
-
-      return { admins, mods };
+      const events = settled.flatMap((value) => value);
+      return resolveRoleEvents(events);
     },
     staleTime: 5 * 60_000,
     retry: 1,
   });
 
-  return { admins: data?.admins ?? [], mods: data?.mods ?? [], isLoading };
+  return {
+    admins: data?.admins ?? [],
+    mods: data?.mods ?? [],
+    isLoading,
+    hasCanonicalAdmins: data?.hasCanonicalAdmins ?? false,
+    hasCanonicalMods: data?.hasCanonicalMods ?? false,
+    hasLegacyRoles: data?.hasLegacyRoles ?? false,
+  };
 }
 
 /** The set of pubkeys trusted to moderate (owner + admins + mods). */
@@ -78,7 +82,7 @@ export function useTrustedModerators(): Set<string> {
 
 export function useAdminAccess() {
   const { user } = useCurrentUser();
-  const { admins, mods, isLoading } = useRoleLists();
+  const { admins, mods, isLoading, hasCanonicalAdmins, hasCanonicalMods, hasLegacyRoles } = useRoleLists();
 
   const pubkey = user?.pubkey ?? '';
 
@@ -95,11 +99,17 @@ export function useAdminAccess() {
     /** Admin = owner or admin list. */
     isAdmin: role === 'owner' || role === 'admin',
     /** Mod = any team member (owner, admin, moderator). */
-    isMod: role === 'owner' || role === 'admin' || role === 'moderator',
+    isMod: PERMISSIONS.canModerate(role),
     /** Roles tab (add/remove team members) — owner only. */
-    canManageRoles: role === 'owner',
+    canManageRoles: PERMISSIONS.canManageRoles(role),
+    /** Affiliate rules + referral config — owner + admins. */
+    canManageAffiliates: PERMISSIONS.canManageAffiliates(role),
+    canManageReferralConfig: PERMISSIONS.canManageReferralConfig(role),
     isLoading,
     adminList: admins,
     modList: mods,
+    hasCanonicalAdmins,
+    hasCanonicalMods,
+    hasLegacyRoles,
   };
 }

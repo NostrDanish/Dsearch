@@ -20,6 +20,7 @@
  */
 import type { NostrEvent } from '@nostrify/nostrify';
 
+import { ENGINE_PROFILE } from '@/lib/engine/profile';
 import type { SearchResult } from '@/lib/providers/types';
 
 /** Web Index Observation kind (addressable). Draft allocation — see spec §2. */
@@ -367,6 +368,7 @@ export function observationFromResult(result: SearchResult): IndexObservationInp
     image: result.thumbnail,
     tags: result.tags,
     published: result.timestamp,
-    source: 'dsearch-web/1',
+    // Attributed to this branded engine — see ENGINE_PROFILE.
+    source: ENGINE_PROFILE.search.indexerSource,
   };
 }

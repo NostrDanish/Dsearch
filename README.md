@@ -179,6 +179,12 @@ Everything this app writes is documented in [NIP.md](NIP.md) and the canonical
 The `0xsearchstr:*` namespaces are the **federation contract** shared with 0xSearchstr and every
 compatible fork — they are intentionally kept, not legacy accidents.
 
+Application control-plane data (role lists, moderation labels, abuse inboxes, affiliate rules,
+invite-friends config) lives in the **`dsearch:*` control plane** (`src/lib/dsearchProtocol.ts`),
+rooted at the owner key — never in the shared federation namespaces. Legacy `presearchstr:*` /
+`0xsearchstr.*` control data stays readable (owner-signed) until migrated. Partner referrals use
+pseudonymous per-device keys (kinds 34967 / 6079, `t: dsearch-referral`).
+
 ---
 
 ## Relay Pools

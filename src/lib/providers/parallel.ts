@@ -19,14 +19,16 @@
 import type { SearchProvider, SearchOptions, ProviderSearchResponse, SearchResult } from './types';
 import { proxiedFetch } from '@/lib/corsProxy';
 import { textOnly, toEngineQuery } from '@/lib/queryParser';
+import { readStoredWithLegacy, writeStoredCanonical } from '@/lib/dsearchProtocol';
 
-const LS_PARALLEL_KEY = 'presearchstr:parallel-api-key';
+const LS_PARALLEL_KEY = 'dsearch:parallel-api-key';
+const LEGACY_LS_PARALLEL_KEY = 'presearchstr:parallel-api-key';
 const API_URL = 'https://api.parallel.ai/v1/search';
 
 /** Read the user's Parallel API key (empty when unset). */
 export function getParallelApiKey(): string {
   try {
-    return (localStorage.getItem(LS_PARALLEL_KEY) ?? '').trim();
+    return (readStoredWithLegacy(LS_PARALLEL_KEY, LEGACY_LS_PARALLEL_KEY) ?? '').trim();
   } catch {
     return '';
   }
@@ -36,8 +38,7 @@ export function getParallelApiKey(): string {
 export function setParallelApiKey(key: string): void {
   try {
     const trimmed = key.trim();
-    if (trimmed) localStorage.setItem(LS_PARALLEL_KEY, trimmed);
-    else localStorage.removeItem(LS_PARALLEL_KEY);
+    writeStoredCanonical(LS_PARALLEL_KEY, LEGACY_LS_PARALLEL_KEY, trimmed || null);
   } catch {
     // Storage unavailable — the provider just stays dormant.
   }

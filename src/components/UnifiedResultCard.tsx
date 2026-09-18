@@ -21,6 +21,9 @@ import { OnionWarningDialog } from '@/components/OnionWarningDialog';
 import { ReportDialog } from '@/components/ReportDialog';
 import { VoteButtons } from '@/components/VoteButtons';
 import { sanitizeUrl, sanitizeResultUrl } from '@/lib/sanitizeUrl';
+import { useAffiliateRules } from '@/hooks/useAffiliates';
+import { applyAffiliateRules } from '@/lib/affiliates';
+import { trackAffiliateClick } from '@/hooks/useReferrals';
 import type { SearchResult } from '@/lib/providers/types';
 import { cn } from '@/lib/utils';
 
@@ -288,13 +291,18 @@ function ExternalResultCard({ result, className }: { result: SearchResult; class
   const community = COMMUNITY_PROVIDERS[result.provider];
   const [reportOpen, setReportOpen] = useState(false);
 
+  // Owner-managed affiliate tagging (e.g. a merchant host → ?tag=code).
+  // Applied before sanitization so the final href is always a clean URL.
+  const { rules: affiliateRules } = useAffiliateRules();
+
   // Nostr-native providers (wiki/git pools) link to internal /nip19 routes —
   // those navigate client-side via the router. Everything else opens in a
   // new tab. (A bare <a target="_blank"> would resolve "/naddr1…" against
   // the current origin and hard-load it in a new tab — broken UX.)
   // External URLs are hostile data — sanitize before they become a href.
   const isInternal = result.url.startsWith('/');
-  const safeUrl = isInternal ? '' : sanitizeResultUrl(result.url);
+  const taggedUrl = applyAffiliateRules(result.url, affiliateRules);
+  const safeUrl = isInternal ? '' : sanitizeResultUrl(taggedUrl);
 
   const card = (
     <div className={cn(
@@ -390,6 +398,7 @@ function ExternalResultCard({ result, className }: { result: SearchResult; class
           target="_blank"
           rel="noopener noreferrer"
           className={cn('block group', className)}
+          onClick={() => trackAffiliateClick(result.url, taggedUrl)}
         >
           {card}
         </a>

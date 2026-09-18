@@ -20,6 +20,8 @@
  */
 import { verifyEvent, type Event as NostrEvent } from 'nostr-tools/pure';
 
+import { ENGINE_PROFILE } from '../engine/profile';
+
 /** Engine AI configuration as stored (KV) or provided via env vars. */
 export interface EngineAIConfig {
   /** Master switch for engine-provided AI. */
@@ -45,7 +47,13 @@ export interface KVLike {
 export interface EngineAIEnv {
   /** Public key (hex) allowed to administer engine AI. Not a secret. */
   OWNER_PUBKEY?: string;
-  /** Env-var fallback config (secrets set via `wrangler secret put`). */
+  /**
+   * Env-var fallback config (secrets set via `wrangler secret put`).
+   * Canonical secret name: OPENAI_API_KEY. AI_API_KEY is accepted as a
+   * legacy alias so existing deployments keep working.
+   */
+  OPENAI_API_KEY?: string;
+  /** @deprecated Legacy alias for OPENAI_API_KEY. */
   AI_API_KEY?: string;
   AI_PROVIDER_ENDPOINT?: string;
   AI_MODEL?: string;
@@ -58,23 +66,26 @@ export interface EngineAIEnv {
 const KV_CONFIG_KEY = 'engine-ai-config';
 
 /** Default model when the operator hasn't picked one (not a secret). */
-export const DEFAULT_ENGINE_MODEL = 'qwen/qwen-2.5-7b-instruct';
-/** Default endpoint when unset (PPQ — pay-per-prompt, Lightning-native). */
-export const DEFAULT_ENGINE_ENDPOINT = 'https://api.ppq.ai/v1';
+export const DEFAULT_ENGINE_MODEL = ENGINE_PROFILE.ai.model;
+/** Default endpoint when unset (OpenAI-compatible; operator overrides via env). */
+export const DEFAULT_ENGINE_ENDPOINT = ENGINE_PROFILE.ai.endpoint;
+/** Production system prompt — injected server-side so clients cannot override it. */
+export const ENGINE_SYSTEM_PROMPT = ENGINE_PROFILE.ai.systemPrompt;
 
 /* ------------------------------------------------------------------ */
 /* Config read / write                                                */
 /* ------------------------------------------------------------------ */
 
 function configFromEnv(env: EngineAIEnv): EngineAIConfig | null {
-  const apiKey = env.AI_API_KEY?.trim();
+  // Canonical secret name is OPENAI_API_KEY; AI_API_KEY is the legacy alias.
+  const apiKey = env.OPENAI_API_KEY?.trim() || env.AI_API_KEY?.trim();
   if (!apiKey) return null;
   return {
     enabled: env.AI_ENGINE_ENABLED !== 'false',
     endpoint: env.AI_PROVIDER_ENDPOINT?.trim() || DEFAULT_ENGINE_ENDPOINT,
     model: env.AI_MODEL?.trim() || DEFAULT_ENGINE_MODEL,
     apiKey,
-    providerName: env.AI_PROVIDER_NAME?.trim() || 'Engine AI',
+    providerName: env.AI_PROVIDER_NAME?.trim() || ENGINE_PROFILE.ai.providerName,
   };
 }
 
@@ -191,15 +202,26 @@ export function validateChatPayload(body: unknown): ValidatedChat | string {
   return { messages, maxTokens };
 }
 
+/**
+ * Replace any client-supplied system message with the engine profile
+ * prompt. Users cannot override the production engine system prompt on
+ * the engine tier.
+ */
+export function applyEngineSystemPrompt(messages: ChatMessage[], prompt: string): ChatMessage[] {
+  const withoutSystem = messages.filter((m) => m.role !== 'system');
+  return [{ role: 'system', content: prompt }, ...withoutSystem];
+}
+
 /** Build the upstream provider request. The operator's model is forced —
- *  clients never choose the engine-tier model or see the key. */
+ *  clients never choose the engine-tier model or see the key. The engine
+ *  system prompt is injected here so a client cannot override it. */
 export function buildUpstreamBody(
   payload: ValidatedChat,
   config: EngineAIConfig,
 ): Record<string, unknown> {
   return {
     model: config.model || DEFAULT_ENGINE_MODEL,
-    messages: payload.messages,
+    messages: applyEngineSystemPrompt(payload.messages, ENGINE_SYSTEM_PROMPT),
     max_completion_tokens: payload.maxTokens,
   };
 }

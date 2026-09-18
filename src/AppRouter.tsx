@@ -7,6 +7,7 @@ import About from "./pages/About";
 import Settings from "./pages/Settings";
 import Explore from "./pages/Explore";
 import Admin from "./pages/Admin";
+import Partners from "./pages/Partners";
 import RemoteLoginSuccess from "./pages/RemoteLoginSuccess";
 import NetworkPage from "./pages/Network";
 import BuildPage from "./pages/Build";
@@ -31,6 +32,7 @@ export function AppRouter() {
         <Route path="/policy" element={<Policy />} />
         <Route path="/about" element={<About />} />
         <Route path="/settings" element={<Settings />} />
+        <Route path="/partners" element={<Partners />} />
         <Route path="/explore" element={<Explore />} />
         {/* Ecosystem hub */}
         <Route path="/network" element={<NetworkPage />} />

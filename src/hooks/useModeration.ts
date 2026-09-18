@@ -20,8 +20,10 @@ import {
   OWNER_PUBKEY,
   MODERATION_KIND,
   MODERATION_NS,
+  LEGACY_MODERATION_NS,
   REPORT_KIND,
   REPORT_NS,
+  LEGACY_REPORT_NS,
   parseHiddenLabel,
   toModerationSet,
   buildHideLabel,
@@ -31,6 +33,7 @@ import {
   type HiddenTarget,
   type ModerationSet,
 } from '@/lib/moderation';
+import { isAbuseNs } from '@/lib/dsearchProtocol';
 import { useTrustedModerators, useAdminAccess } from '@/hooks/useAdminAccess';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 
@@ -44,8 +47,9 @@ async function fetchHiddenLabels(
 ): Promise<{ targets: HiddenTarget[]; events: Map<string, NostrEvent>; deleted: Set<string> }> {
   const authorList = [...trusted];
   const filters: NostrFilter[] = [
-    // Team-signed "hidden" labels (author filter = trust boundary).
-    { kinds: [MODERATION_KIND], authors: authorList, '#L': [MODERATION_NS], limit: 500 },
+    // Team-signed "hidden" labels, canonical + legacy namespaces (author
+    // filter = trust boundary).
+    { kinds: [MODERATION_KIND], authors: authorList, '#L': [MODERATION_NS, LEGACY_MODERATION_NS], limit: 500 },
     // Team NIP-09 deletions (retractions of labels).
     { kinds: [5], authors: authorList, limit: 500 },
   ];
@@ -124,11 +128,11 @@ export interface AbuseReport {
 
 function parseReport(event: NostrEvent): AbuseReport | null {
   if (event.kind !== REPORT_KIND) return null;
-  const inNamespace = event.tags.some(([n, v]) => n === 'L' && v === REPORT_NS);
+  const inNamespace = event.tags.some(([n, v]) => n === 'L' && isAbuseNs(v));
   if (!inNamespace) return null;
 
   // Report type from the target tag's 3rd entry or the l label.
-  const labeled = event.tags.find(([n, , ns]) => n === 'l' && ns === REPORT_NS)?.[1];
+  const labeled = event.tags.find(([n, , ns]) => n === 'l' && isAbuseNs(ns))?.[1];
 
   const rTag = event.tags.find(([n]) => n === 'r');
   const eTag = event.tags.find(([n]) => n === 'e');
@@ -155,7 +159,7 @@ export function useAbuseReports() {
     queryFn: async ({ signal }) => {
       const filter: NostrFilter = {
         kinds: [REPORT_KIND],
-        '#L': [REPORT_NS],
+        '#L': [REPORT_NS, LEGACY_REPORT_NS],
         limit: 200,
       };
       const settled = await queryRelayPool(getModerationRelayUrls(), [filter], { signal });

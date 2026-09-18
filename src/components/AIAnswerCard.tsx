@@ -12,6 +12,9 @@ import { Sparkles, ExternalLink, AlertTriangle } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import type { AIEvidenceItem, AIAnswer } from '@/lib/ai/types';
 import { sanitizeUrl } from '@/lib/sanitizeUrl';
+import { applyAffiliateRules, type AffiliateRule } from '@/lib/affiliates';
+import { useAffiliateRules } from '@/hooks/useAffiliates';
+import { trackAffiliateClick } from '@/hooks/useReferrals';
 import { cn } from '@/lib/utils';
 
 interface AIAnswerCardProps {
@@ -23,7 +26,7 @@ interface AIAnswerCardProps {
 }
 
 /** Split answer text into parts, turning [n] markers into citation links. */
-function renderWithCitations(text: string, evidence: AIEvidenceItem[]) {
+function renderWithCitations(text: string, evidence: AIEvidenceItem[], affiliateRules: AffiliateRule[]) {
   const parts = text.split(/(\[\d+\])/g);
   return parts.map((part, i) => {
     const match = part.match(/^\[(\d+)\]$/);
@@ -33,7 +36,7 @@ function renderWithCitations(text: string, evidence: AIEvidenceItem[]) {
     const item = evidence[n - 1];
     if (!item) return <span key={i}>{part}</span>;
 
-    const href = sanitizeUrl(item.url);
+    const href = sanitizeUrl(applyAffiliateRules(item.url, affiliateRules));
     if (!href) return <span key={i}>{part}</span>;
 
     return (
@@ -43,6 +46,7 @@ function renderWithCitations(text: string, evidence: AIEvidenceItem[]) {
         target="_blank"
         rel="noopener noreferrer"
         title={item.title}
+        onClick={() => trackAffiliateClick(item.url, applyAffiliateRules(item.url, affiliateRules))}
         className="inline-flex items-center text-[10px] font-mono text-primary bg-primary/10 border border-primary/20 rounded px-1 mx-0.5 align-super hover:bg-primary/20 transition-colors"
       >
         {n}
@@ -52,9 +56,10 @@ function renderWithCitations(text: string, evidence: AIEvidenceItem[]) {
 }
 
 export function AIAnswerCard({ answer, evidence, isLoading, error, className }: AIAnswerCardProps) {
+  const { rules: affiliateRules } = useAffiliateRules();
   const body = useMemo(
-    () => (answer ? renderWithCitations(answer.text, evidence) : null),
-    [answer, evidence],
+    () => (answer ? renderWithCitations(answer.text, evidence, affiliateRules) : null),
+    [answer, evidence, affiliateRules],
   );
 
   if (isLoading) {
@@ -119,7 +124,7 @@ export function AIAnswerCard({ answer, evidence, isLoading, error, className }: 
       {usedEvidence.length > 0 && (
         <div className="mt-3 pt-3 border-t border-primary/10 flex flex-wrap gap-1.5">
           {usedEvidence.map((item) => {
-            const href = sanitizeUrl(item.url);
+            const href = sanitizeUrl(applyAffiliateRules(item.url, affiliateRules));
             if (!href) return null;
             return (
               <a
@@ -127,6 +132,7 @@ export function AIAnswerCard({ answer, evidence, isLoading, error, className }: 
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
+                onClick={() => trackAffiliateClick(item.url, applyAffiliateRules(item.url, affiliateRules))}
                 className="inline-flex items-center gap-1 text-[11px] px-2 py-1 rounded-md border border-border/60 text-muted-foreground hover:text-foreground hover:border-primary/30 transition-colors max-w-full"
               >
                 <span className="font-mono text-primary">[{item.n}]</span>

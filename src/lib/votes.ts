@@ -18,6 +18,7 @@
 import type { NostrEvent } from '@nostrify/nostrify';
 
 import { normalizeIndexUrl } from '@/lib/webIndex';
+import { readStoredWithLegacy, writeStoredCanonical } from '@/lib/dsearchProtocol';
 
 /** NIP-25 reaction kind. */
 export const VOTE_KIND = 7;
@@ -124,26 +125,29 @@ export function tallyVotes(events: NostrEvent[]): Map<string, VoteTally> {
 /* My votes (localStorage — drives the active button state)            */
 /* ------------------------------------------------------------------ */
 
-const LS_MY_VOTES = 'presearchstr:votes';
+const LS_MY_VOTES = 'dsearch:votes';
+const LEGACY_LS_MY_VOTES = 'presearchstr:votes';
+
+function readMyVotes(): Record<string, number> {
+  try {
+    const raw = readStoredWithLegacy(LS_MY_VOTES, LEGACY_LS_MY_VOTES);
+    return raw ? JSON.parse(raw) : {};
+  } catch {
+    return {};
+  }
+}
 
 export function getMyVote(targetKey: string): VoteDirection | null {
-  try {
-    const raw = localStorage.getItem(LS_MY_VOTES);
-    const parsed = raw ? JSON.parse(raw) : {};
-    const v = parsed[targetKey];
-    return v === 1 || v === -1 ? v : null;
-  } catch {
-    return null;
-  }
+  const v = readMyVotes()[targetKey];
+  return v === 1 || v === -1 ? v : null;
 }
 
 export function setMyVote(targetKey: string, direction: VoteDirection | null): void {
   try {
-    const raw = localStorage.getItem(LS_MY_VOTES);
-    const parsed = raw ? JSON.parse(raw) : {};
+    const parsed = readMyVotes();
     if (direction === null) delete parsed[targetKey];
     else parsed[targetKey] = direction;
-    localStorage.setItem(LS_MY_VOTES, JSON.stringify(parsed));
+    writeStoredCanonical(LS_MY_VOTES, LEGACY_LS_MY_VOTES, JSON.stringify(parsed));
   } catch {
     // Storage unavailable — vote still published, state just won't persist.
   }

@@ -24,6 +24,7 @@ import { useProviderSearch } from '@/hooks/useProviderSearch';
 import { useInstantAnswer } from '@/hooks/useInstantAnswer';
 import { useAIAnswer } from '@/hooks/useAIAnswer';
 import { useSearchHotkeys } from '@/hooks/useSearchHotkeys';
+import { ENGINE_PROFILE } from '@/lib/engine/profile';
 import { useAppContext } from '@/hooks/useAppContext';
 import { ALL_SOURCE_TABS } from '@/components/SourceTabs';
 import type { SearchSource } from '@/lib/providers/types';
@@ -152,8 +153,10 @@ const Index = () => {
   const ai = useAIAnswer(activeQuery, organicResults, hasSearched && source !== 'i2p');
 
   useSeoMeta({
-    title: hasSearched ? `${activeQuery} - Dsearch` : 'Dsearch — The community-driven search engine',
-    description: 'The community-driven search engine. Powered by Nostr, owned by no one. SIP-01 federated web index, privacy-respecting web results. No backend, no tracking.',
+    title: hasSearched
+      ? `${activeQuery} - ${ENGINE_PROFILE.branding.name}`
+      : `${ENGINE_PROFILE.branding.name} — ${ENGINE_PROFILE.branding.slogan}`,
+    description: ENGINE_PROFILE.branding.description,
   });
 
   const handleSubmit = useCallback((value: string) => {

@@ -25,11 +25,26 @@
 
 import { getAIProvider } from '@/lib/ai/registry';
 import type { EngineAIStatus } from '@/lib/ai/engineProxy';
+import { ENGINE_PROFILE } from '@/lib/engine/profile';
+import { readStoredWithLegacy, writeStoredCanonical } from '@/lib/dsearchProtocol';
 
 export type { EngineAIStatus } from '@/lib/ai/engineProxy';
 
-/** Same-origin base of the engine-AI proxy (served by worker.ts). */
-export const ENGINE_AI_BASE = '/api/ai';
+/**
+ * Base of the engine-AI proxy (worker.ts).
+ *
+ * Default is same-origin `/api/ai` — correct when the worker serves the
+ * static app itself (wrangler deploy with assets) or when the host rewrites
+ * /api/* to the worker. Deployments on static hosts whose rewrites cannot
+ * forward POST bodies can point the engine base at the worker directly via
+ * the non-secret build var VITE_ENGINE_API_BASE
+ * (e.g. https://dsearch.workers.dev/api/ai). The worker reflects an
+ * allowlisted Origin, so cross-origin calls carry no cookies and expose
+ * no keys. Forks that co-locate the worker simply leave the var unset and
+ * keep the same-origin default.
+ */
+export const ENGINE_AI_BASE: string =
+  (import.meta.env.VITE_ENGINE_API_BASE as string | undefined)?.replace(/\/$/, '') || '/api/ai';
 
 /** Built-in free tier — shared, rate-limited PPQ key. Provider + model are
  *  locked on this tier. PUBLIC BY DESIGN (ships in the bundle): it exists so
@@ -40,7 +55,8 @@ export const COMMUNITY_AI_ENDPOINT = 'https://api.ppq.ai/v1';
 export const COMMUNITY_AI_KEY = 'sk-VPVVNlf79DvGjUfjjrHeFT';
 export const COMMUNITY_AI_MODEL = 'qwen/qwen-2.5-7b-instruct';
 
-const LS_KEY = 'presearchstr:ai-config';
+const LS_KEY = 'dsearch:ai-config';
+const LEGACY_LS_KEY = 'presearchstr:ai-config';
 
 export interface AIConfig {
   /** Master switch — AI answers only run when enabled. */
@@ -58,11 +74,11 @@ export interface AIConfig {
 }
 
 export const DEFAULT_AI_CONFIG: AIConfig = {
-  enabled: false,
-  providerId: 'ppq',
-  endpoint: 'https://api.ppq.ai/v1',
+  enabled: ENGINE_PROFILE.ai.enabledDefault,
+  providerId: ENGINE_PROFILE.ai.providerId,
+  endpoint: ENGINE_PROFILE.ai.endpoint,
   apiKey: '',
-  model: 'auto',
+  model: ENGINE_PROFILE.ai.model,
   includeNostr: false,
 };
 
@@ -150,7 +166,7 @@ export function resolveAIConfig(cfg: AIConfig, engine?: EngineAIStatus | null): 
 
 export function getAIConfig(): AIConfig {
   try {
-    const raw = localStorage.getItem(LS_KEY);
+    const raw = readStoredWithLegacy(LS_KEY, LEGACY_LS_KEY);
     if (!raw) return { ...DEFAULT_AI_CONFIG };
     const parsed = JSON.parse(raw) as Partial<AIConfig>;
     return { ...DEFAULT_AI_CONFIG, ...parsed };
@@ -162,7 +178,7 @@ export function getAIConfig(): AIConfig {
 export function setAIConfig(patch: Partial<AIConfig>): AIConfig {
   const next = { ...getAIConfig(), ...patch };
   try {
-    localStorage.setItem(LS_KEY, JSON.stringify(next));
+    writeStoredCanonical(LS_KEY, LEGACY_LS_KEY, JSON.stringify(next));
   } catch {
     // Storage unavailable — config just won't persist.
   }

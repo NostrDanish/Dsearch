@@ -30,14 +30,24 @@
 import { queryRelayPool } from '@/lib/searchRelays';
 import { proxiedFetch } from '@/lib/corsProxy';
 import { SEARCH_RELAYS, normalizeRelayUrl } from '@/lib/appRelays';
+import { readStoredWithLegacy, writeStoredCanonical } from '@/lib/dsearchProtocol';
 
 /* ------------------------------------------------------------------ */
 /* Constants                                                           */
 /* ------------------------------------------------------------------ */
 
-/** localStorage keys. */
-const LS_DISCOVERED = '0xsearchstr:relay-discovery:verified';
-const LS_DISCOVERY_ON = '0xsearchstr:relay-discovery:enabled';
+/** localStorage keys (canonical; legacy keys are read-migrated on first access). */
+const LS_DISCOVERED = 'dsearch:relay-discovery:verified';
+const LS_DISCOVERY_ON = 'dsearch:relay-discovery:enabled';
+const LEGACY_LS_DISCOVERED = '0xsearchstr:relay-discovery:verified';
+const LEGACY_LS_DISCOVERY_ON = '0xsearchstr:relay-discovery:enabled';
+
+/** Legacy key for a canonical one, when one exists. */
+function legacyKeyFor(key: string): string | undefined {
+  if (key === LS_DISCOVERED) return LEGACY_LS_DISCOVERED;
+  if (key === LS_DISCOVERY_ON) return LEGACY_LS_DISCOVERY_ON;
+  return undefined;
+}
 
 /** How long a verified list stays fresh (24h). */
 const DISCOVERY_TTL_MS = 24 * 60 * 60 * 1000;
@@ -93,7 +103,8 @@ interface DiscoveryCache {
 
 function readJson<T>(key: string): T | null {
   try {
-    const raw = localStorage.getItem(key);
+    const legacy = legacyKeyFor(key);
+    const raw = legacy ? readStoredWithLegacy(key, legacy) : localStorage.getItem(key);
     return raw ? (JSON.parse(raw) as T) : null;
   } catch {
     return null;
@@ -102,7 +113,12 @@ function readJson<T>(key: string): T | null {
 
 function writeJson(key: string, value: unknown): void {
   try {
-    localStorage.setItem(key, JSON.stringify(value));
+    const legacy = legacyKeyFor(key);
+    if (legacy) {
+      writeStoredCanonical(key, legacy, JSON.stringify(value));
+    } else {
+      localStorage.setItem(key, JSON.stringify(value));
+    }
   } catch {
     // Storage full/unavailable — discovery just won't persist.
   }
@@ -210,10 +226,11 @@ async function probeRelay(url: string, signal?: AbortSignal): Promise<VerifiedRe
 
 let discoveryPromise: Promise<VerifiedRelay[]> | null = null;
 
-/** Privacy Mode check — read the stored app config directly (tolerant). */
+/** Privacy Mode check — read the stored app config directly (tolerant).
+ *  Canonical key first, legacy `nostr:app-config` as read-through. */
 function isPrivacyModeOn(): boolean {
   try {
-    const raw = localStorage.getItem('nostr:app-config');
+    const raw = readStoredWithLegacy('dsearch:app-config', 'nostr:app-config');
     if (!raw) return false;
     const parsed: unknown = JSON.parse(raw);
     return typeof parsed === 'object' && parsed !== null &&

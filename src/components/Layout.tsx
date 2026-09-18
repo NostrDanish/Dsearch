@@ -182,6 +182,7 @@ export function Layout({ children, minimal = false }: LayoutProps) {
             ))}
             <Link to="/docs" className="hover:text-foreground transition-colors">Docs</Link>
             <Link to="/explore" className="hover:text-foreground transition-colors">Explore</Link>
+            <Link to="/partners" className="hover:text-foreground transition-colors">Invite friends</Link>
             <Link to="/policy" className="hover:text-foreground transition-colors">Content Policy</Link>
             <Link to="/about" className="hover:text-foreground transition-colors">About</Link>
             <a

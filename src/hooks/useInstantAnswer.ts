@@ -31,6 +31,7 @@ import { getIndexRelayUrls } from '@/lib/appRelays';
 import { queryRelayPool } from '@/lib/searchRelays';
 import { proxiedFetch } from '@/lib/corsProxy';
 import { useAppContext } from '@/hooks/useAppContext';
+import { ENGINE_PROFILE } from '@/lib/engine/profile';
 
 export type InstantAnswer =
   | { type: 'calculator'; expression: string; result: string }
@@ -152,7 +153,8 @@ async function fetchDuckDuckGoAnswer(query: string, signal?: AbortSignal): Promi
     format: 'json',
     no_html: '1',
     skip_disambig: '1',
-    t: 'dsearch',
+    // DDG's client-attribution parameter — the branded engine, from the profile.
+    t: ENGINE_PROFILE.id,
   });
   const target = `https://api.duckduckgo.com/?${params}`;
   const res = await proxiedFetch(target, {
