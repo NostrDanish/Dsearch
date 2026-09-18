@@ -183,6 +183,7 @@ export const DSEARCH_PROFILE: EngineProfile = {
       { to: '/explore', label: 'Explore' },
       { to: '/partners', label: 'Invite friends' },
       { to: '/policy', label: 'Content Policy' },
+      { to: '/settings', label: 'Settings' },
       { to: '/about', label: 'About' },
     ],
     footerTagline: 'Owned by no one.',

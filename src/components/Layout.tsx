@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Search, Settings, PlusCircle, Menu } from 'lucide-react';
+import { Search, PlusCircle, Menu } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
 import { LoginArea } from '@/components/auth/LoginArea';
@@ -104,16 +104,6 @@ export function Layout({ children, minimal = false }: LayoutProps) {
               <PlusCircle className="w-4 h-4 sm:mr-1.5" />
               <span className="hidden sm:inline">Submit</span>
             </Button>
-            <Button
-              variant="ghost"
-              size="icon"
-              asChild
-              className="h-8 w-8 text-muted-foreground hover:text-foreground"
-            >
-              <Link to="/settings" aria-label="Settings">
-                <Settings className="w-4 h-4" />
-              </Link>
-            </Button>
 
             <LoginArea className="max-w-48" />
 
@@ -184,6 +174,7 @@ export function Layout({ children, minimal = false }: LayoutProps) {
             <Link to="/explore" className="hover:text-foreground transition-colors">Explore</Link>
             <Link to="/partners" className="hover:text-foreground transition-colors">Invite friends</Link>
             <Link to="/policy" className="hover:text-foreground transition-colors">Content Policy</Link>
+            <Link to="/settings" className="hover:text-foreground transition-colors">Settings</Link>
             <Link to="/about" className="hover:text-foreground transition-colors">About</Link>
             <a
               href="https://shakespeare.diy"
