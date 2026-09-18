@@ -30,6 +30,8 @@ export interface EngineBranding {
   ogImage: string;
   /** Default appearance for first-time visitors. */
   defaultTheme: 'light' | 'dark';
+  /** Default accent color (Settings → Appearance is the override). */
+  defaultAccent: 'amber' | 'blue' | 'red' | 'green' | 'violet' | 'cyan';
   /** Search-bar placeholder. */
   searchPlaceholder: string;
   /** Wordmark as shown in the header (plain text; styling is CSS). */
@@ -142,6 +144,7 @@ export const DSEARCH_PROFILE: EngineProfile = {
       'The community-driven search engine. Powered by Nostr, owned by no one. Search it, crawl it, index it, relay it, build on it.',
     ogImage: 'https://dsearch.com/og.jpg',
     defaultTheme: 'dark',
+    defaultAccent: 'blue',
     searchPlaceholder: 'Search Nostr & the web…',
     wordmark: 'Dsearch',
   },

@@ -43,6 +43,7 @@ const queryClient = new QueryClient({
 
 const defaultConfig: AppConfig = {
   theme: ENGINE_PROFILE.branding.defaultTheme,
+  accentColor: ENGINE_PROFILE.branding.defaultAccent,
   relayMetadata: APP_RELAYS,
   blossomServerMetadata: {
     servers: [

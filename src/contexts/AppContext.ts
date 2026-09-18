@@ -2,7 +2,8 @@ import { createContext } from "react";
 
 export type Theme = "dark" | "light" | "hacker";
 
-/** User-selectable accent color (Settings → Appearance). Amber = brand default. */
+/** User-selectable accent color (Settings → Appearance). Blue = shipped
+ *  default (engine profile); amber is the CSS-level fallback. */
 export type AccentColor = "amber" | "blue" | "red" | "green" | "violet" | "cyan";
 
 export interface RelayMetadata {
@@ -24,9 +25,9 @@ export interface AppConfig {
   /** Current theme */
   theme: Theme;
   /**
-   * Accent color for the primary/ring/focus palette. Undefined = amber
-   * (the brand default). Ignored while the hacker theme is active — it
-   * owns its green.
+   * Accent color for the primary/ring/focus palette. The shipped default
+   * comes from the engine profile (blue); undefined = amber (CSS fallback).
+   * Ignored while the hacker theme is active — it owns its green.
    */
   accentColor?: AccentColor;
   /** NIP-65 relay list metadata */
